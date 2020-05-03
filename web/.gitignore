@@ -1,0 +1,10 @@
+npm-debug.log*
+
+build/Release
+node_modules
+.npm
+.node_repl_history
+typings/
+*.map
+.cache
+dist
