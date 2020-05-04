@@ -1,24 +1,26 @@
 import React, { useState } from 'react'
 import produce from 'immer'
-import { Picker, BaseEmoji } from 'emoji-mart'
+import { Picker, NimblePicker, BaseEmoji, Data } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 
 import { Display } from './Display'
 import { style } from 'typestyle'
 import { Stack, StackLine, CharacterEvent } from '../models'
+import { getEmojiData } from '../util/emojiUtil'
 
 interface Props {
   initialStack?: Stack
 }
 
-const defaultData = `abc
-123
-ｄｅｆ
+const emojiData = getEmojiData('11.0')
+
+const defaultStackRaw = `
+abc
 ＤＥＦ
 ✨☁😌`
 
 const defaultStack: Stack = {
-  lines: defaultData.split('\n').map(
+  lines: defaultStackRaw.split('\n').map(
     (line) =>
       ({
         characters: line.split(''),
@@ -64,7 +66,7 @@ export default function Editor(props: Props) {
 
       <h3>Select brush</h3>
       <div>
-        <Picker onSelect={handlePickerSelect} />
+        <NimblePicker onSelect={handlePickerSelect} data={emojiData} />
       </div>
     </div>
   )
