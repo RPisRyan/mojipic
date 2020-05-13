@@ -66,7 +66,7 @@ export default function Editor(props: Props) {
 
       <h3>Select brush</h3>
       <div>
-        <NimblePicker onSelect={handlePickerSelect} data={emojiData} />
+        <NimblePicker onSelect={handlePickerSelect} data={emojiData} emoji="" title="" />
       </div>
     </div>
   )

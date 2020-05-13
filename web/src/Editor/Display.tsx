@@ -6,7 +6,7 @@ import { Stack, CharacterEvent } from '../models'
 const displayStyle = style({
   fontFamily: 'monospace',
   fontSize: '48px',
-  cursor: 'pointer'
+  cursor: 'pointer',
 })
 
 interface Props {
@@ -25,7 +25,7 @@ export function Display(props: Props) {
             (() =>
               props.onCharacterClick!({
                 value: character,
-                position: [lineIndex, charIndex]
+                position: [lineIndex, charIndex],
               }))
           }
         >

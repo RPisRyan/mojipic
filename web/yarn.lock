@@ -1957,15 +1957,27 @@ cssstyle@^1.1.1:
   dependencies:
     cssom "0.3.x"
 
+csstips@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/csstips/-/csstips-1.2.0.tgz#5d145c82b01ee8a051947dd3826363185f070b44"
+  integrity sha512-2KgBibTljubrEuaiCNdJ0zcy6BmJck+J9YUufb+Hwz3T0XANLfevVIabHtCO9T5Zr2kHyvpT+0XM9vk44nmsZg==
+
 csstype@2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.9.tgz#05141d0cd557a56b8891394c1911c40c8a98d098"
   integrity sha512-xz39Sb4+OaTsULgUERcCk+TJj8ylkL4aSVDQiX/ksxbELSqwkgt4d4RD7fovIdgJGSuNYqwZEiVjYY5l0ask+Q==
 
-csstype@^2.2.0:
+csstype@^2.2.0, csstype@^2.5.1:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.10.tgz#e63af50e66d7c266edb6b32909cfd0aabe03928b"
   integrity sha512-D34BqZU4cIlMCY93rZHbrq9pjTAQJ3U8S8rfBqjwHxkGPThWFjzZDQpgMJY0QViLxth6ZKYiwFBo14RdN44U/w==
+
+csx@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/csx/-/csx-10.0.1.tgz#1b94a8297fb9f2a5c158e277a0961a5841d7ea18"
+  integrity sha512-eiumhK/Ke6KpcuaGqCcdfEW+M1R7dJBdsSeQaUq2cVpHXGe3WIQVEL7tlWUmgZlILGdPi7MqrbwXADmZg+uQgA==
+  dependencies:
+    csstype "^2.5.1"
 
 dashdash@^1.12.0:
   version "1.14.1"
@@ -5711,7 +5723,7 @@ typescript@3.7.5:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
   integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
 
-typestyle@2.1.0:
+typestyle@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/typestyle/-/typestyle-2.1.0.tgz#7c5cc567de72cd8bfb686813150b92791aaa7636"
   integrity sha512-6uCYPdG4xWLeEcl9O0GtNFnNGhami+irKiLsXSuvWHC/aTS7wdj49WeikWAKN+xHN3b1hm+9v0svwwgSBhCsNA==

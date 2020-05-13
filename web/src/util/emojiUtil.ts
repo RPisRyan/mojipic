@@ -29,10 +29,10 @@ function availableInVersion(emoji: Emoji, maxVersion: string) {
 }
 
 function compareVersions(a: string, b: string) {
-  return stringToInt(a) - stringToInt(b)
+  return versionStringToInt(a) - versionStringToInt(b)
 }
 
-function stringToInt(versionString: string): number {
+function versionStringToInt(versionString: string): number {
   if (!versionString) {
     return 0
   }
