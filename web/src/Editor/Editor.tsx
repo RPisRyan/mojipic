@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import produce from 'immer'
+import * as csstips from 'csstips'
 import { Picker, NimblePicker, BaseEmoji, Data } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 
@@ -7,6 +8,8 @@ import { Display } from './Display'
 import { style } from 'typestyle'
 import { Stack, StackLine, CharacterEvent } from '../models'
 import { getEmojiData } from '../util/emojiUtil'
+import SymbolCursor from './SymbolCursor'
+import { NestedCSSProperties } from 'typestyle/lib/types'
 
 interface Props {
   initialStack?: Stack
@@ -48,10 +51,18 @@ export default function Editor(props: Props) {
     })
     setStack(nextState)
   }
+
+  const rootStyle: NestedCSSProperties = {
+    ...csstips.flex,
+  }
+
   return (
-    <div>
+    <div className={style(rootStyle)}>
       <h3>Click on a stack slot to change</h3>
+
+      {/* <SymbolCursor cursor={brush}> */}
       <Display stack={stack} onCharacterClick={handleCharacterClick} />
+      {/* </SymbolCursor> */}
 
       <h3>Brush</h3>
       <input

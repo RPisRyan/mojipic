@@ -1,13 +1,16 @@
 import React from 'react'
+import * as csstips from 'csstips'
 import { style } from 'typestyle'
 import { toFullWidth } from '../util/charUtil'
 import { Stack, CharacterEvent } from '../models'
+import { NestedCSSProperties } from 'typestyle/lib/types'
 
-const displayStyle = style({
+const staticStyle: NestedCSSProperties = {
   fontFamily: 'monospace',
   fontSize: '48px',
-  cursor: 'pointer',
-})
+  // cursor: 'pointer',
+  ...csstips.content,
+}
 
 interface Props {
   stack: Stack
@@ -16,7 +19,7 @@ interface Props {
 
 export function Display(props: Props) {
   const lineElements = props.stack.lines.map((line, lineIndex) => (
-    <div key={`l-${lineIndex}`} className={displayStyle}>
+    <div key={`l-${lineIndex}`} className={style(staticStyle)}>
       {line.characters.map((character, charIndex) => (
         <span
           key={`c-${lineIndex}-${charIndex}`}
