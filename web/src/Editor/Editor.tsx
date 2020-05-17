@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, PropsWithChildren } from 'react'
 import produce from 'immer'
 import * as csstips from 'csstips'
 import { Picker, NimblePicker, BaseEmoji, Data } from 'emoji-mart'
@@ -6,6 +6,7 @@ import 'emoji-mart/css/emoji-mart.css'
 import copy from 'copy-to-clipboard'
 import GraphemeSplitter from 'grapheme-splitter'
 
+import { If } from '../util/reactUtil'
 import { Display } from './Display'
 import { style } from 'typestyle'
 import { Stack, StackLine, CharacterEvent } from '../models'
@@ -13,12 +14,15 @@ import { getEmojiData } from '../util/emojiUtil'
 import { stackToText } from '../util/charUtil'
 import SymbolCursor from './SymbolCursor'
 import { NestedCSSProperties } from 'typestyle/lib/types'
+import { isMobileDevice } from '../util/browserUtil'
 
 interface Props {
   initialStack?: Stack
 }
 
 const emojiData = getEmojiData('11.0')
+
+const isMobile = isMobileDevice()
 
 const defaultStackRaw = `☀️🌫🌦
 🌫⛈🌈
@@ -72,8 +76,6 @@ export default function Editor(props: Props) {
       <h3>💫 Mojistack 💫</h3>
       <p>Click on the table to change it. Copy and paste where you like!</p>
 
-      {/* <SymbolCursor cursor={brush}> */}
-
       <div style={{ display: 'flex' }}>
         <Display
           stack={stack}
@@ -118,9 +120,11 @@ export default function Editor(props: Props) {
         }}
       />
 
-      <div>
-        (MacOS tip: Hit Command-Ctrl-Space for emoji keyboard)
-      </div>
+      <If when={!isMobile}>
+        <div>
+          (MacOS tip: Hit Command-Ctrl-Space for emoji keyboard)
+        </div>
+      </If>
 
       {/* <h3>Select brush</h3>
       <div>
