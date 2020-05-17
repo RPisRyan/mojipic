@@ -68,8 +68,8 @@ export default function Editor(props: Props) {
       <input
         type="text"
         className={inputStyle}
-        size={1}
-        maxLength={1}
+        // size={2}
+        maxLength={6}
         width="1em"
         value={brush}
         onChange={(ev) => setBrush(ev.target.value)}
