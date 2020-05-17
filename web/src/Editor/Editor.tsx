@@ -69,8 +69,8 @@ export default function Editor(props: Props) {
         type="text"
         className={inputStyle}
         defaultValue={brush}
-        // size={2}
-        maxLength={6}
+        size={2}
+        maxLength={2}
         width="1em"
         onChange={(ev) => { 
           console.log('selected', ev)
