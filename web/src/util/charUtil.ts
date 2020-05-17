@@ -15,5 +15,6 @@ export function toFullWidth(text: string) {
 }
 
 export function stackToText(stack: Stack) {
-  return stack.lines.map(line => line.characters.join()).join('\n')
+  return stack.lines.map(line => 
+    line.characters.join('')).join('\n').trim()
 }

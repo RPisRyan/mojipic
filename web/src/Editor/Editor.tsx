@@ -4,6 +4,7 @@ import * as csstips from 'csstips'
 import { Picker, NimblePicker, BaseEmoji, Data } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 import copy from 'copy-to-clipboard'
+import GraphemeSplitter from 'grapheme-splitter'
 
 import { Display } from './Display'
 import { style } from 'typestyle'
@@ -19,17 +20,20 @@ interface Props {
 
 const emojiData = getEmojiData('11.0')
 
-const defaultStackRaw = `
-abc
-ＤＥＦ
-✨☁😌`
+const defaultStackRaw = `☀️🌫🌦
+🌫⛈🌈
+🌧🌈💰`
+
+const splitter = new GraphemeSplitter()
 
 const defaultStack: Stack = {
   lines: defaultStackRaw.split('\n').map(
-    (line) =>
-      ({
-        characters: line.split(''),
-      } as StackLine),
+    (line) => {
+      const characters = splitter.splitGraphemes(line.trim())
+      return {
+        characters
+      } as StackLine
+    }
   ),
 }
 
@@ -44,34 +48,42 @@ export default function Editor(props: Props) {
   const [copied, setCopied] = useState<boolean>()
   const [stack, setStack] = useState<Stack>(props.initialStack || defaultStack)
   const [brush, setBrush] = useState<string>('😇')
-  const handlePickerSelect = (emoji: BaseEmoji) => {
-    console.log(emoji)
-    setBrush(emoji.native)
-  }
+  // const handlePickerSelect = (emoji: BaseEmoji) => {
+  //   console.log(emoji)
+  //   setBrush(emoji.native)
+  // }
   const handleCharacterClick = (event: CharacterEvent) => {
+    console.log('character click', event)
     const nextState = produce(stack, (draft) => {
       draft.lines[event.position[0]].characters[event.position[1]] = brush
     })
+    console.log('stack is', nextState)
     setStack(nextState)
     setCopied(false)
   }
 
   const rootStyle: NestedCSSProperties = {
+    cursor: 'pointer',
     ...csstips.flex,
   }
 
   return (
     <div className={style(rootStyle)}>
-      <h3>Click on a stack slot to change</h3>
+      <h3>💫 Mojistack 💫</h3>
+      <p>Click on the table to change it. Copy and paste where you like!</p>
 
       {/* <SymbolCursor cursor={brush}> */}
 
       <div style={{ display: 'flex' }}>
-        <Display stack={stack} onCharacterClick={handleCharacterClick} />
+        <Display
+          stack={stack}
+          onCharacterClick={handleCharacterClick} />
         <div>
           <button
             onClick={() => {
-              copy(stackToText(stack), {
+              const text = stackToText(stack)
+              console.log('copying', text)
+              copy(text, {
                 format: "text/plain",
                 onCopy: () => {
                   setCopied(true)
@@ -85,8 +97,6 @@ export default function Editor(props: Props) {
         </div>
       </div>
 
-      {/* </SymbolCursor> */}
-
       <h3>Brush</h3>
       <input
         type="text"
@@ -95,14 +105,22 @@ export default function Editor(props: Props) {
         size={2}
         maxLength={2}
         width="1em"
+        style={{
+          cursor: 'pointer'
+        }}
         onChange={(ev) => {
-          console.log('selected', ev)
-          setBrush(ev.target.value)
+          const value = ev.target.value.trim()
+          console.log('entered', value)
+          setBrush(value)
         }}
         onFocus={event => {
           event.target.select()
         }}
       />
+
+      <div>
+        (MacOS tip: Hit Command-Ctrl-Space for emoji keyboard)
+      </div>
 
       {/* <h3>Select brush</h3>
       <div>
