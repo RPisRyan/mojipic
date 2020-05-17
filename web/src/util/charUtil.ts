@@ -13,3 +13,7 @@ export function toFullWidth(text: string) {
   })
   return chars.join('')
 }
+
+export function stackToText(stack: Stack) {
+  return stack.lines.map(line => line.characters.join()).join('\n')
+}
