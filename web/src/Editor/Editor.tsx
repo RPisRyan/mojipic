@@ -56,7 +56,7 @@ export default function Editor(props: Props) {
   //   console.log(emoji)
   //   setBrush(emoji.native)
   // }
-  const handleCharacterClick = (event: CharacterEvent) => {
+  const handleCharacterPaint = (event: CharacterEvent) => {
     console.log('character click', event)
     const nextState = produce(stack, (draft) => {
       draft.lines[event.position[0]].characters[event.position[1]] = brush
@@ -79,7 +79,9 @@ export default function Editor(props: Props) {
       <div style={{ display: 'flex' }}>
         <Display
           stack={stack}
-          onCharacterClick={handleCharacterClick} />
+          onCharacterClick={handleCharacterPaint}
+          onCharacterPaint={handleCharacterPaint}
+        />
         <div>
           <button
             onClick={() => {
