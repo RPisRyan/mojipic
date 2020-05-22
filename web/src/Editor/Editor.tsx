@@ -15,6 +15,7 @@ import { stackToText } from '../util/charUtil'
 import SymbolCursor from './SymbolCursor'
 import { NestedCSSProperties } from 'typestyle/lib/types'
 import { isMobileDevice } from '../util/browserUtil'
+import PositionedDisplay from './PositionedDisplay'
 
 interface Props {
   initialStack?: Stack
@@ -77,11 +78,13 @@ export default function Editor(props: Props) {
       <p>Click on the table to change it. Copy and paste where you like!</p>
 
       <div style={{ display: 'flex' }}>
-        <Display
+
+        <PositionedDisplay
           stack={stack}
-          onCharacterClick={handleCharacterPaint}
-          onCharacterPaint={handleCharacterPaint}
+          width={300}
+          onCharacterPaint={ev => console.log('paint', ev)}
         />
+
         <div>
           <button
             onClick={() => {
