@@ -43,6 +43,24 @@ export default function PositionedDisplay(props: Props) {
       return
     }
 
+    const handlePaintAction = (x, y) => {
+      // console.log('paintAction', [x, y])
+      const column = Math.floor(x / cellSize)
+      const row = Math.floor(y / cellSize)
+      const value = props.stack.lines[row].characters[column]
+
+      if (column <= columnCount && row <= rowCount) {
+        const onCharacterPaint = characterPaintRef.current
+        onCharacterPaint({
+          position: {
+            column,
+            row
+          },
+          value
+        })
+      }
+    }
+
     console.log('mounting interact')
     interactableRef.current = interact(ref.current)
       .draggable({
@@ -58,24 +76,14 @@ export default function PositionedDisplay(props: Props) {
           })
         ],
         listeners: {
-          move: function (event) {
-            const column = Math.floor(event.client.x / cellSize)
-            const row = Math.floor(event.client.y / cellSize)
-            const value = props.stack.lines[row].characters[column]
-
-            if (column <= columnCount && row <= rowCount) {
-              const onCharacterPaint = characterPaintRef.current
-              onCharacterPaint({
-                position: {
-                  column,
-                  row
-                },
-                value
-              })
-            }
-          }
+          move: event => handlePaintAction(event.client.x, event.client.y),
+          // tap: handlePaintAction
         }
       })
+      .pointerEvents({
+        origin: 'self'
+      })
+      .on('tap', event => handlePaintAction(event.clientX, event.clientY))
 
     return () => {
       console.log('unmounting interact')

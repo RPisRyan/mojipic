@@ -12,6 +12,7 @@ import { stackToText } from '../util/charUtil'
 import { NestedCSSProperties } from 'typestyle/lib/types'
 import { isMobileDevice } from '../util/browserUtil'
 import PositionedDisplay, { CellMouseEvent } from './PositionedDisplay'
+import BrushEntry from './BrushEntry'
 
 interface Props {
   initialStack?: Stack
@@ -22,7 +23,7 @@ interface Props {
 const isMobile = isMobileDevice()
 
 const defaultStackRaw = `☀️🌫🌦
-🌫⛈🌈
+🌫🌧🌈
 🌧🌈💰`
 
 const splitter = new GraphemeSplitter()
@@ -37,13 +38,6 @@ const defaultStack: Stack = {
     }
   ),
 }
-
-const inputStyle = style({
-  border: '10px solid lightgray',
-  fontSize: '64px',
-  padding: '4px',
-  textAlign: 'center',
-})
 
 export default function Editor(props: Props) {
   const [copied, setCopied] = useState<boolean>()
@@ -76,7 +70,7 @@ export default function Editor(props: Props) {
 
         <PositionedDisplay
           stack={stack}
-          width={300}
+          width={200}
           onCharacterPaint={handleCharacterPaint}
         />
 
@@ -100,25 +94,7 @@ export default function Editor(props: Props) {
       </div>
 
       <h3>Brush</h3>
-      <input
-        type="text"
-        className={inputStyle}
-        defaultValue={brush}
-        size={2}
-        maxLength={2}
-        width="1em"
-        style={{
-          cursor: 'pointer'
-        }}
-        onChange={(ev) => {
-          const value = ev.target.value.trim()
-          console.log('entered', value)
-          setBrush(value)
-        }}
-        onFocus={event => {
-          event.target.select()
-        }}
-      />
+      <BrushEntry brush={brush} setBrush={setBrush} />
 
       <If when={!isMobile}>
         <div>
@@ -133,5 +109,3 @@ export default function Editor(props: Props) {
     </div>
   )
 }
-
-

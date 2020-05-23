@@ -6745,6 +6745,24 @@ function PositionedDisplay(props) {
       return;
     }
 
+    var handlePaintAction = function handlePaintAction(x, y) {
+      // console.log('paintAction', [x, y])
+      var column = Math.floor(x / cellSize);
+      var row = Math.floor(y / cellSize);
+      var value = props.stack.lines[row].characters[column];
+
+      if (column <= columnCount && row <= rowCount) {
+        var onCharacterPaint = characterPaintRef.current;
+        onCharacterPaint({
+          position: {
+            column: column,
+            row: row
+          },
+          value: value
+        });
+      }
+    };
+
     console.log('mounting interact');
     interactableRef.current = (0, _interactjs.default)(ref.current).draggable({
       origin: 'self',
@@ -6756,22 +6774,13 @@ function PositionedDisplay(props) {
       })],
       listeners: {
         move: function move(event) {
-          var column = Math.floor(event.client.x / cellSize);
-          var row = Math.floor(event.client.y / cellSize);
-          var value = props.stack.lines[row].characters[column];
-
-          if (column <= columnCount && row <= rowCount) {
-            var onCharacterPaint = characterPaintRef.current;
-            onCharacterPaint({
-              position: {
-                column: column,
-                row: row
-              },
-              value: value
-            });
-          }
+          return handlePaintAction(event.client.x, event.client.y);
         }
       }
+    }).pointerEvents({
+      origin: 'self'
+    }).on('tap', function (event) {
+      return handlePaintAction(event.clientX, event.clientY);
     });
     return function () {
       var _a;
@@ -6833,7 +6842,56 @@ function renderCells(stack, width, cellSize) {
     });
   });
 }
-},{"react":"n8MK","csx":"O5kx","typestyle":"oehJ","interactjs":"kJvX"}],"qv5k":[function(require,module,exports) {
+},{"react":"n8MK","csx":"O5kx","typestyle":"oehJ","interactjs":"kJvX"}],"gTij":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = BrushEntry;
+
+var _typestyle = require("typestyle");
+
+var _react = _interopRequireWildcard(require("react"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var inputStyle = (0, _typestyle.style)({
+  border: '10px solid lightgray',
+  fontSize: '64px',
+  padding: '4px',
+  textAlign: 'center'
+});
+
+function BrushEntry(props) {
+  var ref = (0, _react.useRef)();
+  return _react.default.createElement("input", {
+    type: "text",
+    ref: ref,
+    className: inputStyle,
+    defaultValue: props.brush,
+    size: 2,
+    maxLength: 2,
+    width: "1em",
+    style: {
+      cursor: 'pointer'
+    },
+    onChange: function onChange(ev) {
+      var _a;
+
+      var value = ev.target.value.trim();
+      console.log('entered', value);
+      props.setBrush(value);
+      (_a = ref.current) === null || _a === void 0 ? void 0 : _a.blur();
+    },
+    onFocus: function onFocus(event) {
+      event.target.select();
+    }
+  });
+}
+},{"typestyle":"oehJ","react":"n8MK"}],"qv5k":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6863,6 +6921,8 @@ var _browserUtil = require("../util/browserUtil");
 
 var _PositionedDisplay = _interopRequireDefault(require("./PositionedDisplay"));
 
+var _BrushEntry = _interopRequireDefault(require("./BrushEntry"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -6887,7 +6947,7 @@ var __assign = void 0 && (void 0).__assign || function () {
 
 // const emojiData = getEmojiData('11.0')
 var isMobile = (0, _browserUtil.isMobileDevice)();
-var defaultStackRaw = "\u2600\uFE0F\uD83C\uDF2B\uD83C\uDF26\n\uD83C\uDF2B\u26C8\uD83C\uDF08\n\uD83C\uDF27\uD83C\uDF08\uD83D\uDCB0";
+var defaultStackRaw = "\u2600\uFE0F\uD83C\uDF2B\uD83C\uDF26\n\uD83C\uDF2B\uD83C\uDF27\uD83C\uDF08\n\uD83C\uDF27\uD83C\uDF08\uD83D\uDCB0";
 var splitter = new _graphemeSplitter.default();
 var defaultStack = {
   lines: defaultStackRaw.split('\n').map(function (line) {
@@ -6897,12 +6957,6 @@ var defaultStack = {
     };
   })
 };
-var inputStyle = (0, _typestyle.style)({
-  border: '10px solid lightgray',
-  fontSize: '64px',
-  padding: '4px',
-  textAlign: 'center'
-});
 
 function Editor(props) {
   var _a = (0, _react.useState)(),
@@ -6939,7 +6993,7 @@ function Editor(props) {
     }
   }, _react.default.createElement(_PositionedDisplay.default, {
     stack: stack,
-    width: 300,
+    width: 200,
     onCharacterPaint: handleCharacterPaint
   }), _react.default.createElement("div", null, _react.default.createElement("button", {
     onClick: function onClick() {
@@ -6952,29 +7006,14 @@ function Editor(props) {
         }
       });
     }
-  }, "Copy to clipboard", copied && _react.default.createElement("span", null, "- done!")))), _react.default.createElement("h3", null, "Brush"), _react.default.createElement("input", {
-    type: "text",
-    className: inputStyle,
-    defaultValue: brush,
-    size: 2,
-    maxLength: 2,
-    width: "1em",
-    style: {
-      cursor: 'pointer'
-    },
-    onChange: function onChange(ev) {
-      var value = ev.target.value.trim();
-      console.log('entered', value);
-      setBrush(value);
-    },
-    onFocus: function onFocus(event) {
-      event.target.select();
-    }
+  }, "Copy to clipboard", copied && _react.default.createElement("span", null, "- done!")))), _react.default.createElement("h3", null, "Brush"), _react.default.createElement(_BrushEntry.default, {
+    brush: brush,
+    setBrush: setBrush
   }), _react.default.createElement(_reactUtil.If, {
     when: !isMobile
   }, _react.default.createElement("div", null, "(MacOS tip: Hit Command-Ctrl-Space for emoji keyboard)")));
 }
-},{"react":"n8MK","immer":"SSrD","csstips":"pm94","emoji-mart/css/emoji-mart.css":"o6es","copy-to-clipboard":"xbqV","grapheme-splitter":"dWiE","typestyle":"oehJ","../util/reactUtil":"z0em","../util/charUtil":"lqYF","../util/browserUtil":"frOy","./PositionedDisplay":"vM5Z"}],"R3v4":[function(require,module,exports) {
+},{"react":"n8MK","immer":"SSrD","csstips":"pm94","emoji-mart/css/emoji-mart.css":"o6es","copy-to-clipboard":"xbqV","grapheme-splitter":"dWiE","typestyle":"oehJ","../util/reactUtil":"z0em","../util/charUtil":"lqYF","../util/browserUtil":"frOy","./PositionedDisplay":"vM5Z","./BrushEntry":"gTij"}],"R3v4":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7013,4 +7052,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var rootElement = document.getElementById('root');
 (0, _reactDom.render)(React.createElement(_App.default, null), rootElement);
 },{"react":"n8MK","react-dom":"NKHc","./App":"R3v4"}]},{},["wGC4"], null)
-//# sourceMappingURL=src.050dc56f.js.map
+//# sourceMappingURL=src.63855c87.js.map

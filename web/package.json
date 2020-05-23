@@ -33,6 +33,7 @@
   "scripts": {
     "start": "parcel public/index.html",
     "build": "parcel build public/index.html --out-dir ../docs --no-minify --public-url ./",
+    "prebuild": "rm -rf ../docs",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
   },
   "browserslist": [
