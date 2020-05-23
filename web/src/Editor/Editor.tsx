@@ -1,27 +1,23 @@
-import React, { useState, PropsWithChildren } from 'react'
+import React, { useState } from 'react'
 import produce from 'immer'
 import * as csstips from 'csstips'
-import { Picker, NimblePicker, BaseEmoji, Data } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 import copy from 'copy-to-clipboard'
 import GraphemeSplitter from 'grapheme-splitter'
+import { style } from 'typestyle'
 
 import { If } from '../util/reactUtil'
-import { Display } from './Display'
-import { style } from 'typestyle'
 import { Stack, StackLine, CharacterEvent } from '../models'
-import { getEmojiData } from '../util/emojiUtil'
 import { stackToText } from '../util/charUtil'
-import SymbolCursor from './SymbolCursor'
 import { NestedCSSProperties } from 'typestyle/lib/types'
 import { isMobileDevice } from '../util/browserUtil'
-import PositionedDisplay from './PositionedDisplay'
+import PositionedDisplay, { CellMouseEvent } from './PositionedDisplay'
 
 interface Props {
   initialStack?: Stack
 }
 
-const emojiData = getEmojiData('11.0')
+// const emojiData = getEmojiData('11.0')
 
 const isMobile = isMobileDevice()
 
@@ -53,18 +49,17 @@ export default function Editor(props: Props) {
   const [copied, setCopied] = useState<boolean>()
   const [stack, setStack] = useState<Stack>(props.initialStack || defaultStack)
   const [brush, setBrush] = useState<string>('😇')
-  // const handlePickerSelect = (emoji: BaseEmoji) => {
-  //   console.log(emoji)
-  //   setBrush(emoji.native)
-  // }
-  const handleCharacterPaint = (event: CharacterEvent) => {
-    console.log('character click', event)
-    const nextState = produce(stack, (draft) => {
-      draft.lines[event.position[0]].characters[event.position[1]] = brush
-    })
-    console.log('stack is', nextState)
-    setStack(nextState)
-    setCopied(false)
+
+  const handleCharacterPaint = (event: CellMouseEvent) => {
+    if (event.value !== brush) {
+      setStack(state =>
+        produce(state, (draft) => {
+          draft
+            .lines[event.position.row]
+            .characters[event.position.column] = brush
+        })
+      )
+    }
   }
 
   const rootStyle: NestedCSSProperties = {
@@ -82,7 +77,7 @@ export default function Editor(props: Props) {
         <PositionedDisplay
           stack={stack}
           width={300}
-          onCharacterPaint={ev => console.log('paint', ev)}
+          onCharacterPaint={handleCharacterPaint}
         />
 
         <div>
@@ -138,3 +133,5 @@ export default function Editor(props: Props) {
     </div>
   )
 }
+
+
