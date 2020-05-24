@@ -1,3 +1,5 @@
+import { CellStack } from "../models"
+
 const latinChars =
   '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&()*+,-./:;<=>?@[]^_`{|}~'
 const fullWidthLatinChars =
@@ -14,7 +16,11 @@ export function toFullWidth(text: string) {
   return chars.join('')
 }
 
-export function stackToText(stack: Stack) {
-  return stack.lines.map(line => 
-    line.characters.join('')).join('\n').trim()
+export function stackToText(stack: CellStack) {
+  return stack.rows.map(line =>
+    line.cells.map(it => it.character || '＿')
+      .join('')
+  )
+    .join('\n')
+    .trim()
 }

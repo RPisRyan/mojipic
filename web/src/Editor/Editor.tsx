@@ -6,8 +6,7 @@ import copy from 'copy-to-clipboard'
 import GraphemeSplitter from 'grapheme-splitter'
 import { style } from 'typestyle'
 
-import { If } from '../util/reactUtil'
-import { Stack, StackLine, CharacterEvent } from '../models'
+import { CellStack, Cell, CharacterEvent, CellRow } from '../models'
 import { stackToText } from '../util/charUtil'
 import { NestedCSSProperties } from 'typestyle/lib/types'
 import { isMobileDevice } from '../util/browserUtil'
@@ -15,45 +14,50 @@ import PositionedDisplay, { CellMouseEvent } from './PositionedDisplay'
 import BrushEntry from './BrushEntry'
 
 interface Props {
-  initialStack?: Stack
+  initialStack?: CellStack
 }
+
+// const largeSize = 
 
 // const emojiData = getEmojiData('11.0')
 
 const isMobile = isMobileDevice()
 
-const defaultStackRaw = `☀️🌫🌦
+const defaultStackRaw = `☀️🌫👍🏿
 🌫🌧🌈
 🌧🌈💰`
 
 const splitter = new GraphemeSplitter()
 
-const defaultStack: Stack = {
-  lines: defaultStackRaw.split('\n').map(
-    (line) => {
-      const characters = splitter.splitGraphemes(line.trim())
-      return {
-        characters
-      } as StackLine
-    }
-  ),
+const defaultStack: CellStack = {
+  rows: defaultStackRaw.split('\n')
+    .map(rowChars => ({
+      cells: splitter.splitGraphemes(rowChars.trim())
+        .map((character) => ({ character }))
+    }))
 }
 
 export default function Editor(props: Props) {
   const [copied, setCopied] = useState<boolean>()
-  const [stack, setStack] = useState<Stack>(props.initialStack || defaultStack)
+  const [stack, setStack] = useState<CellStack>(props.initialStack || defaultStack)
   const [brush, setBrush] = useState<string>('😇')
 
   const handleCharacterPaint = (event: CellMouseEvent) => {
-    if (event.value !== brush) {
+    if (event.character !== brush) {
       setStack(state =>
         produce(state, (draft) => {
-          draft
-            .lines[event.position.row]
-            .characters[event.position.column] = brush
+          const row = draft
+            .rows[event.position.row]
+          const cell = row && row
+            .cells[event.position.col]
+          if (cell) cell.character = brush
         })
       )
     }
+  }
+
+  const handleExpandClick = () => {
+    setStack(current => tap(sizedStack(current, 5, 8)))
   }
 
   const rootStyle: NestedCSSProperties = {
@@ -66,11 +70,10 @@ export default function Editor(props: Props) {
       <h3>💫 Mojistack 💫</h3>
       <p>Click on the table to change it. Copy and paste where you like!</p>
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ maxWidth: '500px' }}>
 
         <PositionedDisplay
           stack={stack}
-          width={200}
           onCharacterPaint={handleCharacterPaint}
         />
 
@@ -90,17 +93,21 @@ export default function Editor(props: Props) {
             Copy to clipboard
           {copied && <span>- done!</span>}
           </button>
+
+          <button onClick={handleExpandClick}>
+            Expand
+          </button>
         </div>
       </div>
 
       <h3>Brush</h3>
       <BrushEntry brush={brush} setBrush={setBrush} />
 
-      <If when={!isMobile}>
+      {isMobile &&
         <div>
           (MacOS tip: Hit Command-Ctrl-Space for emoji keyboard)
         </div>
-      </If>
+      }
 
       {/* <h3>Select brush</h3>
       <div>
@@ -108,4 +115,54 @@ export default function Editor(props: Props) {
       </div> */}
     </div>
   )
+}
+
+function sizedStack(stack: CellStack, rowCount: number, colCount: number): CellStack {
+  const diff = rowCount - stack.rows.length
+  if (diff <= 0) {
+    return {
+      rows: stack.rows.slice(Math.abs(diff))
+        .map(row => sizedRow(row, colCount))
+    }
+  } else {
+    return {
+      rows: [
+        ...emptyArray(diff).map(() =>
+          ({
+            cells: emptyCells(colCount)
+          })),
+        ...stack.rows
+          .map(row => sizedRow(row, colCount))
+      ]
+    }
+  }
+}
+console.log(emptyCells(10))
+
+function sizedRow(row: CellRow, colCount: number) {
+  const diff = colCount - row.cells.length
+  if (diff < 0) {
+    return {
+      cells: [...row.cells.slice(0, colCount - 1)]
+    }
+  } else if (diff > 0) {
+    return {
+      cells: [...row.cells, ...emptyCells(diff)]
+    }
+  }
+  return row
+}
+
+function emptyCells(width: number): Cell[] {
+  return emptyArray(width).map(
+    () => ({ character: null }))
+}
+
+function emptyArray(length: number) {
+  return [...Array(length)]
+}
+
+function tap<T>(t: T): T {
+  console.log('tap', t)
+  return t
 }

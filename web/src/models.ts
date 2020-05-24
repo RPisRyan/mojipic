@@ -1,12 +1,28 @@
-export interface Stack {
-  lines: StackLine[]
+export interface CellStack {
+  rows: CellRow[]
 }
 
-export interface StackLine {
-  characters: string[]
+export interface CellRow {
+  cells: Cell[]
+}
+
+export interface Cell {
+  character: string
+}
+
+export interface CellPosition {
+  row: number
+  col: number
 }
 
 export interface CharacterEvent {
-  value: string
-  position: number[]
+  character: string
+  position: Position
+}
+
+export function stackStats(stack: CellStack) {
+  return {
+    rowCount: stack.rows.length,
+    colCount: Math.max(...stack.rows.map(it => it.cells.length))
+  }
 }

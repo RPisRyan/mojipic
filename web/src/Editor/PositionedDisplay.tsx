@@ -1,64 +1,60 @@
-import React, { useRef, useEffect } from 'react'
-import { px } from 'csx'
+import React, { useRef, useEffect, useState } from 'react'
+import { px, percent } from 'csx'
 import { style } from "typestyle"
 import interact from 'interactjs'
 import Interact from '@interactjs/types/index'
+import useMeasure from 'react-use-measure'
 
-import { Stack } from "../models"
+import { CellStack, CellPosition, stackStats } from "../models"
 
 interface Props {
-  stack: Stack
-  width?: number
+  stack: CellStack
   onCharacterPaint: (ev: CellMouseEvent) => void
 }
 
-type Position = {
-  row: number
-  column: number
-}
-
 export type CellMouseEvent = {
-  position: Position
-  value: string
+  position: CellPosition
+  character: string
 }
 
 export default function PositionedDisplay(props: Props) {
-  const { width = 200 } = props
-  const columnCount = props.stack.lines[0].characters.length
-  const rowCount = props.stack.lines.length
-  const cellSize = width / columnCount
-
-  const ref = useRef()
+  const [measureRef, bounds] = useMeasure()
+  const ref = useRef<HTMLDivElement>(undefined)
   const interactableRef = useRef(null)
 
-  // Interactable captures stale callback
+  const { rowCount, colCount } = stackStats(props.stack)
+  const cellSize = bounds.width / colCount
+
+  // Interactable object captures stale callback
   // There must be a more elegant way to fix it!
-  const characterPaintRef = useRef<any>()
+  const handlePaintActionRef = useRef<any>()
   useEffect(() => {
-    characterPaintRef.current = props.onCharacterPaint
-  }, [props.onCharacterPaint])
+    handlePaintActionRef.current = (x, y) => {
+      if (!cellSize) {
+        return
+      }
 
-  useEffect(() => {
-    if (interactableRef.current) {
-      return
-    }
-
-    const handlePaintAction = (x, y) => {
-      // console.log('paintAction', [x, y])
-      const column = Math.floor(x / cellSize)
       const row = Math.floor(y / cellSize)
-      const value = props.stack.lines[row].characters[column]
+      const col = Math.floor(x / cellSize)
+      console.log('paint', { row, col })
 
-      if (column <= columnCount && row <= rowCount) {
-        const onCharacterPaint = characterPaintRef.current
-        onCharacterPaint({
-          position: {
-            column,
-            row
-          },
-          value
+      if (col >= 0 && col <= colCount
+        && row >= 0 && row <= rowCount) {
+        const cell = props.stack.rows[row].cells[col]
+        props.onCharacterPaint({
+          position: { row, col },
+          character: cell.character
         })
       }
+    }
+  }, [cellSize, rowCount, colCount])
+
+  useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+    if (interactableRef.current) {
+      return
     }
 
     console.log('mounting interact')
@@ -76,14 +72,15 @@ export default function PositionedDisplay(props: Props) {
           })
         ],
         listeners: {
-          move: event => handlePaintAction(event.client.x, event.client.y),
-          // tap: handlePaintAction
+          move: event => handlePaintActionRef.current(
+            event.client.x, event.client.y),
         }
       })
       .pointerEvents({
         origin: 'self'
       })
-      .on('tap', event => handlePaintAction(event.clientX, event.clientY))
+      .on('tap', event => handlePaintActionRef.current(
+        event.clientX, event.clientY))
 
     return () => {
       console.log('unmounting interact')
@@ -97,35 +94,40 @@ export default function PositionedDisplay(props: Props) {
     fontFamily: 'monospace',
     fontSize: '48px',
     cursor: 'pointer',
-    width: px(width),
-    height: px(columnCount * cellSize),
+    minWidth: '200px',
+    width: '100%',
+    height: px(rowCount * cellSize),
     touchAction: 'none'
   })
 
-  return <div className={outerStyle} ref={ref}>
-    {renderCells(props.stack, width, cellSize)}
+  return <div className={outerStyle} ref={it => {
+    ref.current = it
+    measureRef(it)
+  }}>
+    {renderCells(props.stack, cellSize)}
   </div>
 }
 
-function renderCells(stack: Stack, width: number, cellSize: number) {
+function renderCells(stack: CellStack, cellSize: number) {
+  const { rowCount, colCount } = stackStats(stack)
   const cellStyle = style({
     position: 'absolute',
     display: 'table-cell',
     textAlign: 'center',
-    width: px(cellSize),
-    height: px(cellSize),
+    width: percent(100 / colCount),
+    height: percent(100 / rowCount),
     fontSize: px(Math.floor(cellSize * 0.9)),
     pointerEvents: 'none'
   })
 
   const Cell = (props: {
-    position: Position
+    position: CellPosition
     children: string
   }) => {
-    const { row, column } = props.position
+    const { row, col } = props.position
     const itemStyle: React.CSSProperties = {
-      left: px(column * cellSize),
-      top: px(row * cellSize)
+      left: percent(col / colCount * 100),
+      top: percent(row / rowCount * 100)
     }
     return <div
       className={cellStyle}
@@ -135,10 +137,10 @@ function renderCells(stack: Stack, width: number, cellSize: number) {
     </div>
   }
 
-  return stack.lines.map((line, row) =>
-    line.characters.map((char, column) =>
-      <Cell position={{ row, column }} key={`${row}.${column}`}>
-        {char}
+  return stack.rows.map((line, row) =>
+    line.cells.map((cell, col) =>
+      <Cell position={{ row, col }} key={`${row}.${col}`}>
+        {cell?.character || '＿'}
       </Cell>
     )
   )

@@ -21,7 +21,7 @@ export default function BrushEntry(props: Props) {
     className={inputStyle}
     defaultValue={props.brush}
     size={2}
-    maxLength={2}
+    maxLength={4}
     width="1em"
     style={{
       cursor: 'pointer'
