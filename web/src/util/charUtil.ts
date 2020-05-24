@@ -5,6 +5,8 @@ const latinChars =
 const fullWidthLatinChars =
   '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～'
 
+export const blankChar = '⬜️'
+
 export function toFullWidth(text: string) {
   const chars = text.split('').map(c => {
     const idx = latinChars.indexOf(c)
@@ -18,7 +20,7 @@ export function toFullWidth(text: string) {
 
 export function stackToText(stack: CellStack) {
   return stack.rows.map(line =>
-    line.cells.map(it => it.character || '＿')
+    line.cells.map(it => it.character || blankChar)
       .join('')
   )
     .join('\n')

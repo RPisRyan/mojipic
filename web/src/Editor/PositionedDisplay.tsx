@@ -6,6 +6,7 @@ import Interact from '@interactjs/types/index'
 import useMeasure from 'react-use-measure'
 
 import { CellStack, CellPosition, stackStats } from "../models"
+import { blankChar } from '../util/charUtil'
 
 interface Props {
   stack: CellStack
@@ -26,7 +27,6 @@ export default function PositionedDisplay(props: Props) {
   const cellSize = bounds.width / colCount
 
   // Interactable object captures stale callback
-  // There must be a more elegant way to fix it!
   const handlePaintActionRef = useRef<any>()
   useEffect(() => {
     handlePaintActionRef.current = (x, y) => {
@@ -36,7 +36,6 @@ export default function PositionedDisplay(props: Props) {
 
       const row = Math.floor(y / cellSize)
       const col = Math.floor(x / cellSize)
-      console.log('paint', { row, col })
 
       if (col >= 0 && col <= colCount
         && row >= 0 && row <= rowCount) {
@@ -47,7 +46,7 @@ export default function PositionedDisplay(props: Props) {
         })
       }
     }
-  }, [cellSize, rowCount, colCount])
+  }, [cellSize, rowCount, colCount, props.onCharacterPaint])
 
   useEffect(() => {
     if (!ref.current) {
@@ -140,7 +139,7 @@ function renderCells(stack: CellStack, cellSize: number) {
   return stack.rows.map((line, row) =>
     line.cells.map((cell, col) =>
       <Cell position={{ row, col }} key={`${row}.${col}`}>
-        {cell?.character || '＿'}
+        {cell?.character || blankChar}
       </Cell>
     )
   )

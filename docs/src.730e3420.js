@@ -5547,8 +5547,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.toFullWidth = toFullWidth;
 exports.stackToText = stackToText;
+exports.blankChar = void 0;
 var latinChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&()*+,-./:;<=>?@[]^_`{|}~';
 var fullWidthLatinChars = '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～';
+var blankChar = '⬜️';
+exports.blankChar = blankChar;
 
 function toFullWidth(text) {
   var chars = text.split('').map(function (c) {
@@ -5566,7 +5569,7 @@ function toFullWidth(text) {
 function stackToText(stack) {
   return stack.rows.map(function (line) {
     return line.cells.map(function (it) {
-      return it.character || '＿';
+      return it.character || blankChar;
     }).join('');
   }).join('\n').trim();
 }
@@ -6984,6 +6987,8 @@ var _reactUseMeasure = _interopRequireDefault(require("react-use-measure"));
 
 var _models = require("../models");
 
+var _charUtil = require("../util/charUtil");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -7004,7 +7009,6 @@ function PositionedDisplay(props) {
       colCount = _b.colCount;
 
   var cellSize = bounds.width / colCount; // Interactable object captures stale callback
-  // There must be a more elegant way to fix it!
 
   var handlePaintActionRef = (0, _react.useRef)();
   (0, _react.useEffect)(function () {
@@ -7015,10 +7019,6 @@ function PositionedDisplay(props) {
 
       var row = Math.floor(y / cellSize);
       var col = Math.floor(x / cellSize);
-      console.log('paint', {
-        row: row,
-        col: col
-      });
 
       if (col >= 0 && col <= colCount && row >= 0 && row <= rowCount) {
         var cell = props.stack.rows[row].cells[col];
@@ -7031,7 +7031,7 @@ function PositionedDisplay(props) {
         });
       }
     };
-  }, [cellSize, rowCount, colCount]);
+  }, [cellSize, rowCount, colCount, props.onCharacterPaint]);
   (0, _react.useEffect)(function () {
     if (!_ref.current) {
       return;
@@ -7126,11 +7126,11 @@ function renderCells(stack, cellSize) {
           col: col
         },
         key: row + "." + col
-      }, ((_a = cell) === null || _a === void 0 ? void 0 : _a.character) || '＿');
+      }, ((_a = cell) === null || _a === void 0 ? void 0 : _a.character) || _charUtil.blankChar);
     });
   });
 }
-},{"react":"n8MK","csx":"O5kx","typestyle":"oehJ","interactjs":"kJvX","react-use-measure":"kBdr","../models":"ox9z"}],"gTij":[function(require,module,exports) {
+},{"react":"n8MK","csx":"O5kx","typestyle":"oehJ","interactjs":"kJvX","react-use-measure":"kBdr","../models":"ox9z","../util/charUtil":"lqYF"}],"gTij":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7420,4 +7420,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var rootElement = document.getElementById('root');
 (0, _reactDom.render)(React.createElement(_App.default, null), rootElement);
 },{"react":"n8MK","react-dom":"NKHc","./App":"R3v4"}]},{},["wGC4"], null)
-//# sourceMappingURL=src.1beae9aa.js.map
+//# sourceMappingURL=src.730e3420.js.map
