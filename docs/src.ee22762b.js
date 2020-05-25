@@ -6927,7 +6927,8 @@ exports.toFullWidth = toFullWidth;
 exports.blankChar = void 0;
 var latinChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&()*+,-./:;<=>?@[]^_`{|}~';
 var fullWidthLatinChars = '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～';
-var blankChar = '  ';
+var blankChar = '  '; // U+2008 U+2003
+
 exports.blankChar = blankChar;
 
 function toFullWidth(text) {
@@ -7290,7 +7291,8 @@ function BrushEntry(props) {
 
       var value = ev.target.value.trim();
       console.log('entered', value);
-      props.setBrush(value);
+      props.setBrush(value); //@ts-ignore <shrug>
+
       (_a = ref.current) === null || _a === void 0 ? void 0 : _a.blur();
     },
     onFocus: function onFocus(event) {
@@ -7485,4 +7487,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var rootElement = document.getElementById('root');
 (0, _reactDom.render)(React.createElement(_App.default, null), rootElement);
 },{"react":"n8MK","react-dom":"NKHc","./App":"R3v4"}]},{},["wGC4"], null)
-//# sourceMappingURL=src.21c0cb3b.js.map
+//# sourceMappingURL=src.ee22762b.js.map

@@ -33,6 +33,7 @@ export default function BrushEntry(props: Props) {
       const value = ev.target.value.trim()
       console.log('entered', value)
       props.setBrush(value)
+      //@ts-ignore <shrug>
       ref.current?.blur()
     }}
     onFocus={event => {
