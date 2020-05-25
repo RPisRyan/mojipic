@@ -5,7 +5,8 @@ const latinChars =
 const fullWidthLatinChars =
   '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～'
 
-export const blankChar = '  ' // U+2008 U+2003
+// export const blankChar = '  ' // U+2008 U+2003
+export const blankChar = '  ' // U+2009 U+2003
 
 export function toFullWidth(text: string) {
   const chars = text.split('').map(c => {
