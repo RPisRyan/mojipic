@@ -26,6 +26,9 @@ export default function BrushEntry(props: Props) {
     style={{
       cursor: 'pointer'
     }}
+    onKeyDown={event => {
+      console.log('keydown', event.which)
+    }}
     onChange={(ev) => {
       const value = ev.target.value.trim()
       console.log('entered', value)

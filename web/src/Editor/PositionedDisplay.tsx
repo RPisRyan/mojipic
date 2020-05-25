@@ -5,8 +5,9 @@ import interact from 'interactjs'
 import Interact from '@interactjs/types/index'
 import useMeasure from 'react-use-measure'
 
-import { CellStack, CellPosition, stackStats } from "../models"
+import { CellStack, CellPosition } from "../models"
 import { blankChar } from '../util/charUtil'
+import { stackStats } from '../util/stackUtil'
 
 interface Props {
   stack: CellStack
@@ -136,8 +137,8 @@ function renderCells(stack: CellStack, cellSize: number) {
     </div>
   }
 
-  return stack.rows.map((line, row) =>
-    line.cells.map((cell, col) =>
+  return stack.rows.slice().map((rowObj, row) =>
+    rowObj.cells.map((cell, col) =>
       <Cell position={{ row, col }} key={`${row}.${col}`}>
         {cell?.character || blankChar}
       </Cell>

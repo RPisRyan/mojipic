@@ -5539,40 +5539,6 @@ if (typeof module != 'undefined' && module.exports) {
     module.exports = GraphemeSplitter;
 }
 
-},{}],"lqYF":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.toFullWidth = toFullWidth;
-exports.stackToText = stackToText;
-exports.blankChar = void 0;
-var latinChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&()*+,-./:;<=>?@[]^_`{|}~';
-var fullWidthLatinChars = '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～';
-var blankChar = '⬜️';
-exports.blankChar = blankChar;
-
-function toFullWidth(text) {
-  var chars = text.split('').map(function (c) {
-    var idx = latinChars.indexOf(c);
-
-    if (idx < 0) {
-      return c;
-    }
-
-    return fullWidthLatinChars[idx];
-  });
-  return chars.join('');
-}
-
-function stackToText(stack) {
-  return stack.rows.map(function (line) {
-    return line.cells.map(function (it) {
-      return it.character || blankChar;
-    }).join('');
-  }).join('\n').trim();
-}
 },{}],"frOy":[function(require,module,exports) {
 "use strict";
 
@@ -6951,13 +6917,163 @@ if (typeof module !== 'undefined' && Object.getOwnPropertyDescriptor && Object.g
 
 var _default = useMeasure;
 exports.default = _default;
-},{"react":"n8MK","debounce":"dLxY"}],"ox9z":[function(require,module,exports) {
+},{"react":"n8MK","debounce":"dLxY"}],"lqYF":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.toFullWidth = toFullWidth;
+exports.blankChar = void 0;
+var latinChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&()*+,-./:;<=>?@[]^_`{|}~';
+var fullWidthLatinChars = '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～';
+var blankChar = '⬜️';
+exports.blankChar = blankChar;
+
+function toFullWidth(text) {
+  var chars = text.split('').map(function (c) {
+    var idx = latinChars.indexOf(c);
+
+    if (idx < 0) {
+      return c;
+    }
+
+    return fullWidthLatinChars[idx];
+  });
+  return chars.join('');
+}
+},{}],"FhYA":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.stackToText = stackToText;
+exports.measureStack = measureStack;
+exports.visitCells = visitCells;
+exports.sizedStack = sizedStack;
+exports.sizedRow = sizedRow;
 exports.stackStats = stackStats;
+
+var _charUtil = require("./charUtil");
+
+var __spreadArrays = void 0 && (void 0).__spreadArrays || function () {
+  for (var s = 0, i = 0, il = arguments.length; i < il; i++) {
+    s += arguments[i].length;
+  }
+
+  for (var r = Array(s), k = 0, i = 0; i < il; i++) {
+    for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) {
+      r[k] = a[j];
+    }
+  }
+
+  return r;
+};
+
+function stackToText(stack) {
+  var _a = measureStack(stack),
+      rowRange = _a.rowRange,
+      colRange = _a.colRange;
+
+  console.log(rowRange, colRange);
+  return stack.rows.slice().slice(rowRange[0], rowRange[1] + 1).map(function (line) {
+    return line.cells.slice(colRange[0], colRange[1] + 1).map(function (it) {
+      return it.character || _charUtil.blankChar;
+    }).join('');
+  }).join('\n').trim();
+}
+
+function measureStack(stack) {
+  var minRow = Number.MAX_SAFE_INTEGER;
+  var maxRow = 0;
+  var minCol = Number.MAX_SAFE_INTEGER;
+  var maxCol = 0;
+  visitCells(stack, function (cell, position) {
+    if (!cell.character) {
+      return;
+    }
+
+    minRow = Math.min(minRow, position.row);
+    maxRow = Math.max(maxRow, position.row);
+    minCol = Math.min(minCol, position.col);
+    maxCol = Math.max(maxCol, position.col);
+  });
+
+  if (minRow > maxRow || minCol > maxCol) {
+    console.error('failed to measure stack', stack);
+    return {
+      rowRange: [0, 0],
+      colRange: [0, 0]
+    };
+  }
+
+  return {
+    rowRange: [minRow, maxRow],
+    colRange: [minCol, maxCol]
+  };
+}
+
+function visitCells(stack, visitor) {
+  stack.rows.forEach(function (row, rowIndex) {
+    return row.cells.forEach(function (cell, colIndex) {
+      return visitor(cell, {
+        row: rowIndex,
+        col: colIndex
+      });
+    });
+  });
+}
+
+function sizedStack(stack, rowCount, colCount) {
+  var diff = rowCount - stack.rows.length;
+
+  if (diff <= 0) {
+    return {
+      rows: stack.rows.slice(Math.abs(diff)).map(function (row) {
+        return sizedRow(row, colCount);
+      })
+    };
+  } else {
+    return {
+      rows: __spreadArrays(emptyArray(diff).map(function () {
+        return {
+          cells: emptyCells(colCount)
+        };
+      }), stack.rows.map(function (row) {
+        return sizedRow(row, colCount);
+      }))
+    };
+  }
+}
+
+function sizedRow(row, colCount) {
+  var diff = colCount - row.cells.length;
+
+  if (diff < 0) {
+    return {
+      cells: __spreadArrays(row.cells.slice(0, colCount - 1))
+    };
+  } else if (diff > 0) {
+    return {
+      cells: __spreadArrays(row.cells, emptyCells(diff))
+    };
+  }
+
+  return row;
+}
+
+function emptyCells(width) {
+  return emptyArray(width).map(function () {
+    return {
+      character: null
+    };
+  });
+}
+
+function emptyArray(length) {
+  return __spreadArrays(Array(length));
+}
 
 function stackStats(stack) {
   return {
@@ -6967,7 +7083,7 @@ function stackStats(stack) {
     }))
   };
 }
-},{}],"vM5Z":[function(require,module,exports) {
+},{"./charUtil":"lqYF"}],"vM5Z":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -6985,9 +7101,9 @@ var _interactjs = _interopRequireDefault(require("interactjs"));
 
 var _reactUseMeasure = _interopRequireDefault(require("react-use-measure"));
 
-var _models = require("../models");
-
 var _charUtil = require("../util/charUtil");
+
+var _stackUtil = require("../util/stackUtil");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7004,7 +7120,7 @@ function PositionedDisplay(props) {
 
   var interactableRef = (0, _react.useRef)(null);
 
-  var _b = (0, _models.stackStats)(props.stack),
+  var _b = (0, _stackUtil.stackStats)(props.stack),
       rowCount = _b.rowCount,
       colCount = _b.colCount;
 
@@ -7088,7 +7204,7 @@ function PositionedDisplay(props) {
 }
 
 function renderCells(stack, cellSize) {
-  var _a = (0, _models.stackStats)(stack),
+  var _a = (0, _stackUtil.stackStats)(stack),
       rowCount = _a.rowCount,
       colCount = _a.colCount;
 
@@ -7116,8 +7232,8 @@ function renderCells(stack, cellSize) {
     }, props.children);
   };
 
-  return stack.rows.map(function (line, row) {
-    return line.cells.map(function (cell, col) {
+  return stack.rows.slice().map(function (rowObj, row) {
+    return rowObj.cells.map(function (cell, col) {
       var _a;
 
       return _react.default.createElement(Cell, {
@@ -7130,7 +7246,7 @@ function renderCells(stack, cellSize) {
     });
   });
 }
-},{"react":"n8MK","csx":"O5kx","typestyle":"oehJ","interactjs":"kJvX","react-use-measure":"kBdr","../models":"ox9z","../util/charUtil":"lqYF"}],"gTij":[function(require,module,exports) {
+},{"react":"n8MK","csx":"O5kx","typestyle":"oehJ","interactjs":"kJvX","react-use-measure":"kBdr","../util/charUtil":"lqYF","../util/stackUtil":"FhYA"}],"gTij":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7166,6 +7282,9 @@ function BrushEntry(props) {
     style: {
       cursor: 'pointer'
     },
+    onKeyDown: function onKeyDown(event) {
+      console.log('keydown', event.which);
+    },
     onChange: function onChange(ev) {
       var _a;
 
@@ -7179,7 +7298,21 @@ function BrushEntry(props) {
     }
   });
 }
-},{"typestyle":"oehJ","react":"n8MK"}],"qv5k":[function(require,module,exports) {
+},{"typestyle":"oehJ","react":"n8MK"}],"Fehl":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.tap = tap;
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function tap(t) {
+  console.log("tap " + _typeof(t), t);
+  return t;
+}
+},{}],"qv5k":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7201,13 +7334,15 @@ var _graphemeSplitter = _interopRequireDefault(require("grapheme-splitter"));
 
 var _typestyle = require("typestyle");
 
-var _charUtil = require("../util/charUtil");
-
 var _browserUtil = require("../util/browserUtil");
 
 var _PositionedDisplay = _interopRequireDefault(require("./PositionedDisplay"));
 
 var _BrushEntry = _interopRequireDefault(require("./BrushEntry"));
+
+var _functionUtil = require("../util/functionUtil");
+
+var _stackUtil = require("../util/stackUtil");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7231,22 +7366,9 @@ var __assign = void 0 && (void 0).__assign || function () {
   return __assign.apply(this, arguments);
 };
 
-var __spreadArrays = void 0 && (void 0).__spreadArrays || function () {
-  for (var s = 0, i = 0, il = arguments.length; i < il; i++) {
-    s += arguments[i].length;
-  }
+var maxRows = 5;
+var maxColumns = 7; // const emojiData = getEmojiData('11.0')
 
-  for (var r = Array(s), k = 0, i = 0; i < il; i++) {
-    for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) {
-      r[k] = a[j];
-    }
-  }
-
-  return r;
-};
-
-// const largeSize = 
-// const emojiData = getEmojiData('11.0')
 var isMobile = (0, _browserUtil.isMobileDevice)();
 var defaultStackRaw = "\u2600\uFE0F\uD83C\uDF2B\uD83D\uDC4D\uD83C\uDFFF\n\uD83C\uDF2B\uD83C\uDF27\uD83C\uDF08\n\uD83C\uDF27\uD83C\uDF08\uD83D\uDCB0";
 var splitter = new _graphemeSplitter.default();
@@ -7289,7 +7411,7 @@ function Editor(props) {
 
   var handleExpandClick = function handleExpandClick() {
     setStack(function (current) {
-      return tap(sizedStack(current, 5, 8));
+      return (0, _functionUtil.tap)((0, _stackUtil.sizedStack)(current, maxRows, maxColumns));
     });
   };
 
@@ -7308,7 +7430,7 @@ function Editor(props) {
     onCharacterPaint: handleCharacterPaint
   }), _react.default.createElement("div", null, _react.default.createElement("button", {
     onClick: function onClick() {
-      var text = (0, _charUtil.stackToText)(stack);
+      var text = (0, _stackUtil.stackToText)(stack);
       console.log('copying', text);
       (0, _copyToClipboard.default)(text, {
         format: "text/plain",
@@ -7324,64 +7446,7 @@ function Editor(props) {
     setBrush: setBrush
   }), isMobile && _react.default.createElement("div", null, "(MacOS tip: Hit Command-Ctrl-Space for emoji keyboard)"));
 }
-
-function sizedStack(stack, rowCount, colCount) {
-  var diff = rowCount - stack.rows.length;
-
-  if (diff <= 0) {
-    return {
-      rows: stack.rows.slice(Math.abs(diff)).map(function (row) {
-        return sizedRow(row, colCount);
-      })
-    };
-  } else {
-    return {
-      rows: __spreadArrays(emptyArray(diff).map(function () {
-        return {
-          cells: emptyCells(colCount)
-        };
-      }), stack.rows.map(function (row) {
-        return sizedRow(row, colCount);
-      }))
-    };
-  }
-}
-
-console.log(emptyCells(10));
-
-function sizedRow(row, colCount) {
-  var diff = colCount - row.cells.length;
-
-  if (diff < 0) {
-    return {
-      cells: __spreadArrays(row.cells.slice(0, colCount - 1))
-    };
-  } else if (diff > 0) {
-    return {
-      cells: __spreadArrays(row.cells, emptyCells(diff))
-    };
-  }
-
-  return row;
-}
-
-function emptyCells(width) {
-  return emptyArray(width).map(function () {
-    return {
-      character: null
-    };
-  });
-}
-
-function emptyArray(length) {
-  return __spreadArrays(Array(length));
-}
-
-function tap(t) {
-  console.log('tap', t);
-  return t;
-}
-},{"react":"n8MK","immer":"SSrD","csstips":"pm94","emoji-mart/css/emoji-mart.css":"o6es","copy-to-clipboard":"xbqV","grapheme-splitter":"dWiE","typestyle":"oehJ","../util/charUtil":"lqYF","../util/browserUtil":"frOy","./PositionedDisplay":"vM5Z","./BrushEntry":"gTij"}],"R3v4":[function(require,module,exports) {
+},{"react":"n8MK","immer":"SSrD","csstips":"pm94","emoji-mart/css/emoji-mart.css":"o6es","copy-to-clipboard":"xbqV","grapheme-splitter":"dWiE","typestyle":"oehJ","../util/browserUtil":"frOy","./PositionedDisplay":"vM5Z","./BrushEntry":"gTij","../util/functionUtil":"Fehl","../util/stackUtil":"FhYA"}],"R3v4":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -7420,4 +7485,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var rootElement = document.getElementById('root');
 (0, _reactDom.render)(React.createElement(_App.default, null), rootElement);
 },{"react":"n8MK","react-dom":"NKHc","./App":"R3v4"}]},{},["wGC4"], null)
-//# sourceMappingURL=src.730e3420.js.map
+//# sourceMappingURL=src.07a62aee.js.map

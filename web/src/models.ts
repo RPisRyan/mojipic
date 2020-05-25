@@ -19,10 +19,3 @@ export interface CharacterEvent {
   character: string
   position: Position
 }
-
-export function stackStats(stack: CellStack) {
-  return {
-    rowCount: stack.rows.length,
-    colCount: Math.max(...stack.rows.map(it => it.cells.length))
-  }
-}

@@ -6,18 +6,20 @@ import copy from 'copy-to-clipboard'
 import GraphemeSplitter from 'grapheme-splitter'
 import { style } from 'typestyle'
 
-import { CellStack, Cell, CharacterEvent, CellRow } from '../models'
-import { stackToText } from '../util/charUtil'
+import { CellStack } from '../models'
 import { NestedCSSProperties } from 'typestyle/lib/types'
 import { isMobileDevice } from '../util/browserUtil'
 import PositionedDisplay, { CellMouseEvent } from './PositionedDisplay'
 import BrushEntry from './BrushEntry'
+import { tap } from '../util/functionUtil'
+import { sizedStack, stackToText } from '../util/stackUtil'
+
+const maxRows = 5
+const maxColumns = 7
 
 interface Props {
   initialStack?: CellStack
 }
-
-// const largeSize = 
 
 // const emojiData = getEmojiData('11.0')
 
@@ -57,7 +59,7 @@ export default function Editor(props: Props) {
   }
 
   const handleExpandClick = () => {
-    setStack(current => tap(sizedStack(current, 5, 8)))
+    setStack(current => tap(sizedStack(current, maxRows, maxColumns)))
   }
 
   const rootStyle: NestedCSSProperties = {
@@ -115,54 +117,4 @@ export default function Editor(props: Props) {
       </div> */}
     </div>
   )
-}
-
-function sizedStack(stack: CellStack, rowCount: number, colCount: number): CellStack {
-  const diff = rowCount - stack.rows.length
-  if (diff <= 0) {
-    return {
-      rows: stack.rows.slice(Math.abs(diff))
-        .map(row => sizedRow(row, colCount))
-    }
-  } else {
-    return {
-      rows: [
-        ...emptyArray(diff).map(() =>
-          ({
-            cells: emptyCells(colCount)
-          })),
-        ...stack.rows
-          .map(row => sizedRow(row, colCount))
-      ]
-    }
-  }
-}
-console.log(emptyCells(10))
-
-function sizedRow(row: CellRow, colCount: number) {
-  const diff = colCount - row.cells.length
-  if (diff < 0) {
-    return {
-      cells: [...row.cells.slice(0, colCount - 1)]
-    }
-  } else if (diff > 0) {
-    return {
-      cells: [...row.cells, ...emptyCells(diff)]
-    }
-  }
-  return row
-}
-
-function emptyCells(width: number): Cell[] {
-  return emptyArray(width).map(
-    () => ({ character: null }))
-}
-
-function emptyArray(length: number) {
-  return [...Array(length)]
-}
-
-function tap<T>(t: T): T {
-  console.log('tap', t)
-  return t
 }
