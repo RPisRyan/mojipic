@@ -5,7 +5,7 @@ const latinChars =
 const fullWidthLatinChars =
   '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～'
 
-export const blankChar = '⬜️'
+export const blankChar = '  '
 
 export function toFullWidth(text: string) {
   const chars = text.split('').map(c => {

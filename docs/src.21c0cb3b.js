@@ -6927,7 +6927,7 @@ exports.toFullWidth = toFullWidth;
 exports.blankChar = void 0;
 var latinChars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&()*+,-./:;<=>?@[]^_`{|}~';
 var fullWidthLatinChars = '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～';
-var blankChar = '⬜️';
+var blankChar = '  ';
 exports.blankChar = blankChar;
 
 function toFullWidth(text) {
@@ -6981,7 +6981,7 @@ function stackToText(stack) {
     return line.cells.slice(colRange[0], colRange[1] + 1).map(function (it) {
       return it.character || _charUtil.blankChar;
     }).join('');
-  }).join('\n').trim();
+  }).join('\n');
 }
 
 function measureStack(stack) {
@@ -7485,4 +7485,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var rootElement = document.getElementById('root');
 (0, _reactDom.render)(React.createElement(_App.default, null), rootElement);
 },{"react":"n8MK","react-dom":"NKHc","./App":"R3v4"}]},{},["wGC4"], null)
-//# sourceMappingURL=src.07a62aee.js.map
+//# sourceMappingURL=src.21c0cb3b.js.map

@@ -12,7 +12,6 @@ export function stackToText(stack: CellStack) {
         .join('')
     )
     .join('\n')
-    .trim()
 }
 
 export function measureStack(stack: CellStack) {
