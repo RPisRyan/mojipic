@@ -5,7 +5,7 @@ import 'emoji-mart/css/emoji-mart.css'
 import copy from 'copy-to-clipboard'
 import GraphemeSplitter from 'grapheme-splitter'
 import { style, stylesheet } from 'typestyle'
-import { FaRegCopy, FaExpandAlt } from "react-icons/fa"
+import { FaRegCopy, FaExpandAlt, FaEraser } from "react-icons/fa"
 
 import { CellStack } from '../models'
 import { NestedCSSProperties } from 'typestyle/lib/types'
@@ -17,6 +17,7 @@ import { sizedStack, stackToText } from '../util/stackUtil'
 import IconButton from '../elements/IconButton'
 import { flex } from 'csstips'
 import NotyfContext from '../app/NotyfContext'
+import ControlVerticalDivider from '../elements/ControlVerticalDivider'
 
 const maxRows = 5
 const maxColumns = 7
@@ -66,6 +67,10 @@ export default function Editor(props: Props) {
     setStack(current => tap(sizedStack(current, maxRows, maxColumns)))
   }
 
+  const handleEraserClick = () => {
+    setBrush(null)
+  }
+
   const rootStyle: NestedCSSProperties = {
     cursor: 'pointer',
     ...csstips.flex,
@@ -73,10 +78,12 @@ export default function Editor(props: Props) {
 
   const css = stylesheet({
     buttons: {
-      margin: '0.25em',
+      margin: 4,
+      display: 'flex',
+      alignItems: 'center',
       $nest: {
         '> *': {
-          margin: '0.25em'
+          margin: 4
         }
       }
     }
@@ -95,6 +102,16 @@ export default function Editor(props: Props) {
         />
 
         <div className={css.buttons}>
+
+          <IconButton
+            onClick={handleEraserClick}
+            mode={brush == null ? 'highlighted' : null}
+          >
+            <FaEraser />
+          </IconButton>
+
+          <ControlVerticalDivider />
+
           <IconButton
             onClick={() => {
               const text = stackToText(stack)
@@ -112,12 +129,17 @@ export default function Editor(props: Props) {
           <IconButton onClick={handleExpandClick}>
             <FaExpandAlt />
           </IconButton>
+
         </div>
 
       </div>
 
       <h3>Brush</h3>
-      <BrushEntry brush={brush} setBrush={setBrush} />
+      <BrushEntry
+        brush={brush}
+        setBrush={setBrush}
+        onClick={}
+      />
 
       {isMobile &&
         <div>

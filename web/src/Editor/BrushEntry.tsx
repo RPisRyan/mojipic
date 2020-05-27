@@ -26,6 +26,9 @@ export default function BrushEntry(props: Props) {
     style={{
       cursor: 'pointer'
     }}
+    onClick={() =>
+      ref.current && props.setBrush(ref.current?.value)
+    }
     onKeyDown={event => {
       console.log('keydown', event.which)
     }}
