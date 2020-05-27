@@ -97,7 +97,8 @@ export default function PositionedDisplay(props: Props) {
     minWidth: '200px',
     width: '100%',
     height: px(rowCount * cellSize),
-    touchAction: 'none'
+    touchAction: 'none',
+    border: '1px solid lightgray'
   })
 
   return <div className={outerStyle} ref={it => {
@@ -117,7 +118,8 @@ function renderCells(stack: CellStack, cellSize: number) {
     width: percent(100 / colCount),
     height: percent(100 / rowCount),
     fontSize: px(Math.floor(cellSize * 0.9)),
-    pointerEvents: 'none'
+    pointerEvents: 'none',
+    border: '1px solid lightgray'
   })
 
   const Cell = (props: {

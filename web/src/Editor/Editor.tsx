@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import produce from 'immer'
 import * as csstips from 'csstips'
 import 'emoji-mart/css/emoji-mart.css'
 import copy from 'copy-to-clipboard'
 import GraphemeSplitter from 'grapheme-splitter'
-import { style } from 'typestyle'
+import { style, stylesheet } from 'typestyle'
+import { FaRegCopy, FaExpandAlt } from "react-icons/fa"
 
 import { CellStack } from '../models'
 import { NestedCSSProperties } from 'typestyle/lib/types'
@@ -13,6 +14,9 @@ import PositionedDisplay, { CellMouseEvent } from './PositionedDisplay'
 import BrushEntry from './BrushEntry'
 import { tap } from '../util/functionUtil'
 import { sizedStack, stackToText } from '../util/stackUtil'
+import IconButton from '../elements/IconButton'
+import { flex } from 'csstips'
+import NotyfContext from '../app/NotyfContext'
 
 const maxRows = 5
 const maxColumns = 7
@@ -40,9 +44,9 @@ const defaultStack: CellStack = {
 }
 
 export default function Editor(props: Props) {
-  const [copied, setCopied] = useState<boolean>()
   const [stack, setStack] = useState<CellStack>(props.initialStack || defaultStack)
   const [brush, setBrush] = useState<string>('😇')
+  const notyf = useContext(NotyfContext)
 
   const handleCharacterPaint = (event: CellMouseEvent) => {
     if (event.character !== brush) {
@@ -67,6 +71,17 @@ export default function Editor(props: Props) {
     ...csstips.flex,
   }
 
+  const css = stylesheet({
+    buttons: {
+      margin: '0.25em',
+      $nest: {
+        '> *': {
+          margin: '0.25em'
+        }
+      }
+    }
+  })
+
   return (
     <div className={style(rootStyle)}>
       <h3>💫 Mojistack 💫</h3>
@@ -79,27 +94,26 @@ export default function Editor(props: Props) {
           onCharacterPaint={handleCharacterPaint}
         />
 
-        <div>
-          <button
+        <div className={css.buttons}>
+          <IconButton
             onClick={() => {
               const text = stackToText(stack)
               console.log('copying', text)
               copy(text, {
                 format: "text/plain",
                 onCopy: () => {
-                  setCopied(true)
+                  notyf.success('copied')
                 }
               })
-            }
-            }>
-            Copy to clipboard
-          {copied && <span>- done!</span>}
-          </button>
+            }}>
+            <FaRegCopy />
+          </IconButton>
 
-          <button onClick={handleExpandClick}>
-            Expand
-          </button>
+          <IconButton onClick={handleExpandClick}>
+            <FaExpandAlt />
+          </IconButton>
         </div>
+
       </div>
 
       <h3>Brush</h3>
