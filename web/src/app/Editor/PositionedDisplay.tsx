@@ -5,9 +5,9 @@ import interact from 'interactjs'
 import Interact from '@interactjs/types/index'
 import useMeasure from 'react-use-measure'
 
-import { CellStack, CellPosition } from "../models"
-import { blankChar } from '../util/charUtil'
-import { stackStats } from '../util/stackUtil'
+import { CellStack, CellPosition } from "../../domain/models"
+import { blankChar } from '../../util/charUtil'
+import { stackStats } from '../../util/stackUtil'
 
 interface Props {
   stack: CellStack

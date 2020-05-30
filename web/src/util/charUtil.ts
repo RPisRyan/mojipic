@@ -1,4 +1,4 @@
-import { CellStack, CellPosition, Cell } from "../models"
+import { CellStack, CellPosition, Cell } from "../domain/models"
 
 const latinChars =
   '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&()*+,-./:;<=>?@[]^_`{|}~'

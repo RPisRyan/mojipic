@@ -7,16 +7,16 @@ import GraphemeSplitter from 'grapheme-splitter'
 import { style, stylesheet } from 'typestyle'
 import { FaRegCopy, FaExpandAlt, FaEraser } from "react-icons/fa"
 
-import { CellStack } from '../models'
+import { CellStack } from '../../domain/models'
 import { NestedCSSProperties } from 'typestyle/lib/types'
-import { isMobileDevice } from '../util/browserUtil'
+import { isMobileDevice } from '../../util/browserUtil'
 import PositionedDisplay, { CellMouseEvent } from './PositionedDisplay'
 import BrushEntry from './BrushEntry'
-import { tap } from '../util/functionUtil'
-import { sizedStack, stackToText } from '../util/stackUtil'
+import { tap } from '../../util/functionUtil'
+import { sizedStack, stackToText } from '../../util/stackUtil'
 import IconButton from '../elements/IconButton'
 import { flex } from 'csstips'
-import NotyfContext from '../app/NotyfContext'
+import NotyfContext from '../NotyfContext'
 import ControlVerticalDivider from '../elements/ControlVerticalDivider'
 
 const maxRows = 5

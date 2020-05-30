@@ -1,4 +1,4 @@
-import { CellStack, Cell, CellRow, CellPosition } from "../models"
+import { CellStack, Cell, CellRow, CellPosition } from "../domain/models"
 import { blankChar } from "./charUtil"
 
 export function stackToText(stack: CellStack) {
