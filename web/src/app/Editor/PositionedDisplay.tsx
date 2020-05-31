@@ -5,30 +5,24 @@ import interact from 'interactjs'
 import Interact from '@interactjs/types/index'
 import useMeasure from 'react-use-measure'
 
-import { CellStack, CellPosition } from "../../domain/models"
 import { blankChar } from '../../util/charUtil'
 import { stackStats } from '../../util/stackUtil'
+import { observer } from 'mobx-react-lite'
+import { useEditorStore } from './Editor'
+import { CellStack, CellPosition } from '../../domain/Editor'
 
-interface Props {
-  stack: CellStack
-  onCharacterPaint: (ev: CellMouseEvent) => void
-}
-
-export type CellMouseEvent = {
-  position: CellPosition
-  character: string
-}
-
-export default function PositionedDisplay(props: Props) {
+const PositionedDisplay: React.FC = observer(() => {
+  const store = useEditorStore()
   const [measureRef, bounds] = useMeasure()
   const ref = useRef<HTMLDivElement>(undefined)
   const interactableRef = useRef(null)
 
-  const { rowCount, colCount } = stackStats(props.stack)
+  const { rowCount, colCount } = stackStats(store.stack)
   const cellSize = bounds.width / colCount
 
   // Interactable object captures stale callback
   const handlePaintActionRef = useRef<any>()
+
   useEffect(() => {
     handlePaintActionRef.current = (x, y) => {
       if (!cellSize) {
@@ -40,14 +34,13 @@ export default function PositionedDisplay(props: Props) {
 
       if (col >= 0 && col <= colCount
         && row >= 0 && row <= rowCount) {
-        const cell = props.stack.rows[row].cells[col]
-        props.onCharacterPaint({
-          position: { row, col },
-          character: cell.character
-        })
+        const cell = store.stack.rows[row].cells[col]
+        if (cell.character !== store.brush) {
+          cell.character = store.brush
+        }
       }
     }
-  }, [cellSize, rowCount, colCount, props.onCharacterPaint])
+  }, [cellSize, rowCount, colCount])
 
   useEffect(() => {
     if (!ref.current) {
@@ -105,9 +98,11 @@ export default function PositionedDisplay(props: Props) {
     ref.current = it
     measureRef(it)
   }}>
-    {renderCells(props.stack, cellSize)}
+    {renderCells(store.stack, cellSize)}
   </div>
-}
+})
+
+export default PositionedDisplay
 
 function renderCells(stack: CellStack, cellSize: number) {
   const { rowCount, colCount } = stackStats(stack)

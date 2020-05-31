@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from "react"
 import { stylesheet, classes } from "typestyle"
-import { sizes } from "../styles"
 import { borderColor } from "csx"
+import { sizes } from "../app/styles"
 
 type Props = HTMLAttributes<HTMLButtonElement> & {
   mode?: 'highlighted'

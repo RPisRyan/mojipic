@@ -1,30 +1,25 @@
-import React, { useState, useContext } from 'react'
-import produce from 'immer'
+import React, { useContext } from 'react'
 import * as csstips from 'csstips'
 import 'emoji-mart/css/emoji-mart.css'
 import copy from 'copy-to-clipboard'
 import GraphemeSplitter from 'grapheme-splitter'
 import { style, stylesheet } from 'typestyle'
 import { FaRegCopy, FaExpandAlt, FaEraser } from "react-icons/fa"
-
-import { CellStack } from '../../domain/models'
+import { observer } from 'mobx-react-lite'
+import { unprotect, getSnapshot, applySnapshot } from 'mobx-state-tree'
 import { NestedCSSProperties } from 'typestyle/lib/types'
+
 import { isMobileDevice } from '../../util/browserUtil'
-import PositionedDisplay, { CellMouseEvent } from './PositionedDisplay'
+import PositionedDisplay from './PositionedDisplay'
 import BrushEntry from './BrushEntry'
-import { tap } from '../../util/functionUtil'
 import { sizedStack, stackToText } from '../../util/stackUtil'
 import IconButton from '../elements/IconButton'
-import { flex } from 'csstips'
 import NotyfContext from '../NotyfContext'
 import ControlVerticalDivider from '../elements/ControlVerticalDivider'
+import { CellStack, EditorNode } from '../../domain/Editor'
 
 const maxRows = 5
 const maxColumns = 7
-
-interface Props {
-  initialStack?: CellStack
-}
 
 // const emojiData = getEmojiData('11.0')
 
@@ -44,31 +39,27 @@ const defaultStack: CellStack = {
     }))
 }
 
-export default function Editor(props: Props) {
-  const [stack, setStack] = useState<CellStack>(props.initialStack || defaultStack)
-  const [brush, setBrush] = useState<string>('😇')
+const editorStore = EditorNode.create({
+  stack: defaultStack,
+  brush: '😇'
+})
+unprotect(editorStore)
+
+export function useEditorStore() {
+  return editorStore
+}
+
+const Editor: React.FC = observer(() => {
+  const store = useEditorStore()
   const notyf = useContext(NotyfContext)
 
-  const handleCharacterPaint = (event: CellMouseEvent) => {
-    if (event.character !== brush) {
-      setStack(state =>
-        produce(state, (draft) => {
-          const row = draft
-            .rows[event.position.row]
-          const cell = row && row
-            .cells[event.position.col]
-          if (cell) cell.character = brush
-        })
-      )
-    }
-  }
-
   const handleExpandClick = () => {
-    setStack(current => tap(sizedStack(current, maxRows, maxColumns)))
+    const newStack = sizedStack(getSnapshot(store.stack), maxRows, maxColumns)
+    applySnapshot(store.stack, newStack)
   }
 
   const handleEraserClick = () => {
-    setBrush(null)
+    store.brush = ''
   }
 
   const rootStyle: NestedCSSProperties = {
@@ -96,16 +87,13 @@ export default function Editor(props: Props) {
 
       <div style={{ maxWidth: '500px' }}>
 
-        <PositionedDisplay
-          stack={stack}
-          onCharacterPaint={handleCharacterPaint}
-        />
+        <PositionedDisplay />
 
         <div className={css.buttons}>
 
           <IconButton
             onClick={handleEraserClick}
-            mode={brush == null ? 'highlighted' : null}
+            mode={store.brush == '' ? 'highlighted' : null}
           >
             <FaEraser />
           </IconButton>
@@ -114,7 +102,7 @@ export default function Editor(props: Props) {
 
           <IconButton
             onClick={() => {
-              const text = stackToText(stack)
+              const text = stackToText(store.stack as CellStack)
               console.log('copying', text)
               copy(text, {
                 format: "text/plain",
@@ -136,9 +124,8 @@ export default function Editor(props: Props) {
 
       <h3>Brush</h3>
       <BrushEntry
-        brush={brush}
-        setBrush={setBrush}
-        onClick={}
+        brush={store.brush}
+        setBrush={it => store.brush = it}
       />
 
       {isMobile &&
@@ -153,4 +140,6 @@ export default function Editor(props: Props) {
       </div> */}
     </div>
   )
-}
+})
+
+export default Editor

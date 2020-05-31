@@ -1,4 +1,4 @@
-import { CellStack, Cell, CellRow, CellPosition } from "../domain/models"
+import { CellStack, Cell, CellRow, CellPosition } from "../domain/Editor"
 import { blankChar } from "./charUtil"
 
 export function stackToText(stack: CellStack) {
@@ -88,7 +88,7 @@ export function sizedRow(row: CellRow, colCount: number) {
 
 function emptyCells(width: number): Cell[] {
   return emptyArray(width).map(
-    () => ({ character: null }))
+    () => ({ character: '' }))
 }
 
 function emptyArray(length: number) {
