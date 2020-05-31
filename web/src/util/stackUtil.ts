@@ -51,24 +51,21 @@ export function visitCells(
     ))
 }
 
-export function sizedStack(stack: CellStack, rowCount: number, colCount: number): CellStack {
-  const diff = rowCount - stack.rows.length
+export function sizedRows(rows: CellRow[], rowCount: number, colCount: number): CellRow[] {
+  const diff = rowCount - rows.length
   if (diff <= 0) {
-    return {
-      rows: stack.rows.slice(Math.abs(diff))
-        .map(row => sizedRow(row, colCount))
-    }
+    return rows.slice(Math.abs(diff))
+      .map(row => sizedRow(row, colCount))
   } else {
-    return {
-      rows: [
-        ...emptyArray(diff).map(() =>
-          ({
-            cells: emptyCells(colCount)
-          })),
-        ...stack.rows
-          .map(row => sizedRow(row, colCount))
-      ]
-    }
+    return [
+      ...emptyArray(diff).map(() =>
+        ({
+          cells: emptyCells(colCount)
+        })),
+      ...rows
+        .map(row => sizedRow(row, colCount))
+    ]
+
   }
 }
 

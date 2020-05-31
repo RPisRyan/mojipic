@@ -5,6 +5,7 @@ import copy from 'copy-to-clipboard'
 import GraphemeSplitter from 'grapheme-splitter'
 import { style, stylesheet } from 'typestyle'
 import { FaRegCopy, FaExpandAlt, FaEraser } from "react-icons/fa"
+import { MdPhotoSizeSelectSmall } from "react-icons/md";
 import { observer } from 'mobx-react-lite'
 import { unprotect, getSnapshot, applySnapshot } from 'mobx-state-tree'
 import { NestedCSSProperties } from 'typestyle/lib/types'
@@ -12,11 +13,12 @@ import { NestedCSSProperties } from 'typestyle/lib/types'
 import { isMobileDevice } from '../../util/browserUtil'
 import PositionedDisplay from './PositionedDisplay'
 import BrushEntry from './BrushEntry'
-import { sizedStack, stackToText } from '../../util/stackUtil'
+import { sizedRows, stackToText } from '../../util/stackUtil'
 import IconButton from '../elements/IconButton'
 import NotyfContext from '../NotyfContext'
 import ControlVerticalDivider from '../elements/ControlVerticalDivider'
 import { CellStack, EditorNode } from '../../domain/Editor'
+import OverlayFill from '../elements/OverlayFill'
 
 const maxRows = 5
 const maxColumns = 7
@@ -32,6 +34,7 @@ const defaultStackRaw = `☀️🌫👍🏿
 const splitter = new GraphemeSplitter()
 
 const defaultStack: CellStack = {
+  sizeIndex: 0,
   rows: defaultStackRaw.split('\n')
     .map(rowChars => ({
       cells: splitter.splitGraphemes(rowChars.trim())
@@ -52,11 +55,6 @@ export function useEditorStore() {
 const Editor: React.FC = observer(() => {
   const store = useEditorStore()
   const notyf = useContext(NotyfContext)
-
-  const handleExpandClick = () => {
-    const newStack = sizedStack(getSnapshot(store.stack), maxRows, maxColumns)
-    applySnapshot(store.stack, newStack)
-  }
 
   const handleEraserClick = () => {
     store.brush = ''
@@ -114,8 +112,18 @@ const Editor: React.FC = observer(() => {
             <FaRegCopy />
           </IconButton>
 
-          <IconButton onClick={handleExpandClick}>
-            <FaExpandAlt />
+          <IconButton onClick={store.stack.expand}>
+            <OverlayFill>
+              <MdPhotoSizeSelectSmall style={{ opacity: 0.3 }} />
+              <span style={{ fontSize: '36px' }}>+</span>
+            </OverlayFill>
+          </IconButton>
+
+          <IconButton onClick={store.stack.shrink}>
+            <OverlayFill>
+              <MdPhotoSizeSelectSmall style={{ opacity: 0.3 }} />
+              <span style={{ fontSize: '36px' }}>-</span>
+            </OverlayFill>
           </IconButton>
 
         </div>
