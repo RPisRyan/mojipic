@@ -55,7 +55,7 @@ export function sizedRows(rows: CellRow[], rowCount: number, colCount: number): 
   const diff = rowCount - rows.length
   if (diff <= 0) {
     return rows.slice(Math.abs(diff))
-      .map(row => sizedRow(row, colCount))
+      .map(row => sizedRow(row, colCount + 1))
   } else {
     return [
       ...emptyArray(diff).map(() =>

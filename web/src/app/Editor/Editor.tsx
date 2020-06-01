@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, PropsWithChildren } from 'react'
 import * as csstips from 'csstips'
 import 'emoji-mart/css/emoji-mart.css'
 import copy from 'copy-to-clipboard'
@@ -112,19 +112,14 @@ const Editor: React.FC = observer(() => {
             <FaRegCopy />
           </IconButton>
 
-          <IconButton onClick={store.stack.expand}>
-            <OverlayFill>
-              <MdPhotoSizeSelectSmall style={{ opacity: 0.3 }} />
-              <span style={{ fontSize: '36px' }}>+</span>
-            </OverlayFill>
-          </IconButton>
 
-          <IconButton onClick={store.stack.shrink}>
-            <OverlayFill>
-              <MdPhotoSizeSelectSmall style={{ opacity: 0.3 }} />
-              <span style={{ fontSize: '36px' }}>-</span>
-            </OverlayFill>
-          </IconButton>
+          <ResizeButton onClick={store.stack.expand}>
+            +
+            </ResizeButton>
+
+          <ResizeButton onClick={store.stack.shrink}>
+            -
+            </ResizeButton>
 
         </div>
 
@@ -149,5 +144,18 @@ const Editor: React.FC = observer(() => {
     </div>
   )
 })
+
+function ResizeButton(props: PropsWithChildren<{
+  onClick: () => void
+}>) {
+  return <IconButton onClick={props.onClick}>
+    <OverlayFill>
+      <MdPhotoSizeSelectSmall style={{ opacity: 0.3 }} />
+      <span style={{ fontSize: '36px' }}>
+        {props.children}
+      </span>
+    </OverlayFill>
+  </IconButton>
+}
 
 export default Editor
