@@ -112,7 +112,7 @@ function renderCells(stack: CellStack, cellSize: number) {
     textAlign: 'center',
     width: percent(100 / colCount),
     height: percent(100 / rowCount),
-    fontSize: px(Math.floor(cellSize * 0.9)),
+    fontSize: px(Math.floor(cellSize * 0.85)),
     pointerEvents: 'none',
     border: '1px solid lightgray'
   })

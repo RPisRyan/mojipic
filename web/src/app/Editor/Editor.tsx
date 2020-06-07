@@ -94,6 +94,16 @@ const Editor: React.FC = observer(() => {
 
           <ControlVerticalDivider />
 
+          <ResizeButton onClick={store.stack.expand}>
+            +
+            </ResizeButton>
+
+          <ResizeButton onClick={store.stack.shrink}>
+            -
+            </ResizeButton>
+
+          <ControlVerticalDivider />
+
           <IconButton
             onClick={() => {
               const text = stackToText(store.stack as CellStack)
@@ -107,15 +117,6 @@ const Editor: React.FC = observer(() => {
             }}>
             <FaRegCopy />
           </IconButton>
-
-
-          <ResizeButton onClick={store.stack.expand}>
-            +
-            </ResizeButton>
-
-          <ResizeButton onClick={store.stack.shrink}>
-            -
-            </ResizeButton>
 
         </div>
 
