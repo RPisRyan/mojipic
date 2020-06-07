@@ -7,25 +7,17 @@ import { style, stylesheet } from 'typestyle'
 import { FaRegCopy, FaExpandAlt, FaEraser } from "react-icons/fa"
 import { MdPhotoSizeSelectSmall } from "react-icons/md";
 import { observer } from 'mobx-react-lite'
-import { unprotect, getSnapshot, applySnapshot } from 'mobx-state-tree'
-import { NestedCSSProperties } from 'typestyle/lib/types'
+import { unprotect } from 'mobx-state-tree'
 
-import { isMobileDevice } from '../../util/browserUtil'
+import { isMacOS } from '../../util/browserUtil'
 import PositionedDisplay from './PositionedDisplay'
-import BrushEntry from './BrushEntry'
-import { sizedRows, stackToText } from '../../util/stackUtil'
+import { stackToText } from '../../util/stackUtil'
 import IconButton from '../elements/IconButton'
 import NotyfContext from '../NotyfContext'
 import ControlVerticalDivider from '../elements/ControlVerticalDivider'
 import { CellStack, EditorNode } from '../../domain/Editor'
 import OverlayFill from '../elements/OverlayFill'
-
-const maxRows = 5
-const maxColumns = 7
-
-// const emojiData = getEmojiData('11.0')
-
-const isMobile = isMobileDevice()
+import EditableChar from './EditableChar'
 
 const defaultStackRaw = `☀️🌫👍🏿
 🌫🌧🌈
@@ -60,12 +52,11 @@ const Editor: React.FC = observer(() => {
     store.brush = ''
   }
 
-  const rootStyle: NestedCSSProperties = {
-    cursor: 'pointer',
-    ...csstips.flex,
-  }
-
   const css = stylesheet({
+    editor: {
+      cursor: 'pointer',
+      ...csstips.flex,
+    },
     buttons: {
       margin: 4,
       display: 'flex',
@@ -79,15 +70,20 @@ const Editor: React.FC = observer(() => {
   })
 
   return (
-    <div className={style(rootStyle)}>
+    <div className={css.editor}>
       <h3>💫 Mojistack 💫</h3>
-      <p>Click on the table to change it. Copy and paste where you like!</p>
 
       <div style={{ maxWidth: '500px' }}>
 
         <PositionedDisplay />
 
         <div className={css.buttons}>
+
+          <IconButton>
+            <EditableChar
+              value={store.brush}
+              onChange={it => { store.brush = it }} />
+          </IconButton>
 
           <IconButton
             onClick={handleEraserClick}
@@ -125,15 +121,9 @@ const Editor: React.FC = observer(() => {
 
       </div>
 
-      <h3>Brush</h3>
-      <BrushEntry
-        brush={store.brush}
-        setBrush={it => store.brush = it}
-      />
-
-      {isMobile &&
+      {isMacOS() &&
         <div>
-          (MacOS tip: Hit Command-Ctrl-Space for emoji keyboard)
+          <i>MacOS tip: Hit Command-Ctrl-Space for emoji keyboard</i>
         </div>
       }
 

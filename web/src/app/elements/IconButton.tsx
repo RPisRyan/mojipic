@@ -11,7 +11,7 @@ const css = stylesheet({
   outer: {
     width: sizes.buttonHeight,
     height: sizes.buttonHeight,
-    fontSize: sizes.buttonHeight * 0.5
+    fontSize: sizes.controlFontSize
   },
   highlighted: {
     border: '3px solid darkblue',
