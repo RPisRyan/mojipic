@@ -1,8 +1,8 @@
 import GraphemeSplitter from 'grapheme-splitter'
 
-export type CellState =
-  { mode: 'view', glyph: Glyph }
-  | { mode: 'input', glyph: Glyph }
+// export type CellState =
+//   { mode: 'view', glyph: Glyph }
+//   | { mode: 'input', glyph: Glyph }
 
 export type Drawing = Glyph[][]
 
@@ -14,6 +14,11 @@ export type DrawingSize = {
 }
 
 export type Glyph = string | null
+
+export type Tool =
+  { type: 'pointer'; } |
+  { type: 'paint'; brush: Glyph; } |
+  { type: 'erase'; };
 
 export const emptyGlyph = null
 

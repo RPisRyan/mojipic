@@ -1,5 +1,5 @@
-import { CellPosition, Drawing, DrawingSize, emptyDrawing, getDrawingSize } from './Drawing'
-import { Tool } from './types'
+import { CellPosition, Drawing, emptyDrawing, getDrawingSize } from './Drawing'
+import { Tool } from "./Drawing"
 import produce from 'immer'
 import { useReducer, Dispatch } from 'react'
 
@@ -55,8 +55,8 @@ export type CanvasAction =
   | { action: 'clear' }
   | { action: 'undo' }
 
-function captureHistory(state): Drawing[] {
-  return [state.history, state.drawing] // todo: truncate
+function captureHistory(state: CanvasState): Drawing[] {
+  return [...state.history, state.drawing] // todo: truncate
 }
 
 function canvasReduce(state: CanvasState, action: CanvasAction) {
@@ -105,5 +105,7 @@ function applyTool(tool: Tool, cell: CellPosition, drawing: Drawing): Drawing {
       })
     case 'erase':
       return emptyDrawing(getDrawingSize(drawing))
+    default:
+      return drawing
   }
 }
