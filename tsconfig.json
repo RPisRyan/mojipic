@@ -1,5 +1,6 @@
 {
-  "include": ["./src/*"],
+  "include": ["./web/src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"],
   "compilerOptions": {
     "strict": true,
     "esModuleInterop": true,

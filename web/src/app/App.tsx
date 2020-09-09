@@ -1,8 +1,8 @@
 import * as React from 'react'
-import Editor from './Editor/Editor'
-
 import 'notyf/notyf.min.css'
 
+import { EditorNew } from './Editor/EditorNew'
+
 export default function App() {
-  return <Editor />
+  return <EditorNew />
 }
