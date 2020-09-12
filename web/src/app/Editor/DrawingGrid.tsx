@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
-import { getDrawingSize } from '../../domain/Editor/Drawing'
+import { getDrawingSize, Tool } from '../../domain/Editor/Drawing'
 import { stylesheet } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { NumericRange } from '../../common/measurement'

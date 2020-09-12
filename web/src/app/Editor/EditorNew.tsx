@@ -13,7 +13,8 @@ import { ControlsBar } from '../elements'
 
 export function EditorNew() {
   const { editorStore, Provider } = useEditorStoreProvider()
-  const { drawing } = editorStore.canvasStore
+  const { canvasStore } = editorStore
+  const { drawing } = canvasStore
 
   useEffect(() => {
     editorStore.canvasStore.setDrawing(fromString(defaultDrawing))
@@ -28,12 +29,20 @@ export function EditorNew() {
 
         <ControlsBar>
           <TileButton
-            onClick={() => editorStore.canvasStore.pickTool({ type: 'paint', brush: '😡' })} >
-            <FontAwesomeIcon icon={faPaintBrush} />
+            active={canvasStore.tool.type === 'paint'}
+            onClick={() => editorStore.canvasStore.pickTool({ type: 'paint', brush: '😡' })}
+          >
+            {
+              (canvasStore.tool.type === 'paint' && canvasStore.tool.brush)
+                ? <span>{canvasStore.tool.brush}</span>
+                : <FontAwesomeIcon icon={faPaintBrush} />
+            }
           </TileButton>
 
           <TileButton
-            onClick={() => editorStore.canvasStore.pickTool({ type: 'eraser' })} >
+            active={canvasStore.tool.type === 'eraser'}
+            onClick={() => editorStore.canvasStore.pickTool({ type: 'eraser' })}
+          >
             <FontAwesomeIcon icon={faEraser} />
           </TileButton>
         </ControlsBar>
