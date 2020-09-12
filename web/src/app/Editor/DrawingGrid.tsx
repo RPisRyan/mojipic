@@ -1,6 +1,7 @@
-import React, { CSSProperties } from 'react'
+import React, { CSSProperties, useRef } from 'react'
+import { useDrag } from 'react-use-gesture'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
-import { getDrawingSize, Tool } from '../../domain/Editor/Drawing'
+import { getDrawingSize, CellPosition } from '../../domain/Editor/Drawing'
 import { stylesheet, classes } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { NumericRange } from '../../common/measurement'
@@ -16,6 +17,28 @@ export function DrawingGrid({ }: Props) {
   const { drawing } = canvasStore
 
   const [measureRef, bounds] = useMeasure()
+
+  const lastAppliedPosition = useRef<CellPosition>()
+  const dragBind = useDrag(
+    (dragEvent) => {
+      const { event } = dragEvent
+      if (!event?.target) {
+        return
+      }
+
+      const target = event.target as HTMLElement
+      if (!target.dataset.position) {
+        return
+      }
+      const position = JSON.parse(target.dataset.position) as CellPosition
+
+      if (position.toString() !== lastAppliedPosition.current?.toString()) {
+        canvasStore.applyTool(position)
+        lastAppliedPosition.current = position
+      }
+
+    }
+  )
 
   const drawingSize = getDrawingSize(canvasStore.drawing)
 
@@ -36,7 +59,7 @@ export function DrawingGrid({ }: Props) {
   }
 
   return <div
-    ref={measureRef}
+    ref={it => measureRef(it)}
     className={css.drawingGrid}
     style={{
       ...containerSizeLimits,
@@ -46,6 +69,7 @@ export function DrawingGrid({ }: Props) {
       gridAutoColumns: cellSize,
       gridAutoRows: cellSize
     }}
+    {...dragBind()}
   >
     {
       bounds.width
@@ -59,9 +83,11 @@ export function DrawingGrid({ }: Props) {
                 gridColumn: colIndex + 1,
                 fontSize: cellSize * 0.8,
               }}
-              onClick={() => canvasStore.applyTool([rowIndex, colIndex])}
+            // onClick={() => canvasStore.applyTool([rowIndex, colIndex])}
             >
               <span
+                data-position={JSON.stringify([rowIndex, colIndex])}
+                data-glyph={glyph}
                 className={classes(css.cellContent, !glyph && css.blankCell)}
               >
                 {
@@ -81,7 +107,7 @@ const css = stylesheet({
     display: 'grid',
     backgroundColor: 'lightgray',
     border: '1px solid lightgray',
-    userSelect: 'none'
+    userSelect: 'none',
   },
   cell: {
     backgroundColor: 'white',

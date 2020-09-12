@@ -27,6 +27,7 @@ const neutral = {
   black: black.luminance(0.01)
 }
 
+// https://www.color-hex.com/color-palette/700
 export const palette = {
   shout: chroma([209, 17, 65]),
   win: chroma([0, 177, 89]),

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { viewWidth } from 'csx'
 import { stylesheet, style } from 'typestyle'
 import * as csstips from 'csstips'
@@ -6,13 +6,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaintBrush, faEraser } from '@fortawesome/free-solid-svg-icons'
 
 import { fromString, getDrawingSize } from '../../domain/Editor/Drawing'
-import { useEditorStoreProvider } from '../../domain/Editor/EditorStore'
+import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
 import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
 import { ControlsBar } from '../elements'
+import { useNewCanvasStore } from '../../domain/Editor/CanvasStore'
 
 export function EditorNew() {
-  const { editorStore, Provider } = useEditorStoreProvider()
+  // const { editorStore, Provider } = useEditorStoreProvider()
+
+  const editorStore = useNewEditorStore()
+
   const { canvasStore } = editorStore
   const { drawing } = canvasStore
 
@@ -22,7 +26,7 @@ export function EditorNew() {
 
   const cellSize = viewWidth(90 / getDrawingSize(drawing).columns) as string
 
-  return <Provider>
+  return <EditorContext.Provider value={editorStore}>
     <div className={css.editor}>
       <div className={style(csstips.vertical)} >
         <DrawingGrid />
@@ -50,7 +54,7 @@ export function EditorNew() {
       </div>
       <div>Right Side Text</div>
     </div>
-  </Provider>
+  </EditorContext.Provider>
 }
 
 const css = stylesheet({

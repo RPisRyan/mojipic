@@ -47,24 +47,12 @@ function createEditorStore(
  */
 export type EditorStore = ReturnType<typeof createEditorStore>
 
-const EditorContext = createContext<EditorStore>(undefined as unknown as EditorStore)
+export const EditorContext = createContext<EditorStore>(undefined as unknown as EditorStore)
 
-/**
- * Create editor store and provider for mounting context.
- */
-export function useEditorStoreProvider() {
+export function useNewEditorStore() {
   const canvas = useNewCanvasStore()
   const [editorState, editorDispatch] = useReducer(reduce, emptyEditorState())
-  const editorStore = createEditorStore(editorState, editorDispatch, canvas)
-  const Provider = ({ children }: PropsWithChildren<any>) =>
-    createElement(
-      EditorContext.Provider,
-      { value: editorStore },
-      children
-    )
-  return {
-    editorStore, Provider
-  }
+  return createEditorStore(editorState, editorDispatch, canvas)
 }
 
 export function useEditorStore() {
