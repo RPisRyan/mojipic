@@ -1,4 +1,4 @@
-import { CellPosition, Drawing, emptyDrawing, getDrawingSize } from './Drawing'
+import { CellPosition, Drawing, emptyDrawing, getDrawingSize, emptyGlyph } from './Drawing'
 import { Tool } from "./Drawing"
 import produce from 'immer'
 import { useReducer, Dispatch } from 'react'
@@ -103,8 +103,10 @@ function applyTool(tool: Tool, cell: CellPosition, drawing: Drawing): Drawing {
       return produce(drawing, draft => {
         draft[cell[0]][cell[1]] = tool.brush
       })
-    case 'erase':
-      return emptyDrawing(getDrawingSize(drawing))
+    case 'eraser':
+      return produce(drawing, draft => {
+        draft[cell[0]][cell[1]] = emptyGlyph
+      })
     default:
       return drawing
   }

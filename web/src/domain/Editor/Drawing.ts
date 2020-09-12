@@ -16,9 +16,9 @@ export type DrawingSize = {
 export type Glyph = string | null
 
 export type Tool =
-  { type: 'pointer'; } |
-  { type: 'paint'; brush: Glyph; } |
-  { type: 'erase'; };
+  { type: 'pointer' } |
+  { type: 'paint'; brush: Glyph } |
+  { type: 'eraser' }
 
 export const emptyGlyph = null
 

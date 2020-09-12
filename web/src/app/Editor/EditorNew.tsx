@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import { px, viewWidth } from 'csx'
+import { viewWidth } from 'csx'
 import { stylesheet, style } from 'typestyle'
 import * as csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaintBrush } from '@fortawesome/free-solid-svg-icons'
+import { faPaintBrush, faEraser } from '@fortawesome/free-solid-svg-icons'
 
 import { fromString, getDrawingSize } from '../../domain/Editor/Drawing'
 import { useEditorStoreProvider } from '../../domain/Editor/EditorStore'
@@ -30,6 +30,11 @@ export function EditorNew() {
           <TileButton
             onClick={() => editorStore.canvasStore.pickTool({ type: 'paint', brush: '😡' })} >
             <FontAwesomeIcon icon={faPaintBrush} />
+          </TileButton>
+
+          <TileButton
+            onClick={() => editorStore.canvasStore.pickTool({ type: 'eraser' })} >
+            <FontAwesomeIcon icon={faEraser} />
           </TileButton>
         </ControlsBar>
 
