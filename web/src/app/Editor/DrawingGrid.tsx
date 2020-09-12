@@ -1,10 +1,10 @@
 import React, { CSSProperties } from 'react'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
 import { getDrawingSize, Tool } from '../../domain/Editor/Drawing'
-import { stylesheet } from 'typestyle'
+import { stylesheet, classes } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { NumericRange } from '../../common/measurement'
-import { sizes, styles } from '../../common/theme'
+import { sizes, styles, colors } from '../../common/theme'
 
 /**
  * Component is sized in two stages:
@@ -62,9 +62,11 @@ export function DrawingGrid({ }: Props) {
               onClick={() => canvasStore.applyTool([rowIndex, colIndex])}
             >
               <span
-                className={css.cellContent}
+                className={classes(css.cellContent, !glyph && css.blankCell)}
               >
-                {glyph}
+                {
+                  glyph || '☻'
+                }
               </span>
             </div>
           )
@@ -90,6 +92,9 @@ const css = stylesheet({
   },
   cellContent: {
     margin: 'auto'
+  },
+  blankCell: {
+    color: colors.lightest
   }
 })
 

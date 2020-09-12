@@ -57,8 +57,13 @@ export const colors = {
     return neutral.medium.hex()
   },
   border: neutral.medium.hex(),
+
+  lightest: neutral.lightest.hex(),
+  light: neutral.light.hex(),
+  medium: neutral.medium.hex(),
   dark: neutral.dark.hex(),
-  darkest: neutral.darkest.hex()
+  darkest: neutral.darkest.hex(),
+  black: neutral.black.hex()
 }
 
 export const styles: Record<string, NestedCSSProperties> = {
