@@ -1,18 +1,10 @@
-import React, { HTMLAttributes, CSSProperties } from 'react'
+import React, { CSSProperties } from 'react'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
 import { getDrawingSize } from '../../domain/Editor/Drawing'
 import { stylesheet } from 'typestyle'
-import { NestedCSSProperties } from 'typestyle/lib/types'
-import { em, viewWidth } from 'csx'
 import useMeasure from 'react-use-measure'
 import { NumericRange } from '../../common/measurement'
-import { clamp } from '../../util/primitiveUtil'
-import { centerContent } from '../../common/styles'
-
-const cellSizeRange: NumericRange = {
-  min: 16,
-  max: 96
-}
+import { sizes, styles } from '../../common/theme'
 
 /**
  * Component is sized in two stages:
@@ -30,7 +22,7 @@ export function DrawingGrid({ }: Props) {
   const borderWidth = 3
 
   // subract column borders from width
-  const cellSize = (bounds.width - (borderWidth * drawingSize.columns + 1))
+  const cellSize = (bounds.width - (borderWidth * (drawingSize.columns + 1)))
     / drawingSize.columns
 
   const widthRange = gridBoundsRange(drawingSize.columns, borderWidth)
@@ -42,13 +34,6 @@ export function DrawingGrid({ }: Props) {
     minHeight: heightRange.min,
     maxHeight: heightRange.max,
   }
-
-  console.log({
-    bounds,
-    drawingSize,
-    cellSize,
-    containerSizeLimits
-  })
 
   return <div
     ref={measureRef}
@@ -74,6 +59,7 @@ export function DrawingGrid({ }: Props) {
                 gridColumn: colIndex + 1,
                 fontSize: cellSize * 0.8,
               }}
+              onClick={() => canvasStore.applyTool([rowIndex, colIndex])}
             >
               <span
                 className={css.cellContent}
@@ -92,14 +78,15 @@ const css = stylesheet({
   drawingGrid: {
     display: 'grid',
     backgroundColor: 'lightgray',
-    border: '1px solid lightgray'
+    border: '1px solid lightgray',
+    userSelect: 'none'
   },
   cell: {
     backgroundColor: 'white',
     width: '100%',
     height: '100%',
-
-    ...centerContent
+    cursor: 'pointer',
+    ...styles.centerContent
   },
   cellContent: {
     margin: 'auto'
@@ -108,12 +95,11 @@ const css = stylesheet({
 
 type Props = {
 }
-//& Pick<HTMLAttributes<HTMLDivElement>, 'style'
 
 function gridBoundsRange(tracks: number, borderWidth: number): NumericRange {
   const borders = (tracks + 1) * borderWidth
   return {
-    min: tracks * cellSizeRange.min + borders,
-    max: tracks * cellSizeRange.max + borders
+    min: tracks * sizes.clickableMin + borders,
+    max: tracks * sizes.clickableMax + borders
   }
 }

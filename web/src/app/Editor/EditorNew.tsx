@@ -1,9 +1,15 @@
-import { useEditorStoreProvider } from '../../domain/Editor/EditorStore';
-import { DrawingGrid } from './DrawingGrid';
-import React, { useEffect } from 'react';
-import { fromString, getDrawingSize } from '../../domain/Editor/Drawing';
+import React, { useEffect } from 'react'
 import { px, viewWidth } from 'csx'
-import { stylesheet } from 'typestyle';
+import { stylesheet, style } from 'typestyle'
+import * as csstips from 'csstips'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaintBrush } from '@fortawesome/free-solid-svg-icons'
+
+import { fromString, getDrawingSize } from '../../domain/Editor/Drawing'
+import { useEditorStoreProvider } from '../../domain/Editor/EditorStore'
+import { DrawingGrid } from './DrawingGrid'
+import { TileButton } from '../elements/TileButton'
+import { ControlsBar } from '../elements'
 
 export function EditorNew() {
   const { editorStore, Provider } = useEditorStoreProvider()
@@ -17,9 +23,18 @@ export function EditorNew() {
 
   return <Provider>
     <div className={css.editor}>
-      <DrawingGrid />
-      <div>other stuff</div>
+      <div className={style(csstips.vertical)} >
+        <DrawingGrid />
 
+        <ControlsBar>
+          <TileButton
+            onClick={() => editorStore.canvasStore.pickTool({ type: 'paint', brush: '😡' })} >
+            <FontAwesomeIcon icon={faPaintBrush} />
+          </TileButton>
+        </ControlsBar>
+
+      </div>
+      <div>Right Side Text</div>
     </div>
   </Provider>
 }
