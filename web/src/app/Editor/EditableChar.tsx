@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
-import { sizes } from '../styles'
 import { stylesheet, classes } from 'typestyle'
 
 type Props = {
-  value: string,
+  value: string | null,
   onChange: (value: string) => void
 }
 
 const css = stylesheet({
   editableChar: {
-    fontSize: sizes.controlFontSize
   },
   editableCharInput: {
     width: '80%'
@@ -28,9 +26,7 @@ export default function EditableChar(props: Props) {
         props.onChange((event.target as HTMLInputElement).value)
         setIsEditing(false)
       }}
-      onChange={
-        event => console.log('changed', event)
-      }
+      onChange={() => { }}
       onBlur={
         () => setIsEditing(false)
       }

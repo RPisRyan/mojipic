@@ -1,25 +1,31 @@
-import { CellPosition, Drawing, emptyDrawing, getDrawingSize, emptyGlyph } from './Drawing'
+import { CellPosition, Drawing, emptyDrawing, getDrawingSize, emptyGlyph, Glyph, PaintbrushTool } from './Drawing'
 import { Tool } from "./Drawing"
 import produce from 'immer'
 import { useReducer, Dispatch } from 'react'
 
+type ToolType = Tool['type']
+
 export type CanvasState = {
   drawing: Drawing,
   history: Drawing[],
-  tool: Tool
+  tools: { [key in Tool['type']]: Tool },
+  activeToolType: Tool['type']
 }
 
 export function emptyCanvasState(): CanvasState {
   return {
     drawing: emptyDrawing({ rows: 3, columns: 3 }),
     history: [],
-    tool: { type: 'pointer' },
+    tools: {
+      paint: { type: 'paint', brush: '👍' },
+      eraser: { type: 'eraser' },
+    },
+    activeToolType: 'paint',
   }
 }
 
 export function useNewCanvasStore() {
-  const [state, dispatch] = useReducer(canvasReduce,
-    emptyCanvasState())
+  const [state, dispatch] = useReducer(canvasReduce, emptyCanvasState())
   return createCanvasStore(state, dispatch)
 }
 
@@ -31,8 +37,20 @@ export function createCanvasStore(
     undo() {
       dispatch({ action: 'undo' })
     },
-    pickTool(tool: Tool) {
-      dispatch({ action: 'pickTool', tool })
+    activateTool(type: Tool['type']) {
+      dispatch({ action: 'activateTool', type })
+    },
+    setBrush(brush: Glyph) {
+      dispatch({
+        action: 'setTool',
+        tool: { type: 'paint', brush: brush }
+      })
+    },
+    get activeTool() {
+      return state.tools[state.activeToolType]
+    },
+    get brush() {
+      return (state.tools['paint'] as PaintbrushTool).brush
     },
     applyTool(cell: CellPosition) {
       dispatch({ action: 'applyTool', cell })
@@ -49,7 +67,8 @@ export function createCanvasStore(
 export type CanvasStore = ReturnType<typeof createCanvasStore>
 
 export type CanvasAction =
-  { action: 'pickTool', tool: Tool }
+  { action: 'activateTool', type: Tool['type'] }
+  | { action: 'setTool', tool: Tool }
   | { action: 'applyTool', cell: CellPosition }
   | { action: 'setDrawing', drawing: Drawing }
   | { action: 'clear' }
@@ -59,18 +78,30 @@ function captureHistory(state: CanvasState): Drawing[] {
   return [...state.history, state.drawing] // todo: truncate
 }
 
-function canvasReduce(state: CanvasState, action: CanvasAction) {
+function canvasReduce(state: CanvasState, action: CanvasAction): CanvasState {
+  console.log('canvasReduce', state, action)
+
   switch (action.action) {
-    case 'pickTool':
+    case 'activateTool':
       return {
         ...state,
-        tool: action.tool
+        activeToolType: action.type
       }
+    case 'setTool':
+      return produce(state, draft => {
+        draft.tools[action.tool.type] = action.tool
+      })
     case 'applyTool':
+      const tool = state.tools[state.activeToolType]
+      if (!tool) return state
       return {
         ...state,
         history: captureHistory(state),
-        drawing: applyTool(state.tool, action.cell, state.drawing)
+        drawing: applyTool(
+          tool,
+          action.cell,
+          state.drawing
+        )
       }
     case 'setDrawing':
       return {

@@ -831,11 +831,6 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
-"@interactjs/types@1.9.17":
-  version "1.9.17"
-  resolved "https://registry.yarnpkg.com/@interactjs/types/-/types-1.9.17.tgz#a6b2ae0939075b42d6a99a4e5a706d927179c892"
-  integrity sha512-yrfNj4kJHsTxb2gJrihznNSDkg7thSC04CWIF+aDZm6K7+6wiAzxJf4PyznR23Am0FPxeP8a8uM6md89BlIXHw==
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -3172,13 +3167,6 @@ inquirer@^7.0.0:
     string-width "^4.1.0"
     strip-ansi "^6.0.0"
     through "^2.3.6"
-
-interactjs@^1.9.17:
-  version "1.9.17"
-  resolved "https://registry.yarnpkg.com/interactjs/-/interactjs-1.9.17.tgz#4147171e3b212d6cc7dc38acebfd7c80e85398bd"
-  integrity sha512-FBWOju1kD0sMwRxKCkz1RNCoiXluef8AApgpR05QSkAMX3ix0W8ZJzUPjuFK8BRh7HOIXlJJJ+Dy7W3fQ1Byzg==
-  dependencies:
-    "@interactjs/types" "1.9.17"
 
 internal-slot@^1.0.2:
   version "1.0.2"

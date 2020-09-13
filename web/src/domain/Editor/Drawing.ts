@@ -15,10 +15,11 @@ export type DrawingSize = {
 
 export type Glyph = string | null
 
-export type Tool =
-  { type: 'pointer' } |
-  { type: 'paint'; brush: Glyph } |
-  { type: 'eraser' }
+export type PaintbrushTool = { type: 'paint'; brush: Glyph }
+export type EraserTool = { type: 'eraser' }
+
+export type Tool = PaintbrushTool | EraserTool
+
 
 export const emptyGlyph = null
 

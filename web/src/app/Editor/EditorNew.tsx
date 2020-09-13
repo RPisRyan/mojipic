@@ -1,16 +1,16 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect } from 'react'
 import { viewWidth } from 'csx'
 import { stylesheet, style } from 'typestyle'
 import * as csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaintBrush, faEraser } from '@fortawesome/free-solid-svg-icons'
+import { faEraser } from '@fortawesome/free-solid-svg-icons'
 
-import { fromString, getDrawingSize } from '../../domain/Editor/Drawing'
+import { fromString, getDrawingSize, PaintbrushTool } from '../../domain/Editor/Drawing'
 import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
 import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
 import { ControlsBar } from '../elements'
-import { useNewCanvasStore } from '../../domain/Editor/CanvasStore'
+import EditableChar from './EditableChar'
 
 export function EditorNew() {
   // const { editorStore, Provider } = useEditorStoreProvider()
@@ -24,7 +24,6 @@ export function EditorNew() {
     editorStore.canvasStore.setDrawing(fromString(defaultDrawing))
   }, [])
 
-  const cellSize = viewWidth(90 / getDrawingSize(drawing).columns) as string
 
   return <EditorContext.Provider value={editorStore}>
     <div className={css.editor}>
@@ -33,19 +32,22 @@ export function EditorNew() {
 
         <ControlsBar>
           <TileButton
-            active={canvasStore.tool.type === 'paint'}
-            onClick={() => editorStore.canvasStore.pickTool({ type: 'paint', brush: '😡' })}
+            active={canvasStore.activeToolType === 'paint'}
+            onClick={() => canvasStore.activateTool('paint')}
           >
             {
-              (canvasStore.tool.type === 'paint' && canvasStore.tool.brush)
-                ? <span>{canvasStore.tool.brush}</span>
-                : <FontAwesomeIcon icon={faPaintBrush} />
+              canvasStore.activeToolType === 'paint'
+                ? <EditableChar
+                  value={canvasStore.brush}
+                  onChange={canvasStore.setBrush}
+                />
+                : <span>{canvasStore.brush}</span>
             }
           </TileButton>
 
           <TileButton
-            active={canvasStore.tool.type === 'eraser'}
-            onClick={() => editorStore.canvasStore.pickTool({ type: 'eraser' })}
+            active={canvasStore.activeToolType === 'eraser'}
+            onClick={() => canvasStore.activateTool('eraser')}
           >
             <FontAwesomeIcon icon={faEraser} />
           </TileButton>
@@ -53,6 +55,7 @@ export function EditorNew() {
 
       </div>
       <div>Right Side Text</div>
+
     </div>
   </EditorContext.Provider>
 }

@@ -83,11 +83,11 @@ export function DrawingGrid({ }: Props) {
                 gridColumn: colIndex + 1,
                 fontSize: cellSize * 0.8,
               }}
-            // onClick={() => canvasStore.applyTool([rowIndex, colIndex])}
+              data-position={JSON.stringify([rowIndex, colIndex])}
+              data-glyph={glyph}
+              onClick={() => canvasStore.applyTool([rowIndex, colIndex])}
             >
               <span
-                data-position={JSON.stringify([rowIndex, colIndex])}
-                data-glyph={glyph}
                 className={classes(css.cellContent, !glyph && css.blankCell)}
               >
                 {
@@ -117,7 +117,8 @@ const css = stylesheet({
     ...styles.centerContent
   },
   cellContent: {
-    margin: 'auto'
+    margin: 'auto',
+    pointerEvents: 'none'
   },
   blankCell: {
     color: colors.lightest
