@@ -1,9 +1,16 @@
-import { CellPosition, Drawing, emptyDrawing, getDrawingSize, emptyGlyph, Glyph, PaintbrushTool } from './Drawing'
+import {
+  CellPosition, Drawing, emptyDrawing, getDrawingSize, emptyGlyph,
+  Glyph, PaintbrushTool, isWithinDrawing, expandToInclude, trimDrawing
+} from './Drawing'
 import { Tool } from "./Drawing"
 import produce from 'immer'
 import { useReducer, Dispatch } from 'react'
 
 type ToolType = Tool['type']
+
+const minDrawingSize = 3
+const maxDrawingSize = 15
+const defaultBrush = '👍'
 
 export type CanvasState = {
   drawing: Drawing,
@@ -14,10 +21,10 @@ export type CanvasState = {
 
 export function emptyCanvasState(): CanvasState {
   return {
-    drawing: emptyDrawing({ rows: 3, columns: 3 }),
+    drawing: emptyDrawing({ rows: minDrawingSize, columns: minDrawingSize }),
     history: [],
     tools: {
-      paint: { type: 'paint', brush: '👍' },
+      paint: { type: 'paint', brush: defaultBrush },
       eraser: { type: 'eraser' },
     },
     activeToolType: 'paint',
@@ -128,16 +135,39 @@ function canvasReduce(state: CanvasState, action: CanvasAction): CanvasState {
   }
 }
 
-function applyTool(tool: Tool, cell: CellPosition, drawing: Drawing): Drawing {
+function applyTool(tool: Tool, position: CellPosition, drawing: Drawing): Drawing {
+  const isWithin = isWithinDrawing(position, drawing)
+
   switch (tool.type) {
     case 'paint':
-      return produce(drawing, draft => {
-        draft[cell[0]][cell[1]] = tool.brush
-      })
+      const { row, col } = position
+      if (isWithin) {
+        return produce(drawing, draft => {
+          draft[row][col] = tool.brush
+        })
+      }
+
+      const size = getDrawingSize(drawing)
+      if (size.columns >= maxDrawingSize || size.rows >= maxDrawingSize) {
+        // if either direction is maxed, do nothing
+        return drawing
+      }
+
+      const newDrawing = expandToInclude(position, drawing)
+      if (newDrawing) {
+        return produce(newDrawing, draft => {
+          draft[Math.max(0, row)][Math.max(0, col)] = tool.brush
+        })
+      }
     case 'eraser':
-      return produce(drawing, draft => {
-        draft[cell[0]][cell[1]] = emptyGlyph
-      })
+      if (isWithin) {
+        const { row, col } = position
+        const newDrawing = produce(drawing, draft => {
+          draft[row][col] = emptyGlyph
+        })
+        return trimDrawing(newDrawing, minDrawingSize)
+      }
+      return drawing
     default:
       return drawing
   }

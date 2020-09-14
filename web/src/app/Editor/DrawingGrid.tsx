@@ -1,7 +1,7 @@
-import React, { CSSProperties, useRef } from 'react'
+import React, { CSSProperties, useRef, ReactElement } from 'react'
 import { useDrag } from 'react-use-gesture'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
-import { getDrawingSize, CellPosition } from '../../domain/Editor/Drawing'
+import { getDrawingSize, CellPosition, positionToString, positionFromString } from '../../domain/Editor/Drawing'
 import { stylesheet, classes } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { NumericRange } from '../../common/measurement'
@@ -30,10 +30,10 @@ export function DrawingGrid({ }: Props) {
       if (!target.dataset.position) {
         return
       }
-      const position = JSON.parse(target.dataset.position) as CellPosition
+      const position = positionFromString(target.dataset.position)
 
       if (position.toString() !== lastAppliedPosition.current?.toString()) {
-        canvasStore.applyTool(position)
+        // canvasStore.applyTool(position)
         lastAppliedPosition.current = position
       }
 
@@ -45,8 +45,9 @@ export function DrawingGrid({ }: Props) {
   const borderWidth = 3
 
   // subract column borders from width
-  const cellSize = (bounds.width - (borderWidth * (drawingSize.columns + 1)))
-    / drawingSize.columns
+  const bordersWidth = borderWidth * (drawingSize.columns + 3)
+  const cellSize = (bounds.width - bordersWidth)
+    / (drawingSize.columns + 2)
 
   const widthRange = gridBoundsRange(drawingSize.columns, borderWidth)
   const heightRange = gridBoundsRange(drawingSize.rows, borderWidth)
@@ -58,48 +59,73 @@ export function DrawingGrid({ }: Props) {
     maxHeight: heightRange.max,
   }
 
+  const cells: ReactElement[] = []
+
+  for (let rowIdx = -1; rowIdx <= drawingSize.rows; rowIdx++) {
+    const row = rowIdx >= 0 && rowIdx < drawingSize.rows
+      ? drawing[rowIdx]
+      : null
+    for (let colIdx = -1; colIdx <= drawingSize.columns; colIdx++) {
+      const position: CellPosition = { row: rowIdx, col: colIdx }
+      const glyph = row && (colIdx >= 0 && colIdx < drawingSize.columns)
+        ? row[colIdx]
+        : null
+      cells.push(
+        <Cell
+          key={positionToString(position)}
+          position={position}
+          glyph={glyph}
+          cellSize={cellSize}
+          onClick={() => canvasStore.applyTool(position)}
+        />
+      )
+    }
+  }
+
   return <div
     ref={it => measureRef(it)}
     className={css.drawingGrid}
     style={{
       ...containerSizeLimits,
       borderWidth,
-
       gap: borderWidth,
       gridAutoColumns: cellSize,
       gridAutoRows: cellSize
     }}
     {...dragBind()}
   >
-    {
-      bounds.width
-        ? drawing.map((row, rowIndex) =>
-          row.map((glyph, colIndex) =>
-            <div
-              key={[rowIndex, colIndex].toString()}
-              className={css.cell}
-              style={{
-                gridRow: rowIndex + 1,
-                gridColumn: colIndex + 1,
-                fontSize: cellSize * 0.8,
-              }}
-              data-position={JSON.stringify([rowIndex, colIndex])}
-              data-glyph={glyph}
-              onClick={() => canvasStore.applyTool([rowIndex, colIndex])}
-            >
-              <span
-                className={classes(css.cellContent, !glyph && css.blankCell)}
-              >
-                {
-                  glyph || '☻'
-                }
-              </span>
-            </div>
-          )
-        )
-        : null
-    }
+    {bounds.width ? cells : null}
   </div >
+}
+
+function Cell({ position, glyph, cellSize, onClick }: CellProps) {
+  const { row, col } = position
+  return <div
+    className={css.cell}
+    style={{
+      gridRow: row + 2,
+      gridColumn: col + 2,
+      fontSize: cellSize * 0.8,
+    }}
+    data-position={positionToString(position)}
+    data-glyph={glyph}
+    onClick={onClick}
+  >
+    <span
+      className={classes(css.cellContent, !glyph && css.blankCell)}
+    >
+      {
+        glyph || '☻'
+      }
+    </span>
+  </div>
+}
+
+type CellProps = {
+  position: CellPosition
+  cellSize: number
+  glyph: string | null
+  onClick: () => void
 }
 
 const css = stylesheet({
@@ -129,7 +155,7 @@ type Props = {
 }
 
 function gridBoundsRange(tracks: number, borderWidth: number): NumericRange {
-  const borders = (tracks + 1) * borderWidth
+  const borders = (tracks + 3) * borderWidth
   return {
     min: tracks * sizes.clickableMin + borders,
     max: tracks * sizes.clickableMax + borders

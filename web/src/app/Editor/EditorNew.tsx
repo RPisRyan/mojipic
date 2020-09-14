@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
-import { viewWidth } from 'csx'
 import { stylesheet, style } from 'typestyle'
 import * as csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEraser } from '@fortawesome/free-solid-svg-icons'
 
-import { fromString, getDrawingSize, PaintbrushTool } from '../../domain/Editor/Drawing'
+import { fromString } from '../../domain/Editor/Drawing'
 import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
 import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
@@ -13,17 +12,12 @@ import { ControlsBar } from '../elements'
 import EditableChar from './EditableChar'
 
 export function EditorNew() {
-  // const { editorStore, Provider } = useEditorStoreProvider()
-
   const editorStore = useNewEditorStore()
-
   const { canvasStore } = editorStore
-  const { drawing } = canvasStore
 
   useEffect(() => {
     editorStore.canvasStore.setDrawing(fromString(defaultDrawing))
   }, [])
-
 
   return <EditorContext.Provider value={editorStore}>
     <div className={css.editor}>
