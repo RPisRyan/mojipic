@@ -93,7 +93,10 @@ function emptyRow(size: number) {
   return new Array(size).fill(emptyGlyph)
 }
 
-export function positionToString(position: CellPosition) {
+export function positionToString(position: CellPosition | null) {
+  if (position == null) {
+    return null
+  }
   return position.row + ',' + position.col
 }
 

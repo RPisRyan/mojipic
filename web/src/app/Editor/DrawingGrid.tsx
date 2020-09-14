@@ -1,7 +1,10 @@
 import React, { CSSProperties, useRef, ReactElement } from 'react'
 import { useDrag } from 'react-use-gesture'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
-import { getDrawingSize, CellPosition, positionToString, positionFromString, Drawing, addRow, addColumn } from '../../domain/Editor/Drawing'
+import {
+  getDrawingSize, CellPosition, positionToString,
+  positionFromString, isWithinDrawing
+} from '../../domain/Editor/Drawing'
 import { stylesheet, classes } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { NumericRange } from '../../common/measurement'
@@ -32,12 +35,16 @@ export function DrawingGrid({ }: Props) {
         return
       }
       const position = positionFromString(target.dataset.position)
-
-      if (position.toString() !== lastAppliedPosition.current?.toString()) {
-        // canvasStore.applyTool(position)
+      const positionChanged = positionToString(position) !==
+        positionToString(lastAppliedPosition.current || null)
+      const withinBounds = isWithinDrawing(position, drawing)
+      if (withinBounds && positionChanged) {
+        canvasStore.applyTool(position)
         lastAppliedPosition.current = position
       }
-
+    },
+    {
+      filterTaps: true
     }
   )
 
@@ -84,7 +91,7 @@ export function DrawingGrid({ }: Props) {
           : null
         cells.push(
           <Cell
-            key={positionToString(position)}
+            key={positionToString(position)!}
             position={position}
             origin={origin}
             glyph={glyph}
