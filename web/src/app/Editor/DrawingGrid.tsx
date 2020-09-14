@@ -1,11 +1,12 @@
 import React, { CSSProperties, useRef, ReactElement } from 'react'
 import { useDrag } from 'react-use-gesture'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
-import { getDrawingSize, CellPosition, positionToString, positionFromString } from '../../domain/Editor/Drawing'
+import { getDrawingSize, CellPosition, positionToString, positionFromString, Drawing, addRow, addColumn } from '../../domain/Editor/Drawing'
 import { stylesheet, classes } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { NumericRange } from '../../common/measurement'
 import { sizes, styles, colors } from '../../common/theme'
+import { maxDrawingSize } from '../../domain/Editor/CanvasStore'
 
 /**
  * Component is sized in two stages:
@@ -61,24 +62,37 @@ export function DrawingGrid({ }: Props) {
 
   const cells: ReactElement[] = []
 
-  for (let rowIdx = -1; rowIdx <= drawingSize.rows; rowIdx++) {
-    const row = rowIdx >= 0 && rowIdx < drawingSize.rows
-      ? drawing[rowIdx]
-      : null
-    for (let colIdx = -1; colIdx <= drawingSize.columns; colIdx++) {
-      const position: CellPosition = { row: rowIdx, col: colIdx }
-      const glyph = row && (colIdx >= 0 && colIdx < drawingSize.columns)
-        ? row[colIdx]
+  if (bounds.width) {
+    // If max size reached in one direction, don't show
+    //  border cells.
+    const rowRange = drawingSize.rows < maxDrawingSize
+      ? [-1, drawingSize.rows]
+      : [0, drawingSize.rows - 1]
+    const colRange = drawingSize.columns < maxDrawingSize
+      ? [-1, drawingSize.columns]
+      : [0, drawingSize.columns - 1]
+    const origin: CellPosition = { row: rowRange[0], col: colRange[0] }
+
+    for (let rowIdx = rowRange[0]; rowIdx <= rowRange[1]; rowIdx++) {
+      const row = rowIdx >= 0 && rowIdx < drawingSize.rows
+        ? drawing[rowIdx]
         : null
-      cells.push(
-        <Cell
-          key={positionToString(position)}
-          position={position}
-          glyph={glyph}
-          cellSize={cellSize}
-          onClick={() => canvasStore.applyTool(position)}
-        />
-      )
+      for (let colIdx = colRange[0]; colIdx <= colRange[1]; colIdx++) {
+        const position: CellPosition = { row: rowIdx, col: colIdx }
+        const glyph = row && (colIdx >= 0 && colIdx < drawingSize.columns)
+          ? row[colIdx]
+          : null
+        cells.push(
+          <Cell
+            key={positionToString(position)}
+            position={position}
+            origin={origin}
+            glyph={glyph}
+            cellSize={cellSize}
+            onClick={() => canvasStore.applyTool(position)}
+          />
+        )
+      }
     }
   }
 
@@ -94,17 +108,17 @@ export function DrawingGrid({ }: Props) {
     }}
     {...dragBind()}
   >
-    {bounds.width ? cells : null}
+    {cells}
   </div >
 }
 
-function Cell({ position, glyph, cellSize, onClick }: CellProps) {
+function Cell({ position, origin, glyph, cellSize, onClick }: CellProps) {
   const { row, col } = position
   return <div
     className={css.cell}
     style={{
-      gridRow: row + 2,
-      gridColumn: col + 2,
+      gridRow: row - origin.row + 1,
+      gridColumn: col - origin.col + 1,
       fontSize: cellSize * 0.8,
     }}
     data-position={positionToString(position)}
@@ -123,6 +137,7 @@ function Cell({ position, glyph, cellSize, onClick }: CellProps) {
 
 type CellProps = {
   position: CellPosition
+  origin: CellPosition
   cellSize: number
   glyph: string | null
   onClick: () => void

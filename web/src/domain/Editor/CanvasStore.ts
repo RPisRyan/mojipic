@@ -8,8 +8,8 @@ import { useReducer, Dispatch } from 'react'
 
 type ToolType = Tool['type']
 
-const minDrawingSize = 3
-const maxDrawingSize = 15
+export const minDrawingSize = 3
+export const maxDrawingSize = 15
 const defaultBrush = '👍'
 
 export type CanvasState = {
