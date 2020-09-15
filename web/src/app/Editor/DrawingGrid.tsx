@@ -64,7 +64,7 @@ export function DrawingGrid({ }: Props) {
     minWidth: widthRange.min,
     maxWidth: widthRange.max,
     minHeight: heightRange.min,
-    maxHeight: heightRange.max,
+    // maxHeight: heightRange.max,
   }
 
   const cells: ReactElement[] = []

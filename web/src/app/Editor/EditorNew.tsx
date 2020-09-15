@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { stylesheet, style } from 'typestyle'
 import * as csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEraser } from '@fortawesome/free-solid-svg-icons'
+import { faEraser, faCopy } from '@fortawesome/free-solid-svg-icons'
 
 import { fromString } from '../../domain/Editor/Drawing'
 import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
@@ -10,6 +10,7 @@ import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
 import { ControlsBar } from '../elements'
 import EditableChar from './EditableChar'
+import { sizes, spaces } from '../../common/theme'
 
 export function EditorNew() {
   const editorStore = useNewEditorStore()
@@ -48,7 +49,13 @@ export function EditorNew() {
         </ControlsBar>
 
       </div>
-      <div>Right Side Text</div>
+      <div className={style(csstips.vertical)}>
+        <TileButton
+          onClick={() => undefined}
+        >
+          <FontAwesomeIcon icon={faCopy} />
+        </TileButton>
+      </div>
 
     </div>
   </EditorContext.Provider>
@@ -57,7 +64,8 @@ export function EditorNew() {
 const css = stylesheet({
   editor: {
     display: 'grid',
-    gridTemplateColumns: '50% 50%',
+    gridTemplateColumns: 'auto min-content',
+    gap: spaces.sm
   }
 })
 

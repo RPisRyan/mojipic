@@ -45,7 +45,7 @@ export type ControlState = {
 export const colors = {
   getControlBackground({ active, hover }: ControlState): string {
     if (active) {
-      return palette.energy.brighten(1.5).hex()
+      return palette.energy.brighten(1).hex()
     }
     return hover
       ? neutral.light.hex()
@@ -53,7 +53,7 @@ export const colors = {
   },
   getControlBorder({ active }: ControlState): string {
     if (active) {
-      return palette.energy.brighten().hex()
+      return palette.energy.brighten(2).hex()
     }
     return neutral.medium.hex()
   },
