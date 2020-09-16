@@ -1,9 +1,6 @@
 import GraphemeSplitter from 'grapheme-splitter'
+import { blankChar } from '../../util/charUtil'
 import { sizedRow } from '../../util/stackUtil'
-
-// export type CellState =
-//   { mode: 'view', glyph: Glyph }
-//   | { mode: 'input', glyph: Glyph }
 
 export type Drawing = Glyph[][]
 
@@ -133,6 +130,11 @@ export function trimDrawing(drawing: Drawing, minSize: number) {
   }
 
   return working
+}
+
+export function drawingToString(drawing: Drawing) {
+  return drawing.map(row => row.map(it => it || blankChar)
+    .join('')).join('\n')
 }
 
 function rowIsEmpty(rowIdx: number, drawing: Drawing) {

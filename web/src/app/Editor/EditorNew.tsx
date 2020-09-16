@@ -51,7 +51,7 @@ export function EditorNew() {
       </div>
       <div className={style(csstips.vertical)}>
         <TileButton
-          onClick={() => undefined}
+          onClick={() => editorStore.copyToClipboard()}
         >
           <FontAwesomeIcon icon={faCopy} />
         </TileButton>

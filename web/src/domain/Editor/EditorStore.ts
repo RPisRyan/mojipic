@@ -1,8 +1,10 @@
-import React, {
-  useReducer, PropsWithChildren, createContext,
-  useContext, Dispatch, createElement
+import {
+  useReducer, createContext,
+  useContext, Dispatch
 } from 'react'
 import { useNewCanvasStore, CanvasStore } from './CanvasStore'
+import { drawingToString } from './Drawing'
+import { notify } from '../../common/notification'
 
 export type EditorState = {
   saved: boolean
@@ -36,8 +38,12 @@ function createEditorStore(
     ...editorState,
     canvasStore,
     async save() {
-      // await asyncStuff()
       dispatch({ action: 'didSave' })
+    },
+    async copyToClipboard() {
+      const serialized = drawingToString(canvasStore.drawing)
+      await navigator.clipboard.writeText(serialized)
+      notify.success('copied')
     }
   }
 }
