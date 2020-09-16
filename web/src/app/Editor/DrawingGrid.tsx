@@ -22,7 +22,6 @@ export function DrawingGrid({ }: Props) {
   const { drawing } = canvasStore
 
   const [measureRef, bounds] = useMeasure()
-  const dragContainerRef = useRef<HTMLElement | null>()
 
   const lastAppliedPosition = useRef<CellPosition>()
   const dragBind = useDrag(
@@ -32,10 +31,11 @@ export function DrawingGrid({ }: Props) {
         return
       }
 
+      const body = document.querySelector('body')!
       if (down) {
-        disableBodyScroll(dragContainerRef.current as HTMLElement)
+        disableBodyScroll(body)
       } else {
-        enableBodyScroll(dragContainerRef.current as HTMLElement)
+        enableBodyScroll(body)
       }
 
       const target = event.target as HTMLElement
@@ -112,10 +112,7 @@ export function DrawingGrid({ }: Props) {
   }
 
   return <div
-    ref={it => {
-      measureRef(it)
-      dragContainerRef.current = it
-    }}
+    ref={measureRef}
     className={css.drawingGrid}
     style={{
       ...containerSizeLimits,

@@ -25,7 +25,8 @@ const css = stylesheet({
   root: {
     display: 'grid',
     gridTemplateColumns: '1fr minmax(300px, 800px) 1fr',
-    height: '100%'
+    height: '100%',
+    width: '100%'
   },
   application: {
     display: 'grid',
@@ -51,5 +52,5 @@ const css = stylesheet({
 })
 
 cssRule('html', {
-  fontSize: 'clamp(12px, 4vw, 36px)'
+  fontSize: 'clamp(12px, 5vw, 30px)'
 })
