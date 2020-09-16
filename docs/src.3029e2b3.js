@@ -24261,7 +24261,6 @@ function DrawingGrid(_a) {
       measureRef = _b[0],
       bounds = _b[1];
 
-  var dragContainerRef = (0, _react.useRef)();
   var lastAppliedPosition = (0, _react.useRef)();
   var dragBind = (0, _reactUseGesture.useDrag)(function (dragEvent) {
     var _a;
@@ -24273,10 +24272,12 @@ function DrawingGrid(_a) {
       return;
     }
 
+    var body = document.querySelector('body');
+
     if (down) {
-      (0, _bodyScrollLock.disableBodyScroll)(dragContainerRef.current);
+      (0, _bodyScrollLock.disableBodyScroll)(body);
     } else {
-      (0, _bodyScrollLock.enableBodyScroll)(dragContainerRef.current);
+      (0, _bodyScrollLock.enableBodyScroll)(body);
     }
 
     var target = event.target;
@@ -24348,10 +24349,7 @@ function DrawingGrid(_a) {
   }
 
   return _react.default.createElement("div", __assign({
-    ref: function ref(it) {
-      measureRef(it);
-      dragContainerRef.current = it;
-    },
+    ref: measureRef,
     className: css.drawingGrid,
     style: __assign(__assign({}, containerSizeLimits), {
       borderWidth: borderWidth,
@@ -24837,7 +24835,8 @@ var css = (0, _typestyle.stylesheet)({
   root: {
     display: 'grid',
     gridTemplateColumns: '1fr minmax(300px, 800px) 1fr',
-    height: '100%'
+    height: '100%',
+    width: '100%'
   },
   application: {
     display: 'grid',
@@ -24859,7 +24858,7 @@ var css = (0, _typestyle.stylesheet)({
   }
 });
 (0, _typestyle.cssRule)('html', {
-  fontSize: 'clamp(12px, 4vw, 36px)'
+  fontSize: 'clamp(12px, 5vw, 30px)'
 });
 },{"react":"n8MK","./Editor/EditorNew":"nabL","typestyle":"oehJ","../common/theme":"GwfW","./elements/ButtonLetters":"mtsy","csx":"O5kx"}],"wGC4":[function(require,module,exports) {
 "use strict";
@@ -24883,4 +24882,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var rootElement = document.getElementById('root');
 (0, _reactDom.render)(React.createElement(_App.default, null), rootElement);
 },{"react":"n8MK","react-dom":"NKHc","csstips":"pm94","./app/App":"AUkG"}]},{},["wGC4"], null)
-//# sourceMappingURL=src.09da97fe.js.map
+//# sourceMappingURL=src.3029e2b3.js.map
