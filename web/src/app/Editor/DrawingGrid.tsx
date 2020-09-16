@@ -1,6 +1,7 @@
 import React, { CSSProperties, useRef, ReactElement } from 'react'
 import { useDrag } from 'react-use-gesture'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import {
   getDrawingSize, CellPosition, positionToString,
   positionFromString, isWithinDrawing
@@ -21,13 +22,20 @@ export function DrawingGrid({ }: Props) {
   const { drawing } = canvasStore
 
   const [measureRef, bounds] = useMeasure()
+  const dragContainerRef = useRef<HTMLElement | null>()
 
   const lastAppliedPosition = useRef<CellPosition>()
   const dragBind = useDrag(
     (dragEvent) => {
-      const { event } = dragEvent
+      const { event, down } = dragEvent
       if (!event?.target) {
         return
+      }
+
+      if (down) {
+        disableBodyScroll(dragContainerRef.current as HTMLElement)
+      } else {
+        enableBodyScroll(dragContainerRef.current as HTMLElement)
       }
 
       const target = event.target as HTMLElement
@@ -104,7 +112,10 @@ export function DrawingGrid({ }: Props) {
   }
 
   return <div
-    ref={it => measureRef(it)}
+    ref={it => {
+      measureRef(it)
+      dragContainerRef.current = it
+    }}
     className={css.drawingGrid}
     style={{
       ...containerSizeLimits,

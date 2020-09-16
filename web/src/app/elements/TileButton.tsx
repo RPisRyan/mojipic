@@ -38,7 +38,7 @@ const css = stylesheet({
   active: {
     backgroundColor: colors.getControlBackground({ active: true, hover: false }),
     borderColor: colors.getControlBorder({ active: true, hover: false }),
-    textShadow: '0 0 0.5rem white, 0 0 0.5rem white',
+    textShadow: '0 0 0.5rem white, 0 0 0.6rem white, 0 0 0.7rem white',
     cursor: 'pointer',
     '$nest': {
       '&:hover': {

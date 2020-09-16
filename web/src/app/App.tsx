@@ -11,7 +11,7 @@ export default function App() {
     <div className={css.application}>
       <div className={css.headerBar}>
         <span className={css.headerTitle}>
-          <ButtonLetters>MOGLYPH</ButtonLetters>
+          <ButtonLetters>Mojipic</ButtonLetters>
         </span>
       </div>
       <div className={css.appBody}>
@@ -24,7 +24,7 @@ export default function App() {
 const css = stylesheet({
   root: {
     display: 'grid',
-    gridTemplateColumns: '1fr minmax(20em, max-content) 1fr',
+    gridTemplateColumns: '1fr minmax(300px, 800px) 1fr',
     height: '100%'
   },
   application: {
