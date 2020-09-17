@@ -1,6 +1,13 @@
 import { rem } from 'csx'
 import { NestedCSSProperties } from 'typestyle/lib/types'
 import chroma from 'chroma-js'
+import { cssRule } from 'typestyle'
+
+export function mountTheme() {
+  cssRule('html', {
+    fontSize: 'clamp(14px, 5vw, 30px)'
+  })
+}
 
 export const sizes = {
   clickableMin: 24,

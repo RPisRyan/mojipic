@@ -50,7 +50,3 @@ const css = stylesheet({
     padding: spaces.sm
   }
 })
-
-cssRule('html', {
-  fontSize: 'clamp(12px, 5vw, 30px)'
-})

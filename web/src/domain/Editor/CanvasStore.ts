@@ -123,7 +123,7 @@ function canvasReduce(state: CanvasState, action: CanvasAction): CanvasState {
       return {
         ...state,
         history: captureHistory(state),
-        drawing: emptyDrawing(getDrawingSize(state.drawing))
+        drawing: emptyDrawing({ rows: minDrawingSize, columns: minDrawingSize })
       }
     case 'undo':
       if (state.history.length === 0) {
