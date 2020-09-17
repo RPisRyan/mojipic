@@ -1,10 +1,15 @@
 import {
   useReducer, createContext,
-  useContext, Dispatch
+  useContext, Dispatch, useEffect
 } from 'react'
 import { useNewCanvasStore, CanvasStore } from './CanvasStore'
-import { drawingToString } from './Drawing'
+import { drawingFromString, drawingToString } from './Drawing'
 import { notify } from '../../common/notification'
+import { loadLocal, saveLocal } from '../../common/storage'
+
+const defaultDrawing = `☀️🌫👍🏿
+🌫🌧🌈
+🌧🌈💰`
 
 export type EditorState = {
   saved: boolean
@@ -58,6 +63,20 @@ export const EditorContext = createContext<EditorStore>(undefined as unknown as 
 export function useNewEditorStore() {
   const canvas = useNewCanvasStore()
   const [editorState, editorDispatch] = useReducer(reduce, emptyEditorState())
+
+  useEffect(() => {
+    const loaded = loadLocal()
+    if (loaded) {
+      canvas.setDrawing(loaded)
+    } else {
+      canvas.setDrawing(drawingFromString(defaultDrawing))
+    }
+  }, [])
+
+  useEffect(() => {
+    saveLocal(canvas.drawing)
+  }, [canvas.drawing])
+
   return createEditorStore(editorState, editorDispatch, canvas)
 }
 

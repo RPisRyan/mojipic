@@ -4,7 +4,7 @@ import * as csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEraser, faCopy, faTrash } from '@fortawesome/free-solid-svg-icons'
 
-import { fromString } from '../../domain/Editor/Drawing'
+import { drawingFromString, drawingIsEmpty } from '../../domain/Editor/Drawing'
 import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
 import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
@@ -15,10 +15,6 @@ import { sizes, spaces } from '../../common/theme'
 export function Editor() {
   const editorStore = useNewEditorStore()
   const { canvasStore } = editorStore
-
-  useEffect(() => {
-    editorStore.canvasStore.setDrawing(fromString(defaultDrawing))
-  }, [])
 
   return <EditorContext.Provider value={editorStore}>
     <div className={css.editor}>
@@ -78,7 +74,3 @@ const css = stylesheet({
     gap: spaces.sm
   }
 })
-
-const defaultDrawing = `☀️🌫👍🏿
-🌫🌧🌈
-🌧🌈💰`

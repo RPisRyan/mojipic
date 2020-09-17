@@ -1,6 +1,6 @@
+import { gl } from 'chroma-js'
 import GraphemeSplitter from 'grapheme-splitter'
 import { blankChar } from '../../util/charUtil'
-import { sizedRow } from '../../util/stackUtil'
 
 export type Drawing = Glyph[][]
 
@@ -34,11 +34,6 @@ export function getDrawingSize(drawing: Drawing): DrawingSize {
     rows: drawing.length,
     columns: drawing[0]?.length
   }
-}
-
-export function fromString(raw: string): Drawing {
-  return raw.split('\n')
-    .map(rowChars => splitter.splitGraphemes(rowChars.trim()))
 }
 
 export function isWithinDrawing(position: CellPosition, drawing: Drawing) {
@@ -135,6 +130,20 @@ export function trimDrawing(drawing: Drawing, minSize: number) {
 export function drawingToString(drawing: Drawing) {
   return drawing.map(row => row.map(it => it || blankChar)
     .join('')).join('\n')
+}
+
+export function drawingIsEmpty(drawing: Drawing) {
+  return drawing.every(row =>
+    row.every(cell => !cell)
+  )
+}
+
+export function drawingFromString(raw: string): Drawing {
+  return raw.split('\n')
+    .map(rowChars =>
+      splitter.splitGraphemes(rowChars.trim())
+        .map(glyph => glyph === blankChar ? null : glyph)
+    )
 }
 
 function rowIsEmpty(rowIdx: number, drawing: Drawing) {
