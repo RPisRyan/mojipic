@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { stylesheet, style } from 'typestyle'
 import * as csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEraser, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faEraser, faCopy, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import { fromString } from '../../domain/Editor/Drawing'
 import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
@@ -49,11 +49,17 @@ export function Editor() {
         </ControlsBar>
 
       </div>
-      <div className={style(csstips.vertical)}>
+      <div className={css.commandButtons}>
         <TileButton
           onClick={() => editorStore.copyToClipboard()}
         >
           <FontAwesomeIcon icon={faCopy} />
+        </TileButton>
+
+        <TileButton
+          onClick={() => canvasStore.clear()}
+        >
+          <FontAwesomeIcon icon={faTrash} />
         </TileButton>
       </div>
 
@@ -65,6 +71,10 @@ const css = stylesheet({
   editor: {
     display: 'grid',
     gridTemplateColumns: 'auto min-content',
+    gap: spaces.sm
+  },
+  commandButtons: {
+    ...csstips.vertical,
     gap: spaces.sm
   }
 })
