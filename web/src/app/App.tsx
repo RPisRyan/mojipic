@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { EditorNew } from './Editor/EditorNew'
+import { Editor } from './Editor/Editor'
 import { stylesheet, cssRule } from 'typestyle'
 import { palette, spaces, colors } from '../common/theme'
 import { ButtonLetters } from './elements/ButtonLetters'
@@ -15,7 +15,7 @@ export default function App() {
         </span>
       </div>
       <div className={css.appBody}>
-        <EditorNew />
+        <Editor />
       </div>
     </div>
   </div>

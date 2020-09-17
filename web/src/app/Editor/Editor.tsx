@@ -1,152 +1,74 @@
-// import React, { useContext, PropsWithChildren } from 'react'
-// import * as csstips from 'csstips'
-// import 'emoji-mart/css/emoji-mart.css'
-// import copy from 'copy-to-clipboard'
-// import GraphemeSplitter from 'grapheme-splitter'
-// import { style, stylesheet } from 'typestyle'
-// import { FaRegCopy, FaExpandAlt, FaEraser } from "react-icons/fa"
-// import { MdPhotoSizeSelectSmall } from "react-icons/md";
-// import { observer } from 'mobx-react-lite'
-// import { unprotect } from 'mobx-state-tree'
+import React, { useEffect } from 'react'
+import { stylesheet, style } from 'typestyle'
+import * as csstips from 'csstips'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEraser, faCopy } from '@fortawesome/free-solid-svg-icons'
 
-// import { isMacOS } from '../../util/browserUtil'
-// import PositionedDisplay from './PositionedDisplay'
-// import { stackToText } from '../../util/stackUtil'
-// import IconButton from '../elements/IconButton'
-// import NotyfContext from '../NotyfContext'
-// import ControlVerticalDivider from '../elements/ControlVerticalDivider'
-// import { CellStack, EditorNode } from '../../domain/Editor'
-// import OverlayFill from '../elements/OverlayFill'
-// import EditableChar from './EditableChar'
+import { fromString } from '../../domain/Editor/Drawing'
+import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
+import { DrawingGrid } from './DrawingGrid'
+import { TileButton } from '../elements/TileButton'
+import { ControlsBar } from '../elements'
+import EditableChar from './EditableChar'
+import { sizes, spaces } from '../../common/theme'
 
-// const defaultStackRaw = `☀️🌫👍🏿
-// 🌫🌧🌈
-// 🌧🌈💰`
+export function Editor() {
+  const editorStore = useNewEditorStore()
+  const { canvasStore } = editorStore
 
-// const splitter = new GraphemeSplitter()
+  useEffect(() => {
+    editorStore.canvasStore.setDrawing(fromString(defaultDrawing))
+  }, [])
 
-// const defaultStack: CellStack = {
-//   sizeIndex: 0,
-//   rows: defaultStackRaw.split('\n')
-//     .map(rowChars => ({
-//       cells: splitter.splitGraphemes(rowChars.trim())
-//         .map((character) => ({ character }))
-//     }))
-// }
+  return <EditorContext.Provider value={editorStore}>
+    <div className={css.editor}>
+      <div className={style(csstips.vertical)} >
+        <DrawingGrid />
 
-// const editorStore = EditorNode.create({
-//   stack: defaultStack,
-//   brush: '😇'
-// })
-// unprotect(editorStore)
+        <ControlsBar>
+          <TileButton
+            active={canvasStore.activeToolType === 'paint'}
+            onClick={() => canvasStore.activateTool('paint')}
+          >
+            {
+              canvasStore.activeToolType === 'paint'
+                ? <EditableChar
+                  value={canvasStore.brush}
+                  onChange={canvasStore.setBrush}
+                />
+                : <span>{canvasStore.brush}</span>
+            }
+          </TileButton>
 
-// export function useEditorStore() {
-//   return editorStore
-// }
+          <TileButton
+            active={canvasStore.activeToolType === 'eraser'}
+            onClick={() => canvasStore.activateTool('eraser')}
+          >
+            <FontAwesomeIcon icon={faEraser} />
+          </TileButton>
+        </ControlsBar>
 
-// const Editor: React.FC = observer(() => {
-//   const store = useEditorStore()
-//   const notyf = useContext(NotyfContext)
+      </div>
+      <div className={style(csstips.vertical)}>
+        <TileButton
+          onClick={() => editorStore.copyToClipboard()}
+        >
+          <FontAwesomeIcon icon={faCopy} />
+        </TileButton>
+      </div>
 
-//   const handleEraserClick = () => {
-//     store.brush = ''
-//   }
+    </div>
+  </EditorContext.Provider>
+}
 
-//   const css = stylesheet({
-//     editor: {
-//       cursor: 'pointer',
-//       ...csstips.flex,
-//     },
-//     buttons: {
-//       margin: 4,
-//       display: 'flex',
-//       alignItems: 'center',
-//       $nest: {
-//         '> *': {
-//           margin: 4
-//         }
-//       }
-//     }
-//   })
+const css = stylesheet({
+  editor: {
+    display: 'grid',
+    gridTemplateColumns: 'auto min-content',
+    gap: spaces.sm
+  }
+})
 
-//   return (
-//     <div className={css.editor}>
-//       <h3>💫 Mojistack 💫</h3>
-
-//       <div style={{ maxWidth: '500px' }}>
-
-//         <PositionedDisplay />
-
-//         <div className={css.buttons}>
-
-//           <IconButton>
-//             <EditableChar
-//               value={store.brush}
-//               onChange={it => { store.brush = it }} />
-//           </IconButton>
-
-//           <IconButton
-//             onClick={handleEraserClick}
-//             mode={store.brush == '' ? 'highlighted' : null}
-//           >
-//             <FaEraser />
-//           </IconButton>
-
-//           <ControlVerticalDivider />
-
-//           <ResizeButton onClick={store.stack.expand}>
-//             +
-//             </ResizeButton>
-
-//           <ResizeButton onClick={store.stack.shrink}>
-//             -
-//             </ResizeButton>
-
-//           <ControlVerticalDivider />
-
-//           <IconButton
-//             onClick={() => {
-//               const text = stackToText(store.stack as CellStack)
-//               console.log('copying', text)
-//               copy(text, {
-//                 format: "text/plain",
-//                 onCopy: () => {
-//                   notyf.success('copied')
-//                 }
-//               })
-//             }}>
-//             <FaRegCopy />
-//           </IconButton>
-
-//         </div>
-
-//       </div>
-
-//       {isMacOS() &&
-//         <div>
-//           <i>MacOS tip: Hit Command-Ctrl-Space for emoji keyboard</i>
-//         </div>
-//       }
-
-//       {/* <h3>Select brush</h3>
-//       <div>
-//         <NimblePicker onSelect={handlePickerSelect} data={emojiData} emoji="" title="" />
-//       </div> */}
-//     </div>
-//   )
-// })
-
-// function ResizeButton(props: PropsWithChildren<{
-//   onClick: () => void
-// }>) {
-//   return <IconButton onClick={props.onClick}>
-//     <OverlayFill>
-//       <MdPhotoSizeSelectSmall style={{ opacity: 0.3 }} />
-//       <span style={{ fontSize: '36px' }}>
-//         {props.children}
-//       </span>
-//     </OverlayFill>
-//   </IconButton>
-// }
-
-// export default Editor
+const defaultDrawing = `☀️🌫👍🏿
+🌫🌧🌈
+🌧🌈💰`
