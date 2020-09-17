@@ -4,7 +4,7 @@ import { useEditorStore } from '../../domain/Editor/EditorStore'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import {
   getDrawingSize, CellPosition, positionToString,
-  positionFromString, isWithinDrawing
+  positionFromString, isWithinDrawing, positionsAreEqual
 } from '../../domain/Editor/Drawing'
 import { stylesheet, classes } from 'typestyle'
 import useMeasure from 'react-use-measure'
@@ -43,16 +43,20 @@ export function DrawingGrid({ }: Props) {
         return
       }
       const position = positionFromString(target.dataset.position)
-      const positionChanged = positionToString(position) !==
-        positionToString(lastAppliedPosition.current || null)
       const withinBounds = isWithinDrawing(position, drawing)
-      if (withinBounds && positionChanged) {
+      if (
+        withinBounds
+        && !positionsAreEqual(lastAppliedPosition.current, position)
+      ) {
+        console.log('dragging', { position, last: lastAppliedPosition.current })
+
         canvasStore.applyTool(position)
         lastAppliedPosition.current = position
       }
     },
     {
-      filterTaps: true
+      filterTaps: true,
+      threshold: 4
     }
   )
 
@@ -104,7 +108,12 @@ export function DrawingGrid({ }: Props) {
             origin={origin}
             glyph={glyph}
             cellSize={cellSize}
-            onClick={() => canvasStore.applyTool(position)}
+            onClick={() => {
+              if (!positionsAreEqual(lastAppliedPosition.current, position)) {
+                lastAppliedPosition.current = position
+                canvasStore.applyTool(position)
+              }
+            }}
           />
         )
       }

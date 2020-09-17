@@ -153,3 +153,23 @@ function rowIsEmpty(rowIdx: number, drawing: Drawing) {
 function colIsEmpty(colIdx: number, drawing: Drawing) {
   return drawing.every(row => row[colIdx] == null)
 }
+
+export function drawingsAreEqual(a: Drawing | null, b: Drawing | null) {
+  if (a == null || b == null) {
+    return false
+  }
+  if (a === b) {
+    return true
+  }
+  return drawingToString(a) === drawingToString(b)
+}
+
+export function positionsAreEqual(
+  a: CellPosition | null | undefined,
+  b: CellPosition | null | undefined
+) {
+  if (a == null || b == null) {
+    return false
+  }
+  return a.col === b.col && a.row === b.row
+}

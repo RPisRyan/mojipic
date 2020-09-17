@@ -1,16 +1,15 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { stylesheet, style } from 'typestyle'
 import * as csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEraser, faCopy, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faEraser, faCopy, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons'
 
-import { drawingFromString, drawingIsEmpty } from '../../domain/Editor/Drawing'
 import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
 import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
 import { ControlsBar } from '../elements'
 import EditableChar from './EditableChar'
-import { sizes, spaces } from '../../common/theme'
+import { spaces } from '../../common/theme'
 
 export function Editor() {
   const editorStore = useNewEditorStore()
@@ -50,6 +49,12 @@ export function Editor() {
           onClick={() => editorStore.copyToClipboard()}
         >
           <FontAwesomeIcon icon={faCopy} />
+        </TileButton>
+
+        <TileButton
+          onClick={() => canvasStore.undo()}
+        >
+          <FontAwesomeIcon icon={faUndo} />
         </TileButton>
 
         <TileButton

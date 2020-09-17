@@ -1,6 +1,6 @@
 import {
   CellPosition, Drawing, emptyDrawing, getDrawingSize, emptyGlyph,
-  Glyph, PaintbrushTool, isWithinDrawing, expandToInclude, trimDrawing
+  Glyph, PaintbrushTool, isWithinDrawing, expandToInclude, trimDrawing, drawingsAreEqual
 } from './Drawing'
 import { Tool } from "./Drawing"
 import produce from 'immer'
@@ -82,7 +82,10 @@ export type CanvasAction =
   | { action: 'undo' }
 
 function captureHistory(state: CanvasState): Drawing[] {
-  return [...state.history, state.drawing] // todo: truncate
+  if (state.history.length > 0 && drawingsAreEqual(state.drawing, state.history[0])) {
+    return state.history
+  }
+  return [state.drawing, ...state.history] // todo: truncate
 }
 
 function canvasReduce(state: CanvasState, action: CanvasAction): CanvasState {
