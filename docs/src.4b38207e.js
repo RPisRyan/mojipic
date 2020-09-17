@@ -14397,7 +14397,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.emptyDrawing = emptyDrawing;
 exports.getDrawingSize = getDrawingSize;
-exports.fromString = fromString;
 exports.isWithinDrawing = isWithinDrawing;
 exports.expandToInclude = expandToInclude;
 exports.addRow = addRow;
@@ -14406,6 +14405,10 @@ exports.positionToString = positionToString;
 exports.positionFromString = positionFromString;
 exports.trimDrawing = trimDrawing;
 exports.drawingToString = drawingToString;
+exports.drawingIsEmpty = drawingIsEmpty;
+exports.drawingFromString = drawingFromString;
+exports.drawingsAreEqual = drawingsAreEqual;
+exports.positionsAreEqual = positionsAreEqual;
 exports.emptyGlyph = void 0;
 
 var _graphemeSplitter = _interopRequireDefault(require("grapheme-splitter"));
@@ -14449,12 +14452,6 @@ function getDrawingSize(drawing) {
     rows: drawing.length,
     columns: (_a = drawing[0]) === null || _a === void 0 ? void 0 : _a.length
   };
-}
-
-function fromString(raw) {
-  return raw.split('\n').map(function (rowChars) {
-    return splitter.splitGraphemes(rowChars.trim());
-  });
 }
 
 function isWithinDrawing(position, drawing) {
@@ -14592,6 +14589,22 @@ function drawingToString(drawing) {
   }).join('\n');
 }
 
+function drawingIsEmpty(drawing) {
+  return drawing.every(function (row) {
+    return row.every(function (cell) {
+      return !cell;
+    });
+  });
+}
+
+function drawingFromString(raw) {
+  return raw.split('\n').map(function (rowChars) {
+    return splitter.splitGraphemes(rowChars.trim()).map(function (glyph) {
+      return glyph === _charUtil.blankChar ? null : glyph;
+    });
+  });
+}
+
 function rowIsEmpty(rowIdx, drawing) {
   return drawing[rowIdx].every(function (cell) {
     return cell == null;
@@ -14602,6 +14615,26 @@ function colIsEmpty(colIdx, drawing) {
   return drawing.every(function (row) {
     return row[colIdx] == null;
   });
+}
+
+function drawingsAreEqual(a, b) {
+  if (a == null || b == null) {
+    return false;
+  }
+
+  if (a === b) {
+    return true;
+  }
+
+  return drawingToString(a) === drawingToString(b);
+}
+
+function positionsAreEqual(a, b) {
+  if (a == null || b == null) {
+    return false;
+  }
+
+  return a.col === b.col && a.row === b.row;
 }
 },{"grapheme-splitter":"dWiE","../../util/charUtil":"lqYF"}],"SSrD":[function(require,module,exports) {
 "use strict";
@@ -15793,7 +15826,11 @@ function createCanvasStore(state, dispatch) {
 }
 
 function captureHistory(state) {
-  return __spreadArrays(state.history, [state.drawing]); // todo: truncate
+  if (state.history.length > 0 && (0, _Drawing.drawingsAreEqual)(state.drawing, state.history[0])) {
+    return state.history;
+  }
+
+  return __spreadArrays([state.drawing], state.history); // todo: truncate
 }
 
 function canvasReduce(state, action) {
@@ -16473,7 +16510,28 @@ var notify = new _notyf.Notyf({
   }
 });
 exports.notify = notify;
-},{"notyf":"hCvX","notyf/notyf.min.css":"o6es"}],"ILS9":[function(require,module,exports) {
+},{"notyf":"hCvX","notyf/notyf.min.css":"o6es"}],"Xl7R":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.saveLocal = saveLocal;
+exports.loadLocal = loadLocal;
+
+var _Drawing = require("../domain/Editor/Drawing");
+
+var localStorageKey = 'currentDrawing';
+
+function saveLocal(drawing) {
+  localStorage.setItem(localStorageKey, (0, _Drawing.drawingToString)(drawing));
+}
+
+function loadLocal() {
+  var serialized = localStorage.getItem(localStorageKey);
+  return serialized == null ? null : (0, _Drawing.drawingFromString)(serialized);
+}
+},{"../domain/Editor/Drawing":"ZM7T"}],"ILS9":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16490,6 +16548,8 @@ var _CanvasStore = require("./CanvasStore");
 var _Drawing = require("./Drawing");
 
 var _notification = require("../../common/notification");
+
+var _storage = require("../../common/storage");
 
 var __assign = void 0 && (void 0).__assign || function () {
   __assign = Object.assign || function (t) {
@@ -16650,6 +16710,8 @@ var __generator = void 0 && (void 0).__generator || function (thisArg, body) {
   }
 };
 
+var defaultDrawing = "\u2600\uFE0F\uD83C\uDF2B\uD83D\uDC4D\uD83C\uDFFF\n\uD83C\uDF2B\uD83C\uDF27\uD83C\uDF08\n\uD83C\uDF27\uD83C\uDF08\uD83D\uDCB0";
+
 function emptyEditorState() {
   return {
     saved: false
@@ -16716,13 +16778,25 @@ function useNewEditorStore() {
       editorState = _a[0],
       editorDispatch = _a[1];
 
+  (0, _react.useEffect)(function () {
+    var loaded = (0, _storage.loadLocal)();
+
+    if (loaded) {
+      canvas.setDrawing(loaded);
+    } else {
+      canvas.setDrawing((0, _Drawing.drawingFromString)(defaultDrawing));
+    }
+  }, []);
+  (0, _react.useEffect)(function () {
+    (0, _storage.saveLocal)(canvas.drawing);
+  }, [canvas.drawing]);
   return createEditorStore(editorState, editorDispatch, canvas);
 }
 
 function useEditorStore() {
   return (0, _react.useContext)(EditorContext);
 }
-},{"react":"n8MK","./CanvasStore":"cyeu","./Drawing":"ZM7T","../../common/notification":"biQx"}],"ZJH7":[function(require,module,exports) {
+},{"react":"n8MK","./CanvasStore":"cyeu","./Drawing":"ZM7T","../../common/notification":"biQx","../../common/storage":"Xl7R"}],"ZJH7":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24287,15 +24361,19 @@ function DrawingGrid(_a) {
     }
 
     var position = (0, _Drawing.positionFromString)(target.dataset.position);
-    var positionChanged = (0, _Drawing.positionToString)(position) !== (0, _Drawing.positionToString)(lastAppliedPosition.current || null);
     var withinBounds = (0, _Drawing.isWithinDrawing)(position, drawing);
 
-    if (withinBounds && positionChanged) {
+    if (withinBounds && !(0, _Drawing.positionsAreEqual)(lastAppliedPosition.current, position)) {
+      console.log('dragging', {
+        position: position,
+        last: lastAppliedPosition.current
+      });
       canvasStore.applyTool(position);
       lastAppliedPosition.current = position;
     }
   }, {
-    filterTaps: true
+    filterTaps: true,
+    threshold: 4
   });
   var drawingSize = (0, _Drawing.getDrawingSize)(canvasStore.drawing);
   var borderWidth = 3; // subract column borders from width
@@ -24337,7 +24415,10 @@ function DrawingGrid(_a) {
           glyph: glyph,
           cellSize: cellSize,
           onClick: function onClick() {
-            return canvasStore.applyTool(position);
+            if (!(0, _Drawing.positionsAreEqual)(lastAppliedPosition.current, position)) {
+              lastAppliedPosition.current = position;
+              canvasStore.applyTool(position);
+            }
           }
         }));
       };
@@ -24662,15 +24743,15 @@ function EditableChar(props) {
     }
   }, props.value);
 }
-},{"react":"n8MK","typestyle":"oehJ"}],"nabL":[function(require,module,exports) {
+},{"react":"n8MK","typestyle":"oehJ"}],"M7Xj":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.EditorNew = EditorNew;
+exports.Editor = Editor;
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _typestyle = require("typestyle");
 
@@ -24679,8 +24760,6 @@ var csstips = _interopRequireWildcard(require("csstips"));
 var _reactFontawesome = require("@fortawesome/react-fontawesome");
 
 var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
-
-var _Drawing = require("../../domain/Editor/Drawing");
 
 var _EditorStore = require("../../domain/Editor/EditorStore");
 
@@ -24694,18 +24773,31 @@ var _EditableChar = _interopRequireDefault(require("./EditableChar"));
 
 var _theme = require("../../common/theme");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function EditorNew() {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var __assign = void 0 && (void 0).__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+function Editor() {
   var editorStore = (0, _EditorStore.useNewEditorStore)();
   var canvasStore = editorStore.canvasStore;
-  (0, _react.useEffect)(function () {
-    editorStore.canvasStore.setDrawing((0, _Drawing.fromString)(defaultDrawing));
-  }, []);
   return _react.default.createElement(_EditorStore.EditorContext.Provider, {
     value: editorStore
   }, _react.default.createElement("div", {
@@ -24728,13 +24820,25 @@ function EditorNew() {
   }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
     icon: _freeSolidSvgIcons.faEraser
   })))), _react.default.createElement("div", {
-    className: (0, _typestyle.style)(csstips.vertical)
+    className: css.commandButtons
   }, _react.default.createElement(_TileButton.TileButton, {
     onClick: function onClick() {
       return editorStore.copyToClipboard();
     }
   }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
     icon: _freeSolidSvgIcons.faCopy
+  })), _react.default.createElement(_TileButton.TileButton, {
+    onClick: function onClick() {
+      return canvasStore.undo();
+    }
+  }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
+    icon: _freeSolidSvgIcons.faUndo
+  })), _react.default.createElement(_TileButton.TileButton, {
+    onClick: function onClick() {
+      return canvasStore.clear();
+    }
+  }, _react.default.createElement(_reactFontawesome.FontAwesomeIcon, {
+    icon: _freeSolidSvgIcons.faTrash
   })))));
 }
 
@@ -24743,10 +24847,12 @@ var css = (0, _typestyle.stylesheet)({
     display: 'grid',
     gridTemplateColumns: 'auto min-content',
     gap: _theme.spaces.sm
-  }
+  },
+  commandButtons: __assign(__assign({}, csstips.vertical), {
+    gap: _theme.spaces.sm
+  })
 });
-var defaultDrawing = "\u2600\uFE0F\uD83C\uDF2B\uD83D\uDC4D\uD83C\uDFFF\n\uD83C\uDF2B\uD83C\uDF27\uD83C\uDF08\n\uD83C\uDF27\uD83C\uDF08\uD83D\uDCB0";
-},{"react":"n8MK","typestyle":"oehJ","csstips":"pm94","@fortawesome/react-fontawesome":"O6gX","@fortawesome/free-solid-svg-icons":"lmHt","../../domain/Editor/Drawing":"ZM7T","../../domain/Editor/EditorStore":"ILS9","./DrawingGrid":"arTd","../elements/TileButton":"wrnK","../elements":"pyKA","./EditableChar":"bSes","../../common/theme":"GwfW"}],"mtsy":[function(require,module,exports) {
+},{"react":"n8MK","typestyle":"oehJ","csstips":"pm94","@fortawesome/react-fontawesome":"O6gX","@fortawesome/free-solid-svg-icons":"lmHt","../../domain/Editor/EditorStore":"ILS9","./DrawingGrid":"arTd","../elements/TileButton":"wrnK","../elements":"pyKA","./EditableChar":"bSes","../../common/theme":"GwfW"}],"mtsy":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24803,7 +24909,7 @@ exports.default = App;
 
 var React = _interopRequireWildcard(require("react"));
 
-var _EditorNew = require("./Editor/EditorNew");
+var _Editor = require("./Editor/Editor");
 
 var _typestyle = require("typestyle");
 
@@ -24828,7 +24934,7 @@ function App() {
     className: css.headerTitle
   }, React.createElement(_ButtonLetters.ButtonLetters, null, "Mojipic"))), React.createElement("div", {
     className: css.appBody
-  }, React.createElement(_EditorNew.EditorNew, null))));
+  }, React.createElement(_Editor.Editor, null))));
 }
 
 var css = (0, _typestyle.stylesheet)({
@@ -24860,7 +24966,7 @@ var css = (0, _typestyle.stylesheet)({
 (0, _typestyle.cssRule)('html', {
   fontSize: 'clamp(12px, 5vw, 30px)'
 });
-},{"react":"n8MK","./Editor/EditorNew":"nabL","typestyle":"oehJ","../common/theme":"GwfW","./elements/ButtonLetters":"mtsy","csx":"O5kx"}],"wGC4":[function(require,module,exports) {
+},{"react":"n8MK","./Editor/Editor":"M7Xj","typestyle":"oehJ","../common/theme":"GwfW","./elements/ButtonLetters":"mtsy","csx":"O5kx"}],"wGC4":[function(require,module,exports) {
 "use strict";
 
 var React = _interopRequireWildcard(require("react"));
@@ -24882,4 +24988,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var rootElement = document.getElementById('root');
 (0, _reactDom.render)(React.createElement(_App.default, null), rootElement);
 },{"react":"n8MK","react-dom":"NKHc","csstips":"pm94","./app/App":"AUkG"}]},{},["wGC4"], null)
-//# sourceMappingURL=src.3029e2b3.js.map
+//# sourceMappingURL=src.4b38207e.js.map
