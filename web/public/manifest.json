@@ -1,0 +1,18 @@
+{
+  "dir": "ltr",
+  "lang": "en",
+  "name": "Mojipic",
+  "short_name": "Mojipic",
+  "scope": "/moji-stack/",
+  "display": "browser",
+  "start_url": "https://ryascl.github.io/moji-stack/",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "description": "",
+  "orientation": "any",
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "icons": [],
+  "url": "https://ryascl.github.io/moji-stack/",
+  "screenshots": []
+}
