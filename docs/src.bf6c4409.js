@@ -15864,7 +15864,10 @@ function canvasReduce(state, action) {
     case 'clear':
       return __assign(__assign({}, state), {
         history: captureHistory(state),
-        drawing: (0, _Drawing.emptyDrawing)((0, _Drawing.getDrawingSize)(state.drawing))
+        drawing: (0, _Drawing.emptyDrawing)({
+          rows: minDrawingSize,
+          columns: minDrawingSize
+        })
       });
 
     case 'undo':
@@ -24188,13 +24191,22 @@ var global = arguments[3];
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.mountTheme = mountTheme;
 exports.styles = exports.colors = exports.palette = exports.spaces = exports.sizes = void 0;
 
 var _csx = require("csx");
 
 var _chromaJs = _interopRequireDefault(require("chroma-js"));
 
+var _typestyle = require("typestyle");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function mountTheme() {
+  (0, _typestyle.cssRule)('html', {
+    fontSize: 'clamp(14px, 5vw, 30px)'
+  });
+}
 
 var sizes = {
   clickableMin: 24,
@@ -24274,7 +24286,7 @@ var styles = {
   }
 };
 exports.styles = styles;
-},{"csx":"O5kx","chroma-js":"dVEF"}],"arTd":[function(require,module,exports) {
+},{"csx":"O5kx","chroma-js":"dVEF","typestyle":"oehJ"}],"arTd":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24963,9 +24975,6 @@ var css = (0, _typestyle.stylesheet)({
     padding: _theme.spaces.sm
   }
 });
-(0, _typestyle.cssRule)('html', {
-  fontSize: 'clamp(12px, 5vw, 30px)'
-});
 },{"react":"n8MK","./Editor/Editor":"M7Xj","typestyle":"oehJ","../common/theme":"GwfW","./elements/ButtonLetters":"mtsy","csx":"O5kx"}],"wGC4":[function(require,module,exports) {
 "use strict";
 
@@ -24977,6 +24986,8 @@ var _csstips = require("csstips");
 
 var _App = _interopRequireDefault(require("./app/App"));
 
+var _theme = require("./common/theme");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -24985,7 +24996,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 (0, _csstips.normalize)();
 (0, _csstips.setupPage)('#root');
+(0, _theme.mountTheme)();
 var rootElement = document.getElementById('root');
 (0, _reactDom.render)(React.createElement(_App.default, null), rootElement);
-},{"react":"n8MK","react-dom":"NKHc","csstips":"pm94","./app/App":"AUkG"}]},{},["wGC4"], null)
-//# sourceMappingURL=src.4b38207e.js.map
+},{"react":"n8MK","react-dom":"NKHc","csstips":"pm94","./app/App":"AUkG","./common/theme":"GwfW"}]},{},["wGC4"], null)
+//# sourceMappingURL=src.bf6c4409.js.map
