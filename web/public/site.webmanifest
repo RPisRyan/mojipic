@@ -1,6 +1,9 @@
 {
-    "name": "",
-    "short_name": "",
+    "dir": "ltr",
+    "lang": "en",
+    "name": "Mojipic: Express yourself with emoji",
+    "short_name": "Mojipic",
+    "categories": ["entertainment", "social"],
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
