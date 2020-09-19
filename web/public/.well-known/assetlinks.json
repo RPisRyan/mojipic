@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "app.mojipic.twa",
+                   "sha256_cert_fingerprints": ["D0:AE:4A:08:CF:7D:F2:64:5D:F0:A5:0A:AD:5B:F4:E6:50:BB:82:04:F0:25:7D:F5:E6:BD:34:62:D8:EE:B6:51"] }
+    }]
