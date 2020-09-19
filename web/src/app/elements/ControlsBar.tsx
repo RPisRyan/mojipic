@@ -1,8 +1,7 @@
-import { HTMLAttributes } from 'react'
-import React from 'react'
+import React, { HTMLAttributes } from 'react'
 import { classes, stylesheet } from 'typestyle'
 import { spaces } from '../../common/theme'
-import { horizontal } from 'csstips'
+import csstips from 'csstips'
 
 export function ControlsBar({ className, ...restProps }: HTMLAttributes<HTMLDivElement>) {
   return <div
@@ -13,7 +12,7 @@ export function ControlsBar({ className, ...restProps }: HTMLAttributes<HTMLDivE
 
 const css = stylesheet({
   controlsBar: {
-    ...horizontal,
+    ...csstips.horizontal,
     gap: spaces.sm,
     padding: spaces.sm
   }

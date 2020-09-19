@@ -1,10 +1,4 @@
-npm-debug.log*
-
-build/Release
+.build
+build
+web_modules
 node_modules
-.npm
-.node_repl_history
-typings/
-*.map
-.cache
-dist
