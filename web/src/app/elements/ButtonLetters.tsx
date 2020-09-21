@@ -4,7 +4,6 @@ import { stylesheet } from 'typestyle'
 import { palette } from '../../common/theme'
 
 export function ButtonLetters({ children }: Props) {
-  console.log(children?.toString().split(''))
   return <>
     {
       children?.toString().split('').map((letter, idx) =>

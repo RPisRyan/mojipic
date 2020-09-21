@@ -89,7 +89,7 @@ function captureHistory(state: CanvasState): Drawing[] {
 }
 
 function canvasReduce(state: CanvasState, action: CanvasAction): CanvasState {
-  console.log('canvasReduce', state, action)
+  // console.log('canvasReduce', state, action)
 
   switch (action.action) {
     case 'activateTool':

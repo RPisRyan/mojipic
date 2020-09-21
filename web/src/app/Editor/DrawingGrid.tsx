@@ -1,16 +1,21 @@
 import React, { CSSProperties, useRef, ReactElement } from 'react'
 import { useDrag } from 'react-use-gesture'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+// import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import {
   getDrawingSize, CellPosition, positionToString,
   positionFromString, isWithinDrawing, positionsAreEqual
 } from '../../domain/Editor/Drawing'
 import { stylesheet, classes } from 'typestyle'
 import useMeasure from 'react-use-measure'
-import { NumericRange } from '../../common/measurement'
 import { sizes, styles, colors } from '../../common/theme'
 import { maxDrawingSize } from '../../domain/Editor/CanvasStore'
+import type { NumericRange } from '../../common/measurement'
+import { Cell } from './Cell'
+
+
+type Props = {
+}
 
 /**
  * Component is sized in two stages:
@@ -33,9 +38,9 @@ export function DrawingGrid({ }: Props) {
 
       const body = document.querySelector('body')!
       if (down) {
-        disableBodyScroll(body)
+        // disableBodyScroll(body)
       } else {
-        enableBodyScroll(body)
+        // enableBodyScroll(body)
       }
 
       const target = event.target as HTMLElement
@@ -136,62 +141,14 @@ export function DrawingGrid({ }: Props) {
   </div >
 }
 
-function Cell({ position, origin, glyph, cellSize, onClick }: CellProps) {
-  const { row, col } = position
-  return <div
-    className={css.cell}
-    style={{
-      gridRow: row - origin.row + 1,
-      gridColumn: col - origin.col + 1,
-      fontSize: cellSize * 0.8,
-    }}
-    data-position={positionToString(position)}
-    data-glyph={glyph}
-    onClick={onClick}
-  >
-    <span
-      className={classes(css.cellContent, !glyph && css.blankCell)}
-    >
-      {
-        glyph || '☻'
-      }
-    </span>
-  </div>
-}
-
-type CellProps = {
-  position: CellPosition
-  origin: CellPosition
-  cellSize: number
-  glyph: string | null
-  onClick: () => void
-}
-
 const css = stylesheet({
   drawingGrid: {
     display: 'grid',
     backgroundColor: 'lightgray',
     border: '1px solid lightgray',
     userSelect: 'none',
-  },
-  cell: {
-    backgroundColor: 'white',
-    width: '100%',
-    height: '100%',
-    cursor: 'pointer',
-    ...styles.centerContent
-  },
-  cellContent: {
-    margin: 'auto',
-    pointerEvents: 'none'
-  },
-  blankCell: {
-    color: colors.lightest
   }
 })
-
-type Props = {
-}
 
 function gridBoundsRange(tracks: number, borderWidth: number): NumericRange {
   const borders = (tracks + 3) * borderWidth

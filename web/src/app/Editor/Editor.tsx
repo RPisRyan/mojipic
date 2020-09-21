@@ -1,6 +1,6 @@
 import React from 'react'
 import { stylesheet, style } from 'typestyle'
-import * as csstips from 'csstips'
+import csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEraser, faCopy, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons'
 
