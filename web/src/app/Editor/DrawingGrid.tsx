@@ -1,14 +1,13 @@
 import React, { CSSProperties, useRef, ReactElement } from 'react'
 import { useDrag } from 'react-use-gesture'
 import { useEditorStore } from '../../domain/Editor/EditorStore'
-// import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import {
   getDrawingSize, CellPosition, positionToString,
   positionFromString, isWithinDrawing, positionsAreEqual
 } from '../../domain/Editor/Drawing'
-import { stylesheet, classes } from 'typestyle'
+import { stylesheet } from 'typestyle'
 import useMeasure from 'react-use-measure'
-import { sizes, styles, colors } from '../../common/theme'
+import { sizes } from '../../common/theme'
 import { maxDrawingSize } from '../../domain/Editor/CanvasStore'
 import type { NumericRange } from '../../common/measurement'
 import { Cell } from './Cell'
@@ -26,24 +25,25 @@ export function DrawingGrid({ }: Props) {
   const { canvasStore } = useEditorStore()
   const { drawing } = canvasStore
 
-  const [measureRef, bounds] = useMeasure()
+  const [containerRef, bounds] = useMeasure()
 
   const lastAppliedPosition = useRef<CellPosition>()
   const dragBind = useDrag(
     (dragEvent) => {
-      const { event, down } = dragEvent
-      if (!event?.target) {
+      const { event } = dragEvent
+
+      if (!event || !event.target) {
         return
       }
 
-      const body = document.querySelector('body')!
-      if (down) {
-        // disableBodyScroll(body)
+      let target: HTMLElement | null
+      if (event instanceof TouchEvent) {
+        var location = (event as any).changedTouches[0]
+        target = document.elementFromPoint(location.clientX, location.clientY) as HTMLElement
       } else {
-        // enableBodyScroll(body)
+        target = event.target as HTMLElement
       }
 
-      const target = event.target as HTMLElement
       if (!target.dataset.position) {
         return
       }
@@ -53,7 +53,7 @@ export function DrawingGrid({ }: Props) {
         withinBounds
         && !positionsAreEqual(lastAppliedPosition.current, position)
       ) {
-        console.log('dragging', { position, last: lastAppliedPosition.current })
+        // console.log('dragging', { position, last: lastAppliedPosition.current })
 
         canvasStore.applyTool(position)
         lastAppliedPosition.current = position
@@ -126,7 +126,7 @@ export function DrawingGrid({ }: Props) {
   }
 
   return <div
-    ref={measureRef}
+    ref={containerRef}
     className={css.drawingGrid}
     style={{
       ...containerSizeLimits,
