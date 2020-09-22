@@ -14,7 +14,7 @@ import { spaces } from '../../common/theme'
 export function Editor() {
   const editorStore = useNewEditorStore()
   const { canvasStore } = editorStore
-
+  const showRecent = canvasStore.recent.filter(it => it !== canvasStore.brush)
   return <EditorContext.Provider value={editorStore}>
     <div className={css.editor}>
       <div className={style(csstips.vertical)} >
@@ -41,6 +41,19 @@ export function Editor() {
           >
             <FontAwesomeIcon icon={faEraser} />
           </TileButton>
+        </ControlsBar>
+
+        <ControlsBar>
+          {
+            showRecent.map(brush =>
+              <TileButton
+                key={brush}
+                onClick={() => canvasStore.setBrush(brush)}
+              >
+                <span>{brush}</span>
+              </TileButton>
+            )
+          }
         </ControlsBar>
 
       </div>

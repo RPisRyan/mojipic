@@ -1,8 +1,8 @@
 import {
   CellPosition, Drawing, emptyDrawing, getDrawingSize, emptyGlyph,
-  Glyph, PaintbrushTool, isWithinDrawing, expandToInclude, trimDrawing, drawingsAreEqual
+  Glyph, PaintbrushTool, isWithinDrawing, expandToInclude, trimDrawing, drawingsAreEqual,
+  Tool
 } from './Drawing'
-import { Tool } from "./Drawing"
 import produce from 'immer'
 import { useReducer, Dispatch } from 'react'
 
@@ -16,7 +16,8 @@ export type CanvasState = {
   drawing: Drawing,
   history: Drawing[],
   tools: { [key in Tool['type']]: Tool },
-  activeToolType: Tool['type']
+  activeToolType: Tool['type'],
+  recent: Glyph[]
 }
 
 export function emptyCanvasState(): CanvasState {
@@ -28,6 +29,7 @@ export function emptyCanvasState(): CanvasState {
       eraser: { type: 'eraser' },
     },
     activeToolType: 'paint',
+    recent: [defaultBrush]
   }
 }
 
@@ -52,6 +54,10 @@ export function createCanvasStore(
         action: 'setTool',
         tool: { type: 'paint', brush: brush }
       })
+      dispatch({
+        action: 'addRecent',
+        recent: [brush]
+      })
     },
     get activeTool() {
       return state.tools[state.activeToolType]
@@ -67,7 +73,11 @@ export function createCanvasStore(
     },
     clear() {
       dispatch({ action: 'clear' })
+    },
+    addRecent(recent: Glyph[]) {
+      dispatch({ action: 'addRecent', recent: recent.filter(it => it !== emptyGlyph) })
     }
+
   }
 }
 
@@ -80,6 +90,7 @@ export type CanvasAction =
   | { action: 'setDrawing', drawing: Drawing }
   | { action: 'clear' }
   | { action: 'undo' }
+  | { action: 'addRecent', recent: Glyph[] }
 
 function captureHistory(state: CanvasState): Drawing[] {
   if (state.history.length > 0 && drawingsAreEqual(state.drawing, state.history[0])) {
@@ -134,6 +145,12 @@ function canvasReduce(state: CanvasState, action: CanvasAction): CanvasState {
         ...state,
         drawing,
         history
+      }
+    case 'addRecent':
+      const set = new Set([...action.recent, ...state.recent])
+      return {
+        ...state,
+        recent: Array.from(set)
       }
   }
 }

@@ -173,3 +173,9 @@ export function positionsAreEqual(
   }
   return a.col === b.col && a.row === b.row
 }
+
+export function uniqueGlyphs(drawing: Drawing) {
+  const allChars = drawing.flatMap(
+    row => row.flatMap(glyph => glyph))
+  return Array.from(new Set(allChars))
+}

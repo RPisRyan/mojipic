@@ -3,7 +3,7 @@ import {
   useContext, Dispatch, useEffect
 } from 'react'
 import { useNewCanvasStore, CanvasStore } from './CanvasStore'
-import { drawingFromString, drawingToString } from './Drawing'
+import { drawingFromString, drawingToString, uniqueGlyphs } from './Drawing'
 import { notify } from '../../common/notification'
 import { loadLocal, saveLocal } from '../../common/storage'
 
@@ -65,12 +65,9 @@ export function useNewEditorStore() {
   const [editorState, editorDispatch] = useReducer(reduce, emptyEditorState())
 
   useEffect(() => {
-    const loaded = loadLocal()
-    if (loaded) {
-      canvas.setDrawing(loaded)
-    } else {
-      canvas.setDrawing(drawingFromString(defaultDrawing))
-    }
+    const toSet = loadLocal() || drawingFromString(defaultDrawing)
+    canvas.setDrawing(toSet)
+    canvas.addRecent(uniqueGlyphs(toSet))
   }, [])
 
   useEffect(() => {
