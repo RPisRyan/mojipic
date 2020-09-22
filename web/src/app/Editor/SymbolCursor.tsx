@@ -1,4 +1,3 @@
-import { NestedCSSProperties } from 'typestyle/lib/types'
 import React, { PropsWithChildren } from 'react'
 import { style } from 'typestyle'
 
@@ -8,7 +7,7 @@ type Props = PropsWithChildren<{
 
 export default function SymbolCursor(props: Props) {
   const cursorRule = props.cursor ? charCursorRule(props.cursor) : undefined
-  const rootStyle: NestedCSSProperties = {
+  const rootStyle = {
     cursor: cursorRule,
   }
   return <div className={style(rootStyle)}>{props.children}</div>
