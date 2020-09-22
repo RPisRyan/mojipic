@@ -7,9 +7,10 @@ import { faEraser, faCopy, faTrash, faUndo } from '@fortawesome/free-solid-svg-i
 import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
 import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
-import { ControlsBar } from '../elements'
 import EditableChar from './EditableChar'
 import { spaces } from '../../common/theme'
+import { ControlsBar, GlyphList } from '../elements/containers'
+import { GlyphOption } from '../elements/controls'
 
 export function Editor() {
   const editorStore = useNewEditorStore()
@@ -43,18 +44,18 @@ export function Editor() {
           </TileButton>
         </ControlsBar>
 
-        <ControlsBar>
+        <GlyphList>
           {
             showRecent.map(brush =>
-              <TileButton
+              <GlyphOption
                 key={brush}
                 onClick={() => canvasStore.setBrush(brush)}
               >
                 <span>{brush}</span>
-              </TileButton>
+              </GlyphOption>
             )
           }
-        </ControlsBar>
+        </GlyphList>
 
       </div>
       <div className={css.commandButtons}>

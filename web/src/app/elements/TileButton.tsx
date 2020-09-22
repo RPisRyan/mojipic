@@ -23,8 +23,8 @@ const css = stylesheet({
     borderColor: colors.getControlBorder({ active: false, hover: false }),
     color: colors.darkest,
     borderRadius: em(0.2),
-    width: sizes.clickTarget,
-    height: sizes.clickTarget,
+    width: sizes.clickable.lg,
+    height: sizes.clickable.lg,
     cursor: 'pointer',
     '$nest': {
       '&:hover': {
