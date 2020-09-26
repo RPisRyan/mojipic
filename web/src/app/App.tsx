@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Editor } from './Editor/Editor'
 import { stylesheet, cssRule } from 'typestyle'
 import { palette, spaces, colors } from '../common/theme'
-import { ButtonLetters } from './elements/ButtonLetters'
+import { LogoText } from './elements/LogoText'
 import { linearGradient } from 'csx'
 
 export default function App() {
@@ -11,7 +11,7 @@ export default function App() {
     <div className={css.application}>
       <div className={css.headerBar}>
         <span className={css.headerTitle}>
-          <ButtonLetters>Mojipic</ButtonLetters>
+          <LogoText>Mojipic</LogoText>
         </span>
       </div>
       <div className={css.appBody}>

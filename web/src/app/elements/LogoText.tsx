@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from 'react'
 import { stylesheet } from 'typestyle'
 import { palette } from '../../common/theme'
 
-export function ButtonLetters({ children }: Props) {
+export function LogoText({ children }: Props) {
   return <>
     {
       children?.toString().split('').map((letter, idx) =>

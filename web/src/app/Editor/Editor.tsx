@@ -51,7 +51,7 @@ export function Editor() {
                 key={brush}
                 onClick={() => canvasStore.setBrush(brush)}
               >
-                <span>{brush}</span>
+                {brush}
               </GlyphOption>
             )
           }
