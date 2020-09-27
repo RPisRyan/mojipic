@@ -37,7 +37,7 @@ export function DrawingGrid({ }: Props) {
       }
 
       let target: HTMLElement | null
-      if (event instanceof TouchEvent) {
+      if ((typeof TouchEvent) !== 'undefined' && event instanceof TouchEvent) {
         var location = (event as any).changedTouches[0]
         target = document.elementFromPoint(location.clientX, location.clientY) as HTMLElement
       } else {

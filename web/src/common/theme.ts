@@ -93,3 +93,9 @@ export const styles: Record<string, NestedCSSProperties> = {
     boxShadow: `0 0 2px ${neutral.medium}, 0 2px 2px ${neutral.medium}`,
   }
 }
+
+export const fonts: Record<string, NestedCSSProperties> = {
+  handWritten: {
+    fontFamily: `'Patrick Hand', cursive`
+  }
+}

@@ -1,16 +1,27 @@
 import * as React from 'react'
 
 import { Editor } from './Editor/Editor'
-import { stylesheet, cssRule } from 'typestyle'
+import { stylesheet, cssRule, cssRaw } from 'typestyle'
 import { palette, spaces, colors } from '../common/theme'
 import { LogoText } from './elements/LogoText'
 import { linearGradient } from 'csx'
+import { Welcome } from './Help/Welcome'
+import { AppModal } from './elements/AppModal'
+import { useState } from 'react'
+
+cssRaw(`
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jaldi:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+`)
 
 export default function App() {
+  const [showWelcome, setShowWelcome] = useState<boolean>()
+
   return <div className={css.root}>
     <div className={css.application}>
       <div className={css.headerBar}>
-        <span className={css.headerTitle}>
+        <span className={css.headerTitle} onClick={() => setShowWelcome(true)}>
           <LogoText>Mojipic</LogoText>
         </span>
       </div>
@@ -18,6 +29,16 @@ export default function App() {
         <Editor />
       </div>
     </div>
+    <AppModal
+      show={showWelcome}
+      onHide={() => {
+        console.log('hiding')
+        setShowWelcome(false)
+      }}
+      onBackdropClick={() => setShowWelcome(false)}
+    >
+      <Welcome />
+    </AppModal>
   </div>
 }
 
