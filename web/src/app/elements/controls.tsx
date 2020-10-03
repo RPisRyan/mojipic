@@ -23,6 +23,7 @@ const buttonBase: NestedCSSProperties = {
 export const GlyphOption = styled('button', {
   ...buttonBase,
   ...centerChild,
+  fontSize: percent(150),
   width: sizes.characterButton,
   height: sizes.characterButton
 })
