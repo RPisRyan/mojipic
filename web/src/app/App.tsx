@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 import { Editor } from './Editor/Editor'
 import { stylesheet, cssRule, cssRaw } from 'typestyle'
@@ -8,6 +8,7 @@ import { linearGradient } from 'csx'
 import { Welcome } from './Help/Welcome'
 import { AppModal } from './elements/AppModal'
 import { useState } from 'react'
+// import { OverlayExample } from '../app/elements/OverlayExample'
 
 cssRaw(`
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
@@ -31,14 +32,12 @@ export default function App() {
     </div>
     <AppModal
       show={showWelcome}
-      onHide={() => {
-        console.log('hiding')
-        setShowWelcome(false)
-      }}
+      onHide={() => setShowWelcome(false)}
       onBackdropClick={() => setShowWelcome(false)}
     >
       <Welcome />
     </AppModal>
+    {/* <OverlayExample /> */}
   </div>
 }
 

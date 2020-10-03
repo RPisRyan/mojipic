@@ -27,6 +27,9 @@ export function Welcome() {
         <li>Copy to clipboard</li>
         <li>Paste into text message, tweet, etc</li>
       </ol>
+      <p>
+        Feedback? <a href="mailto:info@mojipic.app">Drop us a line</a>
+      </p>
     </article>
   </div>
 }
