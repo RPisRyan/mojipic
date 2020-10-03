@@ -1,11 +1,11 @@
 import { rem } from 'csx'
-import { NestedCSSProperties } from 'typestyle/lib/types'
+import { NestedCSSProperties } from 'typestyle'
 import chroma from 'chroma-js'
 import { cssRule } from 'typestyle'
 
 export function mountTheme() {
   cssRule('html', {
-    fontSize: 'clamp(14px, 5vw, 30px)'
+    fontSize: 'clamp(14px, 4vw, 30px)'
   })
 }
 
