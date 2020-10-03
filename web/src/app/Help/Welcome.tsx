@@ -8,10 +8,10 @@ import svgUri from 'mini-svg-data-uri'
 export function Welcome() {
   const backgroundSvg = useRoughSvg(rc =>
     rc.rectangle(
-      5, 5, 95, 95,
+      5, 5, 90, 90,
       {
         fill: palette.chill.brighten(3).hex(),
-        fillStyle: 'solid'
+        fillWeight: 4
       }),
     {
       viewBox: [0, 0, 100, 100]
