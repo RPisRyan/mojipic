@@ -2,7 +2,7 @@ import { HTMLAttributes } from 'react'
 import { stylesheet, classes } from 'typestyle'
 import { sizes, styles, colors, palette } from '../../common/theme'
 import React from 'react'
-import { em } from 'csx'
+import { em, percent } from 'csx'
 
 export function TileButton({ className, active, ...restProps }: Props) {
   return <button
@@ -23,8 +23,9 @@ const css = stylesheet({
     borderColor: colors.getControlBorder({ active: false, hover: false }),
     color: colors.darkest,
     borderRadius: em(0.2),
-    width: sizes.clickable.lg,
-    height: sizes.clickable.lg,
+    fontSize: percent(140),
+    width: em(1.75),
+    height: em(1.75),
     cursor: 'pointer',
     '$nest': {
       '&:hover': {

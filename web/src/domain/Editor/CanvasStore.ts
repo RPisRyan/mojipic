@@ -51,12 +51,12 @@ export function createCanvasStore(
     },
     setBrush(brush: Glyph) {
       dispatch({
-        action: 'setTool',
-        tool: { type: 'paint', brush: brush }
-      })
-      dispatch({
-        action: 'addRecent',
-        recent: [brush]
+        action: 'set',
+        change: state => {
+          (state.tools['paint'] as PaintbrushTool).brush = brush
+          state.activeToolType = 'paint'
+          state.recent = Array.from(new Set([brush, ...state.recent]))
+        }
       })
     },
     get activeTool() {
@@ -84,7 +84,8 @@ export function createCanvasStore(
 export type CanvasStore = ReturnType<typeof createCanvasStore>
 
 export type CanvasAction =
-  { action: 'activateTool', type: Tool['type'] }
+  { action: 'set', change: (state: CanvasState) => void }
+  | { action: 'activateTool', type: Tool['type'] }
   | { action: 'setTool', tool: Tool }
   | { action: 'applyTool', cell: CellPosition }
   | { action: 'setDrawing', drawing: Drawing }
@@ -100,9 +101,11 @@ function captureHistory(state: CanvasState): Drawing[] {
 }
 
 function canvasReduce(state: CanvasState, action: CanvasAction): CanvasState {
-  // console.log('canvasReduce', state, action)
-
   switch (action.action) {
+    case 'set':
+      return produce(state, draft => {
+        action.change(draft)
+      })
     case 'activateTool':
       return {
         ...state,

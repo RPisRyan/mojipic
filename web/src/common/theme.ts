@@ -1,21 +1,22 @@
-import { rem } from 'csx'
+import { em, rem } from 'csx'
 import { NestedCSSProperties } from 'typestyle'
 import chroma from 'chroma-js'
 import { cssRule } from 'typestyle'
 
 export function mountTheme() {
   cssRule('html', {
-    fontSize: 'clamp(14px, 4vw, 30px)'
+    fontSize: 'clamp(14px, 5vw, 30px)'
   })
 }
 
 export const sizes = {
   clickableMin: 24,
   clickableMax: 96,
+  characterButton: em(1.75),
   clickable: {
-    lg: rem(2),
-    md: rem(1.2),
-    sm: rem(0.6)
+    lg: rem(2.5),
+    md: rem(2),
+    sm: rem(1.5)
   }
 }
 
