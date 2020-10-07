@@ -8,9 +8,9 @@ import {
 import { stylesheet } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { sizes } from '../../common/theme'
-import { maxDrawingSize } from '../../domain/Editor/CanvasStore'
 import type { NumericRange } from '../../common/measurement'
 import { Cell } from './Cell'
+import { maxDrawingSize } from '../../domain/Editor/CanvasStore'
 
 
 type Props = {

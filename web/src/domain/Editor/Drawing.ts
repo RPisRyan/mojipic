@@ -13,11 +13,6 @@ export type DrawingSize = {
 
 export type Glyph = string | null
 
-export type PaintbrushTool = { type: 'paint'; brush: Glyph }
-export type EraserTool = { type: 'eraser' }
-
-export type Tool = PaintbrushTool | EraserTool
-
 export const emptyGlyph = null
 
 const splitter = new GraphemeSplitter()
@@ -46,7 +41,7 @@ export function isWithinDrawing(position: CellPosition, drawing: Drawing) {
 export function expandToInclude(position: CellPosition, drawing: Drawing) {
   const { row, col } = position
   const size = getDrawingSize(drawing)
-  let newDrawing = drawing
+  let newDrawing = [...drawing.map(row => [...row])]
 
   if (row < 0) {
     newDrawing = addRow('before', newDrawing)
@@ -177,5 +172,5 @@ export function positionsAreEqual(
 export function uniqueGlyphs(drawing: Drawing) {
   const allChars = drawing.flatMap(
     row => row.flatMap(glyph => glyph))
-  return Array.from(new Set(allChars))
+  return Array.from(new Set(allChars)).filter(it => it)
 }

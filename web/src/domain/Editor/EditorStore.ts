@@ -2,10 +2,10 @@ import {
   useReducer, createContext,
   useContext, Dispatch, useEffect
 } from 'react'
-import { useNewCanvasStore, CanvasStore } from './CanvasStore'
 import { drawingFromString, drawingToString, uniqueGlyphs } from './Drawing'
 import { notify } from '../../common/notification'
 import { loadLocal, saveLocal } from '../../common/storage'
+import { CanvasStore, useNewCanvasStore } from './CanvasStore'
 
 const defaultDrawing = `☀️🌫👍🏿
 🌫🌧🌈

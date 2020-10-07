@@ -1,16 +1,22 @@
+import { DispatchStateUpdates, useStoreWithViews } from '../../common/hookedState'
 import {
-  CellPosition, Drawing, emptyDrawing, getDrawingSize, emptyGlyph,
-  Glyph, PaintbrushTool, isWithinDrawing, expandToInclude, trimDrawing, drawingsAreEqual,
-  Tool
+  CellPosition, Drawing, emptyDrawing, emptyGlyph, expandToInclude,
+  getDrawingSize, Glyph, isWithinDrawing, trimDrawing
 } from './Drawing'
-import produce from 'immer'
-import { useReducer, Dispatch } from 'react'
 
-type ToolType = Tool['type']
+export type PaintbrushTool = { type: 'paint'; brush: Glyph }
+export type EraserTool = { type: 'eraser' }
+export type Tool = PaintbrushTool | EraserTool
+export type ToolType = Tool['type']
+export type ToolLookup = { [K in ToolType]: Extract<Tool, { type: K }> }
 
 export const minDrawingSize = 3
 export const maxDrawingSize = 15
 const defaultBrush = '👍'
+
+export function useNewCanvasStore() {
+  return useStoreWithViews(canvasViews, canvasActions, emptyCanvasState())
+}
 
 export type CanvasState = {
   drawing: Drawing,
@@ -18,6 +24,113 @@ export type CanvasState = {
   tools: { [key in Tool['type']]: Tool },
   activeToolType: Tool['type'],
   recent: Glyph[]
+}
+
+export function canvasViews(state: CanvasState) {
+  return {
+    get brush() {
+      return (state.tools.paint as PaintbrushTool).brush
+    }
+  }
+}
+
+export type CanvasStore = CanvasState
+  & ReturnType<typeof canvasViews>
+  & ReturnType<typeof canvasActions>
+
+export function canvasActions(dispatch: DispatchStateUpdates<CanvasState>) {
+  function setDrawing(drawing: Drawing) {
+    dispatch(draft => {
+      draft.drawing = drawing
+    })
+  }
+
+  function addRecent(glyphs: Glyph[]) {
+    dispatch(draft => {
+      draft.recent = Array.from(new Set([...glyphs, ...draft.recent]))
+    })
+  }
+
+  function activateTool(type: ToolType) {
+    dispatch(draft => {
+      draft.activeToolType = type
+    })
+  }
+
+  function pickBrush(brush: Glyph) {
+    if (brush === emptyGlyph) {
+      return
+    }
+    dispatch(draft => {
+      (draft.tools.paint as PaintbrushTool).brush = brush
+    })
+    activateTool('paint')
+    addRecent([brush])
+  }
+
+  function applyTool(position: CellPosition) {
+    dispatch(draft => {
+      const { drawing, tools, activeToolType } = draft
+      const isWithin = isWithinDrawing(position, drawing)
+      draft.history.push(draft.drawing)
+      switch (draft.activeToolType) {
+        case 'paint':
+          const { row, col } = position
+          const brush = (tools[activeToolType] as PaintbrushTool).brush
+          if (isWithin) {
+            drawing[row][col] = brush
+          }
+
+          const size = getDrawingSize(drawing)
+          if (size.columns >= maxDrawingSize || size.rows >= maxDrawingSize) {
+            // if either direction is maxed, do nothing
+            return
+          }
+
+          const newDrawing = expandToInclude(position, drawing)
+          if (newDrawing) {
+            newDrawing[Math.max(0, row)][Math.max(0, col)] = brush
+            draft.drawing = newDrawing
+          }
+
+          break
+        case 'eraser':
+          if (isWithin) {
+            const { row, col } = position
+            drawing[row][col] = emptyGlyph
+            draft.drawing = trimDrawing(drawing, minDrawingSize)
+          }
+      }
+    })
+  }
+
+  function undo() {
+    dispatch(draft => {
+      if (draft.history.length > 0) {
+        draft.drawing = draft.history.pop()!
+      }
+    })
+  }
+
+  function clear() {
+    dispatch(draft => {
+      draft.history.push(draft.drawing)
+      draft.drawing = emptyDrawing({
+        rows: minDrawingSize,
+        columns: minDrawingSize
+      })
+    })
+  }
+
+  return {
+    setDrawing,
+    addRecent,
+    activateTool,
+    pickBrush,
+    applyTool,
+    undo,
+    clear
+  }
 }
 
 export function emptyCanvasState(): CanvasState {
@@ -30,168 +143,5 @@ export function emptyCanvasState(): CanvasState {
     },
     activeToolType: 'paint',
     recent: [defaultBrush]
-  }
-}
-
-export function useNewCanvasStore() {
-  const [state, dispatch] = useReducer(canvasReduce, emptyCanvasState())
-  return createCanvasStore(state, dispatch)
-}
-
-export function createCanvasStore(
-  state: CanvasState, dispatch: Dispatch<CanvasAction>) {
-  return {
-    ...state,
-    canUndo: state.history.length > 0,
-    undo() {
-      dispatch({ action: 'undo' })
-    },
-    activateTool(type: Tool['type']) {
-      dispatch({ action: 'activateTool', type })
-    },
-    setBrush(brush: Glyph) {
-      dispatch({
-        action: 'set',
-        change: state => {
-          (state.tools['paint'] as PaintbrushTool).brush = brush
-          state.activeToolType = 'paint'
-          state.recent = Array.from(new Set([brush, ...state.recent]))
-        }
-      })
-    },
-    get activeTool() {
-      return state.tools[state.activeToolType]
-    },
-    get brush() {
-      return (state.tools['paint'] as PaintbrushTool).brush
-    },
-    applyTool(cell: CellPosition) {
-      dispatch({ action: 'applyTool', cell })
-    },
-    setDrawing(drawing: Drawing) {
-      dispatch({ action: 'setDrawing', drawing })
-    },
-    clear() {
-      dispatch({ action: 'clear' })
-    },
-    addRecent(recent: Glyph[]) {
-      dispatch({ action: 'addRecent', recent: recent.filter(it => it !== emptyGlyph) })
-    }
-
-  }
-}
-
-export type CanvasStore = ReturnType<typeof createCanvasStore>
-
-export type CanvasAction =
-  { action: 'set', change: (state: CanvasState) => void }
-  | { action: 'activateTool', type: Tool['type'] }
-  | { action: 'setTool', tool: Tool }
-  | { action: 'applyTool', cell: CellPosition }
-  | { action: 'setDrawing', drawing: Drawing }
-  | { action: 'clear' }
-  | { action: 'undo' }
-  | { action: 'addRecent', recent: Glyph[] }
-
-function captureHistory(state: CanvasState): Drawing[] {
-  if (state.history.length > 0 && drawingsAreEqual(state.drawing, state.history[0])) {
-    return state.history
-  }
-  return [state.drawing, ...state.history] // todo: truncate
-}
-
-function canvasReduce(state: CanvasState, action: CanvasAction): CanvasState {
-  switch (action.action) {
-    case 'set':
-      return produce(state, draft => {
-        action.change(draft)
-      })
-    case 'activateTool':
-      return {
-        ...state,
-        activeToolType: action.type
-      }
-    case 'setTool':
-      return produce(state, draft => {
-        draft.tools[action.tool.type] = action.tool
-      })
-    case 'applyTool':
-      const tool = state.tools[state.activeToolType]
-      if (!tool) return state
-      return {
-        ...state,
-        history: captureHistory(state),
-        drawing: applyTool(
-          tool,
-          action.cell,
-          state.drawing
-        )
-      }
-    case 'setDrawing':
-      return {
-        ...state,
-        drawing: action.drawing,
-        history: []
-      }
-    case 'clear':
-      return {
-        ...state,
-        history: captureHistory(state),
-        drawing: emptyDrawing({ rows: minDrawingSize, columns: minDrawingSize })
-      }
-    case 'undo':
-      if (state.history.length === 0) {
-        return state
-      }
-      const [drawing, ...history] = state.history
-      return {
-        ...state,
-        drawing,
-        history
-      }
-    case 'addRecent':
-      const set = new Set([...action.recent, ...state.recent])
-      return {
-        ...state,
-        recent: Array.from(set)
-      }
-  }
-}
-
-function applyTool(tool: Tool, position: CellPosition, drawing: Drawing): Drawing {
-  const isWithin = isWithinDrawing(position, drawing)
-
-  switch (tool.type) {
-    case 'paint':
-      const { row, col } = position
-      if (isWithin) {
-        return produce(drawing, draft => {
-          draft[row][col] = tool.brush
-        })
-      }
-
-      const size = getDrawingSize(drawing)
-      if (size.columns >= maxDrawingSize || size.rows >= maxDrawingSize) {
-        // if either direction is maxed, do nothing
-        return drawing
-      }
-
-      const newDrawing = expandToInclude(position, drawing)
-      if (newDrawing) {
-        return produce(newDrawing, draft => {
-          draft[Math.max(0, row)][Math.max(0, col)] = tool.brush
-        })
-      }
-    case 'eraser':
-      if (isWithin) {
-        const { row, col } = position
-        const newDrawing = produce(drawing, draft => {
-          draft[row][col] = emptyGlyph
-        })
-        return trimDrawing(newDrawing, minDrawingSize)
-      }
-      return drawing
-    default:
-      return drawing
   }
 }

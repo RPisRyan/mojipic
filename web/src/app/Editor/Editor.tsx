@@ -11,11 +11,14 @@ import EditableChar from './EditableChar'
 import { spaces } from '../../common/theme'
 import { ControlsBar, GlyphList } from '../elements/containers'
 import { GlyphOption } from '../elements/controls'
+import type { PaintbrushTool } from '../../domain/Editor/CanvasStore'
 
 export function Editor() {
   const editorStore = useNewEditorStore()
   const { canvasStore } = editorStore
-  const showRecent = canvasStore.recent.filter(it => it !== canvasStore.brush)
+  const showRecent = canvasStore.recent.filter(it =>
+    it !== (canvasStore.tools.paint as PaintbrushTool).brush
+  )
   return <EditorContext.Provider value={editorStore}>
     <div className={css.editor}>
       <div className={style(csstips.vertical)} >
@@ -30,7 +33,7 @@ export function Editor() {
               canvasStore.activeToolType === 'paint'
                 ? <EditableChar
                   value={canvasStore.brush}
-                  onChange={canvasStore.setBrush}
+                  onChange={canvasStore.pickBrush}
                 />
                 : <span>{canvasStore.brush}</span>
             }
@@ -49,7 +52,7 @@ export function Editor() {
             showRecent.map(brush =>
               <GlyphOption
                 key={brush}
-                onClick={() => canvasStore.setBrush(brush)}
+                onClick={() => canvasStore.pickBrush(brush)}
               >
                 {brush}
               </GlyphOption>
