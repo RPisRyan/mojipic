@@ -1,6 +1,5 @@
-import { gl } from 'chroma-js'
 import GraphemeSplitter from 'grapheme-splitter'
-import { blankChar } from '../../util/charUtil'
+import { blankChar } from '../../../util/charUtil'
 
 export type Drawing = Glyph[][]
 
@@ -17,7 +16,7 @@ export const emptyGlyph = null
 
 const splitter = new GraphemeSplitter()
 
-export function emptyDrawing({ rows, columns }: DrawingSize) {
+export function emptyDrawing({ rows, columns }: DrawingSize = { rows: 3, columns: 3 }) {
   return Array.from(new Array(rows), () =>
     Array.from(new Array(columns),
       () => null)

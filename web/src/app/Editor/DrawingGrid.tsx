@@ -1,29 +1,28 @@
 import React, { CSSProperties, useRef, ReactElement } from 'react'
 import { useDrag } from 'react-use-gesture'
-import { useEditorStore } from '../../domain/Editor/EditorStore'
 import {
   getDrawingSize, CellPosition, positionToString,
   positionFromString, isWithinDrawing, positionsAreEqual
-} from '../../domain/Editor/Drawing'
+} from '../../domain/editor/canvas/drawing'
 import { stylesheet } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { sizes } from '../../common/theme'
 import type { NumericRange } from '../../common/measurement'
 import { Cell } from './Cell'
-import { maxDrawingSize } from '../../domain/Editor/CanvasStore'
-
-
-type Props = {
-}
+import { useCanvasState } from '../../domain/globalState'
+import { useEditorCommands } from '../../domain/editor/commands'
+import { maxDrawingSize } from '../../domain/editor/canvas/canvasState'
 
 /**
  * Component is sized in two stages:
  *   - On first render, set min/max dimensions for container based on the number of cells
  *   - On re-flow after dimension update, explicitly size cells based on layout bounds assigned to container.
  */
-export function DrawingGrid({ }: Props) {
-  const { canvasStore } = useEditorStore()
-  const { drawing } = canvasStore
+export function DrawingGrid() {
+  const canvas = useCanvasState()
+  const { drawing } = canvas
+
+  const { applyTool } = useEditorCommands()
 
   const [containerRef, bounds] = useMeasure()
 
@@ -55,7 +54,7 @@ export function DrawingGrid({ }: Props) {
       ) {
         // console.log('dragging', { position, last: lastAppliedPosition.current })
 
-        canvasStore.applyTool(position)
+        applyTool(position)
         lastAppliedPosition.current = position
       }
     },
@@ -65,7 +64,7 @@ export function DrawingGrid({ }: Props) {
     }
   )
 
-  const drawingSize = getDrawingSize(canvasStore.drawing)
+  const drawingSize = getDrawingSize(canvas.drawing)
 
   const borderWidth = 3
 
@@ -87,6 +86,8 @@ export function DrawingGrid({ }: Props) {
   const cells: ReactElement[] = []
 
   if (bounds.width) {
+    // blechh!
+
     // If max size reached in one direction, don't show
     //  border cells.
     const rowRange = drawingSize.rows < maxDrawingSize
@@ -116,7 +117,7 @@ export function DrawingGrid({ }: Props) {
             onClick={() => {
               if (!positionsAreEqual(lastAppliedPosition.current, position)) {
                 lastAppliedPosition.current = position
-                canvasStore.applyTool(position)
+                applyTool(position)
               }
             }}
           />

@@ -1,18 +1,22 @@
-import csstips from 'csstips'
 import * as React from 'react'
 import { render } from 'react-dom'
+import { ErrorBoundary } from 'react-error-boundary'
+import { App } from './app/App'
+import type { FallbackProps } from 'react-error-boundary'
+import { setNotifier } from './domain/services'
+import { notify } from './common/notification'
 
-import App from './app/App'
-import { mountTheme } from './common/theme'
-
-csstips.normalize()
-csstips.setupPage('#root')
-mountTheme()
+setNotifier(notify)
 
 const rootElement = document.getElementById('root')
 render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onReset={() => location.reload()}
+    >
+      <App />
+    </ErrorBoundary>
   </React.StrictMode>,
   rootElement
 )
@@ -21,4 +25,12 @@ render(
 // Learn more: https://www.snowpack.dev/#hot-module-replacement
 if (import.meta.hot) {
   import.meta.hot.accept()
+}
+
+function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  return <article role="alert">
+    <p>Something went wrong:</p>
+    <pre>{error?.message}</pre>
+    <button onClick={resetErrorBoundary}>Try again</button>
+  </article>
 }

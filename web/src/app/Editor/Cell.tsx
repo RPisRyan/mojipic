@@ -1,6 +1,6 @@
 import React from 'react'
 import { colors, styles } from '../../common/theme'
-import { positionToString, CellPosition } from '../../domain/Editor/Drawing'
+import { positionToString, CellPosition } from '../../domain/editor/canvas/drawing'
 import { classes, stylesheet } from 'typestyle'
 
 type CellProps = {

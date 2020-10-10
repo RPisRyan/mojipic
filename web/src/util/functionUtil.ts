@@ -9,7 +9,9 @@ export type BinaryFunction<A1, A2, R> = (a1: A1, a2: A2) => R
 
 export type Callback<T> = UnaryFunction<T, void>
 
-export type Producer<T> = NullaryFunction<T>
+export type Produce<T> = NullaryFunction<T>
+
+export type Convert<A, R> = UnaryFunction<A, R>
 
 export function tap<T>(t: T): T {
   console.log(`tap ${typeof t}`, t)

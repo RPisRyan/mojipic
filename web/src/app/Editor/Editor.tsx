@@ -4,85 +4,84 @@ import csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEraser, faCopy, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons'
 
-import { useNewEditorStore, EditorContext } from '../../domain/Editor/EditorStore'
 import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
 import EditableChar from './EditableChar'
 import { spaces } from '../../common/theme'
 import { ControlsBar, GlyphList } from '../elements/containers'
 import { GlyphOption } from '../elements/controls'
-import type { PaintbrushTool } from '../../domain/Editor/CanvasStore'
+import { useToolboxState } from '../../domain/globalState'
+import { useEditorCommands } from '../../domain/editor/commands'
 
 export function Editor() {
-  const editorStore = useNewEditorStore()
-  const { canvasStore } = editorStore
-  const showRecent = canvasStore.recent.filter(it =>
-    it !== (canvasStore.tools.paint as PaintbrushTool).brush
+  const toolbox = useToolboxState()
+  const { activateTool, pickBrush, undo, clear, copyToClipboard } = useEditorCommands()
+
+  const showRecent = toolbox.recent.filter(it =>
+    it !== toolbox.brush
   )
-  return <EditorContext.Provider value={editorStore}>
-    <div className={css.editor}>
-      <div className={style(csstips.vertical)} >
-        <DrawingGrid />
+  return <div className={css.editor}>
+    <div className={style(csstips.vertical)} >
+      <DrawingGrid />
 
-        <ControlsBar>
-          <TileButton
-            active={canvasStore.activeToolType === 'paint'}
-            onClick={() => canvasStore.activateTool('paint')}
-          >
-            {
-              canvasStore.activeToolType === 'paint'
-                ? <EditableChar
-                  value={canvasStore.brush}
-                  onChange={canvasStore.pickBrush}
-                />
-                : <span>{canvasStore.brush}</span>
-            }
-          </TileButton>
-
-          <TileButton
-            active={canvasStore.activeToolType === 'eraser'}
-            onClick={() => canvasStore.activateTool('eraser')}
-          >
-            <FontAwesomeIcon icon={faEraser} />
-          </TileButton>
-        </ControlsBar>
-
-        <GlyphList>
+      <ControlsBar>
+        <TileButton
+          active={toolbox.activeToolType === 'paint'}
+          onClick={() => activateTool('paint')}
+        >
           {
-            showRecent.map(brush =>
-              <GlyphOption
-                key={brush}
-                onClick={() => canvasStore.pickBrush(brush)}
-              >
-                {brush}
-              </GlyphOption>
-            )
+            toolbox.activeToolType === 'paint'
+              ? <EditableChar
+                value={toolbox.brush}
+                onChange={pickBrush}
+              />
+              : <span>{toolbox.brush}</span>
           }
-        </GlyphList>
-
-      </div>
-      <div className={css.commandButtons}>
-        <TileButton
-          onClick={() => editorStore.copyToClipboard()}
-        >
-          <FontAwesomeIcon icon={faCopy} />
         </TileButton>
 
         <TileButton
-          onClick={() => canvasStore.undo()}
+          active={toolbox.activeToolType === 'eraser'}
+          onClick={() => activateTool('eraser')}
         >
-          <FontAwesomeIcon icon={faUndo} />
+          <FontAwesomeIcon icon={faEraser} />
         </TileButton>
+      </ControlsBar>
 
-        <TileButton
-          onClick={() => canvasStore.clear()}
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </TileButton>
-      </div>
+      <GlyphList>
+        {
+          showRecent.map(brush =>
+            <GlyphOption
+              key={brush}
+              onClick={() => pickBrush(brush)}
+            >
+              {brush}
+            </GlyphOption>
+          )
+        }
+      </GlyphList>
 
     </div>
-  </EditorContext.Provider>
+    <div className={css.commandButtons}>
+      <TileButton
+        onClick={copyToClipboard}
+      >
+        <FontAwesomeIcon icon={faCopy} />
+      </TileButton>
+
+      <TileButton
+        onClick={() => undo()}
+      >
+        <FontAwesomeIcon icon={faUndo} />
+      </TileButton>
+
+      <TileButton
+        onClick={() => clear()}
+      >
+        <FontAwesomeIcon icon={faTrash} />
+      </TileButton>
+    </div>
+
+  </div>
 }
 
 const css = stylesheet({

@@ -1,4 +1,4 @@
-import { Drawing, drawingFromString, drawingToString } from '../domain/Editor/Drawing'
+import { Drawing, drawingFromString, drawingToString } from '../domain/editor/canvas/drawing'
 
 const localStorageKey = 'currentDrawing'
 
