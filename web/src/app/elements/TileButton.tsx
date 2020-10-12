@@ -1,7 +1,6 @@
-import { HTMLAttributes } from 'react'
+import React, { HTMLAttributes } from 'react'
 import { stylesheet, classes } from 'typestyle'
 import { sizes, styles, colors, palette } from '../../common/theme'
-import React from 'react'
 import { em, percent } from 'csx'
 
 export function TileButton({ className, active, ...restProps }: Props) {
