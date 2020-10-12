@@ -11,7 +11,7 @@ export function Welcome() {
       5, 5, 90, 90,
       {
         fill: palette.chill.brighten(3).hex(),
-        fillWeight: 4
+        fillWeight: 5
       }),
     {
       viewBox: [0, 0, 100, 100]
