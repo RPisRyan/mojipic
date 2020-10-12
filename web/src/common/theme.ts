@@ -1,7 +1,7 @@
 import { em, rem } from 'csx'
-import { NestedCSSProperties } from 'typestyle'
 import chroma from 'chroma-js'
 import { cssRule } from 'typestyle'
+import type { NestedCSSProperties } from 'typestyle/lib/types'
 
 export function mountTheme() {
   cssRule('html', {
