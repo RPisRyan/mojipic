@@ -1,5 +1,5 @@
-import { stylesheet, classes } from 'typestyle';
-import React, { PropsWithChildren, cloneElement, Children, ReactElement } from 'react';
+import { stylesheet, classes } from 'typestyle'
+import React, { PropsWithChildren, cloneElement, Children, ReactElement } from 'react'
 
 const css = stylesheet({
   overlay: {
@@ -23,7 +23,7 @@ type Props = PropsWithChildren<{}>
 export default function OverlayFill(props: Props) {
   return <div className={css.overlay}>
     {
-      Children.map(props.children, (child: ReactElement) =>
+      Children.map(props.children as ReactElement[], (child: ReactElement) =>
         cloneElement(child,
           {
             className: classes(child.props.className, css.child),

@@ -7,26 +7,30 @@ import { LogoText } from '../elements/LogoText'
 import { linearGradient } from 'csx'
 import { Welcome } from '../Help/Welcome'
 import { AppModal } from '../elements/AppModal'
-import { useState } from 'react'
+import { useEditorModel } from './useEditorModel'
 
 export default function EditorScreen() {
-  const [showWelcome, setShowWelcome] = useState<boolean>()
+  const { welcomeVisible, showWelcome, helpDone: done } = useEditorModel()
 
   return <div className={css.root}>
     <div className={css.application}>
       <div className={css.headerBar}>
-        <span className={css.headerTitle} onClick={() => setShowWelcome(true)}>
+        {/* todo: make helper that binds onClick, enabled */}
+        <span className={css.headerTitle} onClick={showWelcome}>
           <LogoText>Mojipic</LogoText>
         </span>
+
+        {/* todo: make command element that binds onClick, enabled */}
+        {/* <button onClick={showWelcome}>help</button> */}
       </div>
       <div className={css.appBody}>
         <Editor />
       </div>
     </div>
     <AppModal
-      show={showWelcome}
-      onHide={() => setShowWelcome(false)}
-      onBackdropClick={() => setShowWelcome(false)}
+      show={welcomeVisible}
+      onHide={done}
+      onBackdropClick={done}
     >
       <Welcome />
     </AppModal>

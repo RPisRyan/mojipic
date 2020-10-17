@@ -12,6 +12,7 @@ import { ControlsBar, GlyphList } from '../elements/containers'
 import { GlyphOption } from '../elements/controls'
 import { useToolboxState } from '../../domain/globalState'
 import { useEditorCommands } from '../../domain/editor/commands'
+import { HelpTooltip } from '../Help/HelpTooltip'
 
 export function Editor() {
   const toolbox = useToolboxState()
@@ -25,19 +26,23 @@ export function Editor() {
       <DrawingGrid />
 
       <ControlsBar>
-        <TileButton
-          active={toolbox.activeToolType === 'paint'}
-          onClick={() => activateTool('paint')}
+        <HelpTooltip
+          message="Select paintbrush tool"
         >
-          {
-            toolbox.activeToolType === 'paint'
-              ? <EditableChar
-                value={toolbox.brush}
-                onChange={pickBrush}
-              />
-              : <span>{toolbox.brush}</span>
-          }
-        </TileButton>
+          <TileButton
+            active={toolbox.activeToolType === 'paint'}
+            onClick={() => activateTool('paint')}
+          >
+            {
+              toolbox.activeToolType === 'paint'
+                ? <EditableChar
+                  value={toolbox.brush}
+                  onChange={pickBrush}
+                />
+                : <span>{toolbox.brush}</span>
+            }
+          </TileButton>
+        </HelpTooltip>
 
         <TileButton
           active={toolbox.activeToolType === 'eraser'}

@@ -1,4 +1,4 @@
-import { NestedCSSProperties } from 'typestyle/lib/types'
+import type { NestedCSSProperties } from 'typestyle/lib/types'
 import { ReactElement, cloneElement } from 'react'
 import { style, classes } from 'typestyle'
 

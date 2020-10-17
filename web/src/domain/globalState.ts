@@ -5,23 +5,49 @@ import { createUpdateState } from '../common/hookedState'
 import { initialEditorState } from './editor/editorState'
 import { toolboxViews } from './editor/toolbox/toolboxViews'
 import { tuple } from '../util/arrayUtil'
+import type { Dispatch, SetStateAction } from 'react'
 
 const initialState = {
+  root: {} as { [name: string]: unknown },
   canvas: initialCanvasState(),
   toolbox: initialToolboxState(),
   editor: initialEditorState()
 }
 
 export const { useGlobalState, getGlobalState, setGlobalState }
-  = createGlobalState(initialState)
+  = createGlobalState(initialState as any)
 
 export function resetGlobalState() {
   setGlobalState('canvas', initialState.canvas)
 }
 
+export const getRootState = () => getGlobalState('root')
 export const getToolboxState = () => toolboxViews(getGlobalState('toolbox'))
 export const getCanvasState = () => getGlobalState('canvas')
 export const getEditorState = () => getGlobalState('editor')
+
+export function createSharedState<S>(name: string) {
+
+  function useSharedState() {
+    const [state, setState] = useGlobalState(name)
+    return tuple(
+      state as S,
+      setState as Dispatch<SetStateAction<S>>
+    )
+  }
+  function getSharedState() {
+    return getGlobalState(name) as S
+  }
+  function setSharedState(state: S) {
+    setGlobalState(name, state)
+  }
+
+  return tuple(
+    useSharedState,
+    getSharedState,
+    setSharedState
+  )
+}
 
 export const updateToolbox = createUpdateState<ToolboxState>(s => setGlobalState('toolbox', s))
 export const updateCanvas = createUpdateState<DrawingCanvasState>(s => setGlobalState('canvas', s))

@@ -3,11 +3,16 @@ import { stylesheet, classes } from 'typestyle'
 import { sizes, styles, colors, palette } from '../../common/theme'
 import { em, percent } from 'csx'
 
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css' // optional
+
 export function TileButton({ className, active, ...restProps }: Props) {
-  return <button
-    className={classes(css.squareButton, active && css.active, className)}
-    {...restProps}
-  />
+  return <Tippy content={<span>Tooltip</span>}>
+    <button
+      className={classes(css.squareButton, active && css.active, className)}
+      {...restProps}
+    />
+  </Tippy>
 }
 
 type Props = HTMLAttributes<HTMLButtonElement> & {

@@ -1,3 +1,6 @@
+
+export const foo = undefined
+
 // import dataRaw from 'emoji-mart/data/all.json'
 // import { Data } from 'emoji-mart'
 // import { Emoji } from 'emoji-mart/dist-es/utils/data'

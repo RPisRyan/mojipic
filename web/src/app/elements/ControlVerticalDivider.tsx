@@ -1,10 +1,10 @@
+import { em } from 'csx'
 import React from 'react'
 import { stylesheet } from "typestyle"
-import { sizes } from '../styles'
 
 const css = stylesheet({
   outer: {
-    height: sizes.buttonHeight * 1.1,
+    height: em(1),
     width: 4,
     border: '1px solid gray',
     borderRadius: 2,
