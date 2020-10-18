@@ -1,4 +1,4 @@
-import type { Reducer } from 'react'
+import type { Dispatch, Reducer } from 'react'
 
 export function createStore<S, A>(initial: S, reduce: Reducer<S, A>) {
   let current = initial
@@ -30,6 +30,7 @@ export function createStore<S, A>(initial: S, reduce: Reducer<S, A>) {
 
   return {
     subscribe,
+    unsubscribe,
     dispatch,
     get state() {
       return current
@@ -43,6 +44,7 @@ export function createStore<S, A>(initial: S, reduce: Reducer<S, A>) {
 export type Store<S, A> = {
   subscribe(subscriber: Subscriber<S>): VoidFunction
   unsubscribe(subscriber: Subscriber<S>): void
+  // dispatch: Dispatch<A>
   dispatch(...actions: A[]): void
   state: S
 }

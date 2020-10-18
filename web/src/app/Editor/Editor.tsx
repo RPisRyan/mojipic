@@ -26,23 +26,23 @@ export function Editor() {
       <DrawingGrid />
 
       <ControlsBar>
-        <HelpTooltip
+        {/* <HelpTooltip
           message="Select paintbrush tool"
+        > */}
+        <TileButton
+          active={toolbox.activeToolType === 'paint'}
+          onClick={() => activateTool('paint')}
         >
-          <TileButton
-            active={toolbox.activeToolType === 'paint'}
-            onClick={() => activateTool('paint')}
-          >
-            {
-              toolbox.activeToolType === 'paint'
-                ? <EditableChar
-                  value={toolbox.brush}
-                  onChange={pickBrush}
-                />
-                : <span>{toolbox.brush}</span>
-            }
-          </TileButton>
-        </HelpTooltip>
+          {
+            toolbox.activeToolType === 'paint'
+              ? <EditableChar
+                value={toolbox.brush}
+                onChange={pickBrush}
+              />
+              : <span>{toolbox.brush}</span>
+          }
+        </TileButton>
+        {/* </HelpTooltip> */}
 
         <TileButton
           active={toolbox.activeToolType === 'eraser'}

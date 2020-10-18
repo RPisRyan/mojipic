@@ -8,10 +8,10 @@ export function useEditorModel() {
     // todo: helper function for forwarding nullary actions as commands
     showWelcome() {
       // todo: make action name first argument for dispatch() ??
-      dispatchHelp({ action: 'welcome' })
+      dispatchHelp('welcome', {})
     },
     helpDone() {
-      dispatchHelp({ action: 'done' })
+      dispatchHelp('done', {})
     }
   }), [dispatchHelp])
 
