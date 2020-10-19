@@ -1,7 +1,7 @@
 import React from 'react'
 import csstips from 'csstips'
 import { cssRaw } from 'typestyle'
-import { drawingFromString } from '../domain/editor/canvas/drawing'
+import { drawingFromString } from '../domain/drawing'
 import EditorScreen from './Editor/EditorScreen'
 import { useMaintainDrawingLocalCache } from './useMaintainDrawingLocalCache'
 import { mountTheme } from '../common/theme'

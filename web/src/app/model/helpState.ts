@@ -1,5 +1,5 @@
-import { createStore } from '../../packs/essential-store/store'
-import { useStore, useStoreWithNiceDispatch } from '../../packs/essential-store/useStore'
+import { createStore, addNamedDispatch } from '../../packs/essential-store/store'
+import { useStoreWithNamedDispatch } from '../../packs/essential-store/useStore'
 
 export type HelpState = {
   welcomeVisible?: true
@@ -31,6 +31,6 @@ function exhaustiveCheck(): never {
 
 const initialState = {}
 
-export const helpStore = createStore(initialState, reduce)
+export const helpStore = addNamedDispatch(createStore(initialState, reduce))
 
-export const useHelpState = () => useStoreWithNiceDispatch(helpStore)
+export const useHelpState = () => useStoreWithNamedDispatch(helpStore)

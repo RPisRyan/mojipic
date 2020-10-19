@@ -13,6 +13,8 @@ export type Produce<T> = NullaryFunction<T>
 
 export type Convert<A, R> = UnaryFunction<A, R>
 
+export type Predicate<T> = UnaryFunction<T, boolean>
+
 export function tap<T>(t: T): T {
   console.log(`tap ${typeof t}`, t)
   return t

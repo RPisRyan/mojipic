@@ -10,13 +10,12 @@ import EditableChar from './EditableChar'
 import { spaces } from '../../common/theme'
 import { ControlsBar, GlyphList } from '../elements/containers'
 import { GlyphOption } from '../elements/controls'
-import { useToolboxState } from '../../domain/globalState'
-import { useEditorCommands } from '../../domain/editor/commands'
-import { HelpTooltip } from '../Help/HelpTooltip'
+import { useToolboxState } from '../model/toolboxState'
+import { useEditor } from '../model/useEditor'
 
 export function Editor() {
-  const toolbox = useToolboxState()
-  const { activateTool, pickBrush, undo, clear, copyToClipboard } = useEditorCommands()
+  const [toolbox] = useToolboxState()
+  const { activateTool, pickBrush, undo, clear, copyToClipboard } = useEditor()
 
   const showRecent = toolbox.recent.filter(it =>
     it !== toolbox.brush

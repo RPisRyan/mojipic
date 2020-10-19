@@ -5,13 +5,13 @@ import type { Dispatch } from 'react'
  *   `dispatch(actionType, actionPayload)` 
  * @param dispatch - Conventional dispatch for action object
  */
-export function makeBinaryDispatch<A extends TypeDiscriminated>(dispatch: Dispatch<A>):
+export function makeNamedDispatch<A extends TypeDiscriminated>(dispatch: Dispatch<A>):
   // todo: figure out how to make payload argument optional if type has no payload
   <T extends Discriminator<A>, AUnique extends UniqueActionType<A, T>> (
     uniqueType: T,
     payload: UniquePayload<AUnique>
   ) => void {
-  function binaryDispatch<
+  function namedDispatch<
     T extends Discriminator<A>,
     AUnique extends UniqueActionType<A, T>
   >(
@@ -21,13 +21,20 @@ export function makeBinaryDispatch<A extends TypeDiscriminated>(dispatch: Dispat
   ) {
     dispatch({ type: uniqueType, ...payload } as AUnique)
   }
-  return binaryDispatch
+  return namedDispatch
 }
 
-type BinaryDispatch<A extends TypeDiscriminated, T extends Discriminator<A>, AUnique extends UniqueActionType<A, T>> =
+export type NamedDispatch<A extends TypeDiscriminated> =
+  (type: Discriminator<A>, payload: Omit<A, 'type'>) => void
+
+export type NamedDispatchUnique<A extends TypeDiscriminated, T extends Discriminator<A>, AUnique extends UniqueActionType<A, T>> =
   (uniqueType: T, payload?: UniquePayload<AUnique>) => void
 
-type UnaryDispatch<A extends TypeDiscriminated, T extends Discriminator<A>, AUnique extends NoPayloadAction<UniqueActionType<A, T>>> =
+export type NamedEmptyDispatchUnique<
+  A extends TypeDiscriminated,
+  T extends Discriminator<A>,
+  AUnique extends NoPayloadAction<UniqueActionType<A, T>>
+  > =
   (uniqueType: T) => void
 
 export type TypeDiscriminated = { type: string }

@@ -1,5 +1,5 @@
 import { useReducer } from 'react'
-import { makeBinaryDispatch } from './binaryDispatch'
+import { makeNamedDispatch } from './namedDispatch'
 
 type CalculatorState = {
   value: number
@@ -20,6 +20,6 @@ function calculatorReduce(state: CalculatorState, action: CalculatorAction) {
 
 function useDiscriminatedCalc() {
   const [state, dispatch] = useReducer(calculatorReduce, { value: 0 })
-  const dispatchNamed = makeBinaryDispatch(dispatch)
+  const dispatchNamed = makeNamedDispatch(dispatch)
   dispatchNamed('add', { amount: 1 })
 }

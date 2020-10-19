@@ -1,21 +1,13 @@
 import { useEffect } from 'react'
-import { Drawing, uniqueGlyphs } from '../domain/editor/canvas/drawing'
 import { loadLocal, saveLocal } from '../common/storage'
-import { havingDrawing } from '../domain/editor/canvas/canvasUpdates'
-import { withRecent } from '../domain/editor/toolbox/toolboxUpdates'
-import { updateCanvas, updateToolbox, useCanvasState } from '../domain/globalState'
+import type { Drawing } from '../domain/drawing'
+import { useEditor } from './model/useEditor'
 
 export function useMaintainDrawingLocalCache(defaultDrawing: Drawing) {
-  const canvas = useCanvasState()
+  const { canvas, loadDrawing } = useEditor()
 
   useEffect(() => {
-    const drawing = loadLocal() || defaultDrawing
-    updateCanvas(
-      havingDrawing(drawing)
-    )
-    updateToolbox(
-      withRecent(uniqueGlyphs(drawing))
-    )
+    loadDrawing(loadLocal() || defaultDrawing)
   }, [])
 
   useEffect(() => {

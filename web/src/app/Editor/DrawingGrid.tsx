@@ -1,17 +1,16 @@
-import React, { CSSProperties, useRef, ReactElement } from 'react'
+import React, { CSSProperties, useRef } from 'react'
 import { useDrag } from 'react-use-gesture'
 import {
-  getDrawingSize, CellPosition, positionToString,
-  positionFromString, isWithinDrawing, positionsAreEqual
-} from '../../domain/editor/canvas/drawing'
+  getDrawingBounds, CellPosition, positionToString,
+  positionFromString, isWithinDrawing, positionsAreEqual, getCells
+} from '../../domain/drawing'
 import { stylesheet } from 'typestyle'
 import useMeasure from 'react-use-measure'
 import { sizes } from '../../common/theme'
 import type { NumericRange } from '../../common/measurement'
 import { Cell } from './Cell'
-import { useCanvasState } from '../../domain/globalState'
-import { useEditorCommands } from '../../domain/editor/commands'
-import { maxDrawingSize } from '../../domain/editor/canvas/canvasState'
+import { useCanvasState } from '../model/canvasState'
+import { useEditor } from '../model/useEditor'
 
 /**
  * Component is sized in two stages:
@@ -19,10 +18,10 @@ import { maxDrawingSize } from '../../domain/editor/canvas/canvasState'
  *   - On re-flow after dimension update, explicitly size cells based on layout bounds assigned to container.
  */
 export function DrawingGrid() {
-  const canvas = useCanvasState()
+  const [canvas] = useCanvasState()
   const { drawing } = canvas
 
-  const { applyTool } = useEditorCommands()
+  const { applyTool } = useEditor()
 
   const [containerRef, bounds] = useMeasure()
 
@@ -64,14 +63,13 @@ export function DrawingGrid() {
     }
   )
 
-  const drawingSize = getDrawingSize(canvas.drawing)
+  const drawingSize = getDrawingBounds(canvas.drawing)
 
   const borderWidth = 3
 
   // subract column borders from width
-  const bordersWidth = borderWidth * (drawingSize.columns + 3)
-  const cellSize = (bounds.width - bordersWidth)
-    / (drawingSize.columns + 2)
+  const bordersWidth = borderWidth * drawingSize.columns
+  const cellSize = (bounds.width - bordersWidth) / drawingSize.columns
 
   const widthRange = gridBoundsRange(drawingSize.columns, borderWidth)
   const heightRange = gridBoundsRange(drawingSize.rows, borderWidth)
@@ -83,48 +81,18 @@ export function DrawingGrid() {
     // maxHeight: heightRange.max,
   }
 
-  const cells: ReactElement[] = []
-
-  if (bounds.width) {
-    // blechh!
-
-    // If max size reached in one direction, don't show
-    //  border cells.
-    const rowRange = drawingSize.rows < maxDrawingSize
-      ? [-1, drawingSize.rows]
-      : [0, drawingSize.rows - 1]
-    const colRange = drawingSize.columns < maxDrawingSize
-      ? [-1, drawingSize.columns]
-      : [0, drawingSize.columns - 1]
-    const origin: CellPosition = { row: rowRange[0], col: colRange[0] }
-
-    for (let rowIdx = rowRange[0]; rowIdx <= rowRange[1]; rowIdx++) {
-      const row = rowIdx >= 0 && rowIdx < drawingSize.rows
-        ? drawing[rowIdx]
-        : null
-      for (let colIdx = colRange[0]; colIdx <= colRange[1]; colIdx++) {
-        const position: CellPosition = { row: rowIdx, col: colIdx }
-        const glyph = row && (colIdx >= 0 && colIdx < drawingSize.columns)
-          ? row[colIdx]
-          : null
-        cells.push(
-          <Cell
-            key={positionToString(position)!}
-            position={position}
-            origin={origin}
-            glyph={glyph}
-            cellSize={cellSize}
-            onClick={() => {
-              if (!positionsAreEqual(lastAppliedPosition.current, position)) {
-                lastAppliedPosition.current = position
-                applyTool(position)
-              }
-            }}
-          />
-        )
+  const cells = getCells(drawing).map(({ position, glyph }) => <Cell
+    key={positionToString(position)!}
+    position={position}
+    glyph={glyph}
+    cellSize={cellSize}
+    onClick={() => {
+      if (!positionsAreEqual(lastAppliedPosition.current, position)) {
+        lastAppliedPosition.current = position
+        applyTool(position)
       }
-    }
-  }
+    }}
+  />)
 
   return <div
     ref={containerRef}
@@ -152,7 +120,7 @@ const css = stylesheet({
 })
 
 function gridBoundsRange(tracks: number, borderWidth: number): NumericRange {
-  const borders = (tracks + 3) * borderWidth
+  const borders = (tracks + 1) * borderWidth
   return {
     min: tracks * sizes.clickableMin + borders,
     max: tracks * sizes.clickableMax + borders

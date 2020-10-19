@@ -1,23 +1,22 @@
 import React from 'react'
 import { colors, styles } from '../../common/theme'
-import { positionToString, CellPosition } from '../../domain/editor/canvas/drawing'
+import { positionToString, CellPosition } from '../../domain/drawing'
 import { classes, stylesheet } from 'typestyle'
 
 type CellProps = {
   position: CellPosition
-  origin: CellPosition
   cellSize: number
   glyph: string | null
   onClick: () => void
 }
 
-export function Cell({ position, origin, glyph, cellSize, onClick }: CellProps) {
+export function Cell({ position, glyph, cellSize, onClick }: CellProps) {
   const { row, col } = position
   return <div
     className={css.cell}
     style={{
-      gridRow: row - origin.row + 1,
-      gridColumn: col - origin.col + 1,
+      gridRow: row + 1,
+      gridColumn: col + 1,
       fontSize: cellSize * 0.8,
     }}
     data-position={positionToString(position)}

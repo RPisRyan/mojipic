@@ -7,16 +7,16 @@ import { LogoText } from '../elements/LogoText'
 import { linearGradient } from 'csx'
 import { Welcome } from '../Help/Welcome'
 import { AppModal } from '../elements/AppModal'
-import { useEditorModel } from './useEditorModel'
+import { useHelp } from '../model/useHelp'
 
 export default function EditorScreen() {
-  const { welcomeVisible, showWelcome, helpDone: done } = useEditorModel()
+  const { welcomeVisible, welcome, done } = useHelp()
 
   return <div className={css.root}>
     <div className={css.application}>
       <div className={css.headerBar}>
         {/* todo: make helper that binds onClick, enabled */}
-        <span className={css.headerTitle} onClick={showWelcome}>
+        <span className={css.headerTitle} onClick={welcome}>
           <LogoText>Mojipic</LogoText>
         </span>
 
