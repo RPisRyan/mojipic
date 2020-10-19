@@ -50,7 +50,6 @@ function reduce(state: CanvasState, action: CanvasAction) {
         draft.history.push(state.drawing)
 
         if (isInnerPosition(position, bounds)) {
-          draft.history.push(state.drawing)
           draft.drawing[row][col] = glyph
         } else {
           const edges = getPositionEdges(position, bounds)
@@ -58,7 +57,7 @@ function reduce(state: CanvasState, action: CanvasAction) {
           drawing[row][col] = glyph
           // We could be more efficient when painting at the edges,
           //  if we pre-calculated array changes required.
-          draft.drawing = padDrawing(edges, state.drawing, maxDrawingBounds)
+          draft.drawing = padDrawing(edges, drawing, maxDrawingBounds)
         }
       })
     case 'eraseCell':
