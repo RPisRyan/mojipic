@@ -12,6 +12,7 @@ import { ControlsBar, GlyphList } from '../elements/containers'
 import { GlyphOption } from '../elements/controls'
 import { useToolboxState } from '../model/toolboxState'
 import { useEditor } from '../model/useEditor'
+import { CanvasGrid } from './CanvasGrid'
 
 export function Editor() {
   const [toolbox] = useToolboxState()
@@ -22,7 +23,7 @@ export function Editor() {
   )
   return <div className={css.editor}>
     <div className={style(csstips.vertical)} >
-      <DrawingGrid />
+      <CanvasGrid />
 
       <ControlsBar>
         {/* <HelpTooltip

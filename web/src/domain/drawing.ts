@@ -271,6 +271,6 @@ export function getCells(drawing: Drawing): Cell[] {
   )
 }
 
-type Cell = { position: CellPosition, glyph: Glyph }
+export type Cell = { position: CellPosition, glyph: Glyph }
 
 type DrawingEdge = 'top' | 'bottom' | 'left' | 'right'
