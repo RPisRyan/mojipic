@@ -12,7 +12,7 @@ export function mountTheme() {
 export const sizes = {
   clickableMin: 24,
   clickableMax: 96,
-  characterButton: em(1.75)
+  characterButton: em(1.25)
 }
 
 export const spaces = {

@@ -1,11 +1,14 @@
+import { padding } from 'csstips'
 import GraphemeSplitter from 'grapheme-splitter'
+import { maxDrawingBounds } from '../app/model/canvasState'
+import { tuple } from '../util/arrayUtil'
 import { blankChar } from '../util/charUtil'
 
 export type Drawing = Glyph[][]
 
 export type CellPosition = { row: number, col: number }
 
-export type DrawingBounds = {
+export type DrawingSize = {
   rows: number,
   columns: number
 }
@@ -16,25 +19,33 @@ export const emptyGlyph = null
 
 const splitter = new GraphemeSplitter()
 
-export function emptyDrawing({ rows, columns }: DrawingBounds = { rows: 3, columns: 3 }) {
+export function glyphIsEmpty(glyph: Glyph) {
+  return glyph == null
+}
+
+export function glyphHasValue(glyph: Glyph) {
+  return glyph != null
+}
+
+export function emptyDrawing({ rows, columns }: DrawingSize = { rows: 3, columns: 3 }) {
   return Array.from(new Array(rows), () =>
     Array.from(new Array(columns),
       () => null)
   )
 }
 
-export function getDrawingBounds(drawing: Drawing): DrawingBounds {
+export function getDrawingSize(drawing: Drawing): DrawingSize {
   return {
     rows: drawing.length,
-    columns: drawing[0]?.length
+    columns: Math.max(...drawing.map(it => it.length))
   }
 }
 
-export function boundsEqual(a: DrawingBounds, b: DrawingBounds) {
+export function boundsEqual(a: DrawingSize, b: DrawingSize) {
   return a.rows === b.rows && a.columns === b.columns
 }
 
-export function isWithinBounds(position: CellPosition, bounds: DrawingBounds) {
+export function isWithinBounds(position: CellPosition, bounds: DrawingSize) {
   const { row, col } = position
   const { rows, columns } = bounds
   return row >= 0 && row < rows
@@ -42,12 +53,12 @@ export function isWithinBounds(position: CellPosition, bounds: DrawingBounds) {
 }
 
 export function isWithinDrawing(position: CellPosition, drawing: Drawing) {
-  return isWithinBounds(position, getDrawingBounds(drawing))
+  return isWithinBounds(position, getDrawingSize(drawing))
 }
 
 export function expandToInclude(position: CellPosition, drawing: Drawing) {
   const { row, col } = position
-  const size = getDrawingBounds(drawing)
+  const size = getDrawingSize(drawing)
   let newDrawing = [...drawing.map(row => [...row])]
 
   if (row < 0) {
@@ -68,7 +79,7 @@ export function expandToInclude(position: CellPosition, drawing: Drawing) {
 }
 
 export function addRow(side: 'before' | 'after', drawing: Drawing) {
-  const size = getDrawingBounds(drawing)
+  const size = getDrawingSize(drawing)
   if (side === 'before') {
     return [emptyRow(size.columns), ...drawing]
   }
@@ -76,7 +87,7 @@ export function addRow(side: 'before' | 'after', drawing: Drawing) {
 }
 
 export function addColumn(side: 'before' | 'after', drawing: Drawing) {
-  const size = getDrawingBounds(drawing)
+  const size = getDrawingSize(drawing)
   if (side === 'before') {
     return drawing.map(row => [null, ...row])
   }
@@ -117,36 +128,59 @@ export function positionFromString(value: string): CellPosition {
   return { row: numbers[0], col: numbers[1] }
 }
 
-// this could be more efficient
-export function trimDrawing(drawing: Drawing, minSize: number) {
-  let working = [...drawing.map(it => [...it])]
-  let iterations = 1e3
-  const canIterate = () => iterations-- > 0
+function entireDrawing(drawing: Drawing): DrawingRegion {
+  const size = getDrawingSize(drawing)
+  return {
+    rowRange: [0, size.rows - 1],
+    columnRange: [0, size.columns - 1]
+  }
+}
 
-  const canTrimRows = () => working.length > minSize
-  while (canIterate() && canTrimRows() && rowIsEmpty(0, working)) {
-    working = working.slice(1)
+/**
+ * Does `a` fully contain `b`?
+ */
+function containsRegion(a: DrawingRegion, b: DrawingRegion) {
+  return containsRange(a.rowRange, b.rowRange)
+    && containsRange(a.columnRange, b.columnRange)
+}
+
+/**
+ * Does `a` fully contain `b`?
+ */
+function containsRange(a: NumberRange, b: NumberRange) {
+  return a[0] <= b[0] && a[1] >= b[1]
+}
+
+function rangeSubtract(a: NumberRange, b: NumberRange): NumberRange {
+  return [a[0] - b[0], a[1] - b[1]]
+}
+
+function regionSubtract(a: DrawingRegion, b: DrawingRegion): DrawingRegion {
+  return {
+    rowRange: rangeSubtract(a.rowRange, b.rowRange),
+    columnRange: rangeSubtract(a.columnRange, b.columnRange)
   }
-  while (canIterate() && canTrimRows() && rowIsEmpty(working.length - 1, working)) {
-    working = working.slice(0, working.length - 1)
+}
+
+function extractRegion(drawing: Drawing, region: DrawingRegion): Drawing {
+  const fullRegion = entireDrawing(drawing)
+
+  if (containsRegion(region, fullRegion)) {
+    return drawing
   }
 
-  const canTrimColumns = () => {
-    return working[0].length > minSize
-  }
-  while (canIterate() && canTrimColumns() && colIsEmpty(0, working)) {
-    working = working.map(row => row.slice(1))
-  }
-  while (canIterate() && canTrimColumns() && colIsEmpty(working[0].length - 1, working)) {
-    working = working.map(row => row.slice(0, row.length - 1))
-  }
+  return drawing.slice(region.rowRange[0], region.rowRange[1])
+    .map(row => row.slice(region.columnRange[0], region.columnRange[1]))
+}
 
-  return working
+export function trimDrawing(drawing: Drawing) {
+  const contentRegion = getContentRegion(drawing)
+  return extractRegion(drawing, contentRegion)
 }
 
 export function isInnerPosition(
   { row, col }: CellPosition,
-  { rows, columns }: DrawingBounds
+  { rows, columns }: DrawingSize
 ) {
   return row > 0
     && row < rows - 1
@@ -156,7 +190,7 @@ export function isInnerPosition(
 
 export function getPositionEdges(
   { row, col }: CellPosition,
-  { rows, columns }: DrawingBounds
+  { rows, columns }: DrawingSize
 ) {
   const edges = new Set<DrawingEdge>()
   if (row === 0) {
@@ -175,34 +209,63 @@ export function getPositionEdges(
 }
 
 export function padDrawing(
-  edges: Set<DrawingEdge>,
   drawing: Drawing,
-  maxBounds: DrawingBounds
-) {
-  const currentBounds = getDrawingBounds(drawing)
-  let result = drawing
+  maxBounds: DrawingSize
+): Drawing {
+  const size = getDrawingSize(drawing)
 
-  // If edge type was instead [direction, ordinal],
-  //   this would be more elegant
-  if (currentBounds.rows < maxBounds.rows) {
-    if (edges.has('top')) {
-      result = addTrack('top', result)
-    }
-    if (edges.has('bottom')) {
-      result = addTrack('bottom', result)
-    }
+  if (
+    size.rows >= maxBounds.rows
+    && size.columns >= maxBounds.columns
+  ) return drawing
+
+  const paddings = paddingNeeded(drawing)
+
+  const intendedSize = () => ({
+    rows: size.rows + paddings.top + paddings.bottom,
+    columns: size.columns + paddings.left + paddings.right
+  }) as DrawingSize
+  if (intendedSize().rows > maxBounds.rows) {
+    paddings.bottom = 0
+  }
+  if (intendedSize().rows > maxBounds.rows) {
+    paddings.top = 0
+  }
+  if (intendedSize().columns > maxBounds.columns) {
+    paddings.right = 0
+  }
+  if (intendedSize().columns > maxBounds.columns) {
+    paddings.left = 0
   }
 
-  if (currentBounds.columns < maxBounds.columns) {
-    if (edges.has('left')) {
-      result = addTrack('left', result)
-    }
-    if (edges.has('right')) {
-      result = addTrack('right', result)
-    }
+  let current = drawing
+  if (paddings.top) {
+    current = addTrack('top', current)
+  }
+  if (paddings.bottom) {
+    current = addTrack('bottom', current)
+  }
+  if (paddings.left) {
+    current = addTrack('left', current)
+  }
+  if (paddings.right) {
+    current = addTrack('right', current)
   }
 
-  return result
+  return current
+}
+
+function paddingNeeded(drawing: Drawing): DrawingEdgeValues {
+  const size = getDrawingSize(drawing)
+  const region = getContentRegion(drawing)
+  const toNumber = (it: boolean) => it ? 1 : 0
+  const range = {
+    top: toNumber(region.rowRange[0] === 0),
+    bottom: toNumber(region.rowRange[1] === size.rows - 1),
+    left: toNumber(region.columnRange[0] === 0),
+    right: toNumber(region.columnRange[1] === size.columns - 1)
+  }
+  return range
 }
 
 export function cloneDrawing(drawing: Drawing) {
@@ -271,6 +334,77 @@ export function getCells(drawing: Drawing): Cell[] {
   )
 }
 
+export function getContentRegion(drawing: Drawing): DrawingRegion {
+  const size = getDrawingSize(drawing)
+  const lastRow = size.rows - 1
+  const lastColumn = size.columns - 1
+  let rowRange: IndexRange = [lastRow, 0]
+  let columnRange: IndexRange = [lastColumn, 0]
+  getCells(drawing)
+    .forEach(({ position, glyph }) => {
+      if (glyphHasValue(glyph)) {
+        rowRange = [
+          Math.min(position.row, rowRange[0]),
+          Math.max(position.row, rowRange[1])
+        ]
+        columnRange = [
+          Math.min(position.col, columnRange[0]),
+          Math.max(position.col, columnRange[1])
+        ]
+      }
+    })
+
+  if (!isValidRange(rowRange) || !isValidRange(columnRange)) {
+    return emptyRegion
+  }
+
+  return { rowRange, columnRange }
+}
+
+function isValidRange(range: NumberRange) {
+  return range[1] >= range[0]
+}
+
+function intersectRegion(a: DrawingRegion, b: DrawingRegion): DrawingRegion {
+  return {
+    rowRange: intersectRanges(a.rowRange, b.rowRange),
+    columnRange: intersectRanges(a.columnRange, b.columnRange)
+  }
+}
+
+function intersectRanges(a: NumberRange, b: NumberRange): NumberRange {
+  const result = tuple(
+    Math.max(a[0], b[0]),
+    Math.min(a[1], b[1])
+  )
+  if (result[1] < result[0]) {
+    return [result[1], result[0]]
+  }
+  return result
+}
+
+const emptyRange: NumberRange = [0, 0]
+
+const emptyRegion: DrawingRegion = {
+  rowRange: emptyRange,
+  columnRange: emptyRange
+}
+
+export type NumberRange = [number, number]
+export type IndexRange = NumberRange
+
+export type DrawingRegion = {
+  rowRange: IndexRange,
+  columnRange: IndexRange
+}
+
 export type Cell = { position: CellPosition, glyph: Glyph }
 
 type DrawingEdge = 'top' | 'bottom' | 'left' | 'right'
+
+type DrawingEdgeValues = {
+  top: number,
+  bottom: number,
+  left: number,
+  right: number
+}

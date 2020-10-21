@@ -1,10 +1,11 @@
 import React from 'react'
 import csstips from 'csstips'
 import { cssRaw } from 'typestyle'
-import { drawingFromString } from '../domain/drawing'
+import { drawingFromString, padDrawing } from '../domain/drawing'
 import EditorScreen from './Editor/EditorScreen'
 import { useMaintainDrawingLocalCache } from './useMaintainDrawingLocalCache'
 import { mountTheme } from '../common/theme'
+import { maxDrawingBounds } from './model/canvasState'
 
 csstips.normalize()
 csstips.setupPage('#root')
@@ -18,7 +19,10 @@ cssRaw(`
 mountTheme()
 
 export function App() {
-  useMaintainDrawingLocalCache(drawingFromString(defaultDrawing))
+  useMaintainDrawingLocalCache(
+    padDrawing(
+      drawingFromString(defaultDrawing), maxDrawingBounds)
+  )
   return <EditorScreen />
 }
 

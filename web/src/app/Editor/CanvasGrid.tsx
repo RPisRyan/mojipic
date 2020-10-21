@@ -49,6 +49,7 @@ export function CanvasGrid() {
 const css = stylesheet({
   canvasGrid: {
     display: 'grid',
+    userSelect: 'none',
     gridTemplateColumns: 'repeat(auto-fit, 1fr)',
     gridTemplateRows: 'repeat(auto-fit, 1fr)',
     background: colors.light

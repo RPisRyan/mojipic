@@ -2,15 +2,17 @@ import produce from 'immer'
 import { createStore, addNamedDispatch } from '../../packs/essential-store/store'
 import { useStoreWithNamedDispatch } from '../../packs/essential-store/useStore'
 import {
-  CellPosition, cloneDrawing, Drawing, DrawingBounds, emptyDrawing,
-  emptyGlyph, getDrawingBounds, getPositionEdges,
+  CellPosition, cloneDrawing, Drawing, DrawingSize, emptyDrawing,
+  emptyGlyph, getDrawingSize, getPositionEdges,
   Glyph, isInnerPosition, isWithinBounds, padDrawing, trimDrawing
 } from '../../domain/drawing'
 
-export const minDrawingSize = 3
-export const maxDrawingSize = 15
-export const minDrawingBounds: DrawingBounds = { rows: 3, columns: 3 }
-export const maxDrawingBounds: DrawingBounds = { rows: 8, columns: 12 }
+export const minDrawingSize = 5
+export const minDrawingBounds: DrawingSize = {
+  rows: minDrawingSize,
+  columns: minDrawingSize
+}
+export const maxDrawingBounds: DrawingSize = { rows: 8, columns: 12 }
 
 export type CanvasState = {
   drawing: Drawing,
@@ -42,7 +44,7 @@ function reduce(state: CanvasState, action: CanvasAction) {
       return produce(state, draft => {
         const { glyph, position } = action
         const { row, col } = position
-        const bounds = getDrawingBounds(state.drawing)
+        const bounds = getDrawingSize(state.drawing)
         if (!isWithinBounds(position, bounds)) {
           return
         }
@@ -52,19 +54,17 @@ function reduce(state: CanvasState, action: CanvasAction) {
         if (isInnerPosition(position, bounds)) {
           draft.drawing[row][col] = glyph
         } else {
-          const edges = getPositionEdges(position, bounds)
+          // const edges = getPositionEdges(position, bounds)
           let drawing = cloneDrawing(state.drawing)
           drawing[row][col] = glyph
-          // We could be more efficient when painting at the edges,
-          //  if we pre-calculated array changes required.
-          draft.drawing = padDrawing(edges, drawing, maxDrawingBounds)
+          draft.drawing = padDrawing(drawing, maxDrawingBounds)
         }
       })
     case 'eraseCell':
       return produce(state, draft => {
         const { position } = action
         const { row, col } = position
-        const bounds = getDrawingBounds(state.drawing)
+        const bounds = getDrawingSize(state.drawing)
         if (!isWithinBounds(position, bounds)) {
           return
         }
@@ -72,7 +72,7 @@ function reduce(state: CanvasState, action: CanvasAction) {
         if (getPositionEdges(position, bounds).size > 0) {
           const drawing = cloneDrawing(state.drawing)
           drawing[row][col] = emptyGlyph
-          draft.drawing = trimDrawing(drawing, minDrawingSize)
+          draft.drawing = trimDrawing(drawing)
         } else {
           draft.drawing[row][col] = emptyGlyph
         }

@@ -1,7 +1,7 @@
 import React, { CSSProperties, useRef } from 'react'
 import { useDrag } from 'react-use-gesture'
 import {
-  getDrawingBounds, CellPosition, positionToString,
+  getDrawingSize, CellPosition, positionToString,
   positionFromString, isWithinDrawing, positionsAreEqual, getCells
 } from '../../domain/drawing'
 import { stylesheet } from 'typestyle'
@@ -63,7 +63,7 @@ export function DrawingGrid() {
     }
   )
 
-  const drawingSize = getDrawingBounds(canvas.drawing)
+  const drawingSize = getDrawingSize(canvas.drawing)
 
   const borderWidth = 3
 

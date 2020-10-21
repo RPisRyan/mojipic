@@ -28,9 +28,9 @@ const css = stylesheet({
     borderColor: colors.getControlBorder({ active: false, hover: false }),
     color: colors.darkest,
     borderRadius: em(0.2),
-    fontSize: percent(160),
-    width: sizes.characterButton,
-    height: sizes.characterButton,
+    fontSize: sizes.characterButton,
+    width: em(1.75),
+    height: em(1.75),
     cursor: 'pointer',
     '$nest': {
       '&:hover': {
