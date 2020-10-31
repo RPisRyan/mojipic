@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { render } from 'react-dom'
 import { ErrorBoundary } from 'react-error-boundary'
-import { App } from './app/App'
+import { App } from './ui/App'
 import type { FallbackProps } from 'react-error-boundary'
 import { setNotifier } from './domain/services'
-import { notify } from './common/notification'
+import { notify } from './app/notification'
 
 setNotifier(notify)
 

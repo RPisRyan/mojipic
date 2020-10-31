@@ -19,3 +19,9 @@ export function tap<T>(t: T): T {
   console.log(`tap ${typeof t}`, t)
   return t
 }
+
+export function times(numberOf: number) {
+  return (callback: Callback<number>) => {
+    for (let i = 0; i < numberOf; i++) callback(i)
+  }
+}
