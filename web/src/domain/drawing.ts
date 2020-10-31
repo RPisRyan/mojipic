@@ -1,10 +1,7 @@
 import { Record, Map } from 'immutable'
-import { sequence } from '../../common/iterable'
-import { Point } from '../../packs/immutable-2d/point'
-import { Rect } from '../../packs/immutable-2d/rect'
-import type { Size } from '../../packs/immutable-2d/size'
-import { tuple } from '../../util/arrayUtil'
-import { emptyGlyph, Glyph } from '../glyph'
+import { Point, Rect, Size } from '../lib/2d'
+import { sequence } from '../lib/sequences'
+import { emptyGlyph, Glyph, glyphArrayToString } from './glyph'
 
 export type Cell = [Point, Glyph]
 
@@ -89,7 +86,7 @@ export class Drawing extends Record({
       for (let x = left; x <= right; x++) {
         const point = new Point(x, y)
         const cell = contents.get(point)
-        yield tuple(point, cell || emptyGlyph)
+        yield [point, cell || emptyGlyph] as Cell
       }
     }
   }
@@ -104,6 +101,10 @@ export class Drawing extends Record({
       array[position.x - x][position.y - y] = glyph
     }
     return array
+  }
+
+  toString(): string {
+    return glyphArrayToString(this.toArray())
   }
 }
 
