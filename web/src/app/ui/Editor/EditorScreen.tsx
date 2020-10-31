@@ -2,12 +2,12 @@ import React from 'react'
 
 import { Editor } from './Editor'
 import { stylesheet } from 'typestyle'
-import { palette, spaces, colors } from '../../theme'
 import { LogoText } from '../elements/LogoText'
 import { linearGradient } from 'csx'
 import { Welcome } from '../Help/Welcome'
 import { AppModal } from '../elements/AppModal'
-import { useHelp } from '../../state/useHelp'
+import { useHelp } from '../../services/helpState'
+import { colors, palette, spaces } from '../../services/theme'
 
 export default function EditorScreen() {
   const { welcomeVisible, welcome, done } = useHelp()

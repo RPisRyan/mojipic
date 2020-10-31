@@ -1,9 +1,9 @@
 import React from 'react'
-import { palette, spaces } from '../../theme'
 import { classes, stylesheet } from 'typestyle'
 import { useRoughSvg } from '../elements/RoughElement'
 import { viewWidth } from 'csx'
 import svgUri from 'mini-svg-data-uri'
+import { palette, spaces } from '../../services/theme'
 
 export function Welcome() {
   const backgroundSvg = useRoughSvg(rc =>

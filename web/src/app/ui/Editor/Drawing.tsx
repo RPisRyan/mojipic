@@ -1,28 +1,24 @@
 import React, { useMemo } from 'react'
 import { stylesheet } from 'typestyle'
-import { colors } from '../../theme'
-import { Cell, getCells, positionToString } from '../../domain/drawing/drawingFunctions'
-import { useCanvasState } from '../../app/state/canvasState'
-import { useEditor } from '../../state/useEditor'
+import type { Cell } from '../../../lib/emoji-drawing'
+import { useDrawing, useEditor } from '../../services/editorState'
+import { colors } from '../../services/theme'
 
 export function CanvasGrid() {
-  const [canvas] = useCanvasState()
-  const { drawing } = canvas
+  const [drawing] = useDrawing()
 
   const { applyTool } = useEditor()
 
-  const cells = getCells(drawing)
-
   const renderCell = useMemo(() =>
-    ({ glyph, position }: Cell) => <svg
-      key={positionToString(position)}
+    ([position, glyph]: Cell) => <svg
+      key={position?.toString()}
       viewBox="0 0 104 104"
       className={css.cell}
       style={{
-        gridRow: position.row + 1,
-        gridColumn: position.col + 1
+        gridRow: position.y + 1,
+        gridColumn: position.x + 1
       }}
-      data-position={positionToString(position)}
+      data-position={position.toString()}
       onClick={() => applyTool(position)}
     >
       <g transform="translate(2 2)">
@@ -42,6 +38,7 @@ export function CanvasGrid() {
     [applyTool]
   )
 
+  const cells = drawing.cells()
   return <div className={css.canvasGrid}>
     {cells.map(cell => renderCell(cell))}
   </div>

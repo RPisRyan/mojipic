@@ -1,15 +1,15 @@
-import { Point } from '../lib/2d/point'
-import { Rect } from '../lib/2d/rect'
-import { Size } from '../lib/2d/size'
-import { glyph } from './glyph'
+import { Glyph } from './glyph'
+import { Point } from '../2d/point'
+import { Rect } from '../2d/rect'
+import { Size } from '../2d/size'
 import { Cell, Drawing } from './drawing'
 
 describe('drawing', () => {
 
   it('calculates bounds', () => {
     const drawing = Drawing.fromContent([
-      [new Point(1, 1), glyph('X')],
-      [new Point(2, 5), glyph('Y')]
+      [new Point(1, 1), Glyph.new('X')],
+      [new Point(2, 5), Glyph.new('Y')]
     ])
     expect(drawing.bounds).toEqual(
       Rect.fromSides({

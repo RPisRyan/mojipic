@@ -2,8 +2,8 @@ import React, { ComponentProps } from 'react'
 import { stylesheet } from 'typestyle'
 
 import Modal from 'react-overlays/Modal'
-import { centerChild, coverScreen } from '../../app/layout'
 import { styled } from '../../../lib/typestyle-ext/styled'
+import { centerChild, coverScreen } from '../../../lib/typestyle-ext/layouts'
 
 export function AppModal({ children, ...rest }: ComponentProps<typeof Modal>) {
   return <Modal

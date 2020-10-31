@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from 'react'
 import { stylesheet, classes } from 'typestyle'
-import { sizes, styles, colors, palette } from '../../theme'
 import { em, percent } from 'csx'
+import { styles, colors, sizes } from '../../services/theme'
 
 // import Tippy from '@tippyjs/react'
 // import 'tippy.js/dist/tippy.css' // optional

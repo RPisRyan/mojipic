@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { DispatchingStore, addNamedDispatch } from '../../lib/reactives/DispatchingStore'
 import { useStoreWithNamedDispatch } from '../../lib/reactives/hooks'
 
@@ -33,3 +34,21 @@ const initialState = {}
 export const helpStore = addNamedDispatch(DispatchingStore(initialState, reduce))
 
 export const useHelpState = () => useStoreWithNamedDispatch(helpStore)
+
+export function useHelp() {
+  const [state, dispatch] = useHelpState()
+
+  const commands = useMemo(() => ({
+    welcome() {
+      dispatch('welcome', {})
+    },
+    done() {
+      dispatch('done', {})
+    }
+  }), [dispatch])
+
+  return {
+    ...state,
+    ...commands
+  }
+}

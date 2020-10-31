@@ -1,7 +1,7 @@
 import produce, { immerable } from 'immer'
-import type { Point } from '../lib/2d/point'
+import type { Point } from '../2d/point'
 import type { Drawing } from './drawing'
-import { emptyGlyph, Glyph } from './glyph'
+import { Glyph } from './glyph'
 
 export type ToolType = 'eraser' | 'paintbrush'
 
@@ -14,7 +14,7 @@ export class Eraser implements Tool<'eraser'> {
   public readonly type = 'eraser'
 
   apply(drawing: Drawing, position: Point): Drawing {
-    return drawing.setCell([position, emptyGlyph])
+    return drawing.setCell([position, Glyph.none])
   }
 }
 
@@ -40,13 +40,16 @@ export class Toolbox {
     readonly tools: typeof defaultTools,
     readonly activeToolType: ToolType,
     readonly recent: Glyph[]
-  ) {
-  }
+  ) { }
 
   static default = new Toolbox(defaultTools, 'paintbrush', [])
 
   get activeTool() {
     return this.tools[this.activeToolType]
+  }
+
+  get brush() {
+    return this.tools.paintbrush.brush
   }
 
   withBrush(brush: Glyph) {
@@ -55,9 +58,11 @@ export class Toolbox {
     })
   }
 
-  pickTool(type: ToolType) {
-    return produce(this, draft => {
+  withActiveTool(type: ToolType) {
+    const newValue = produce(this, draft => {
       draft.activeToolType = type
     })
+    return newValue
   }
 }
+

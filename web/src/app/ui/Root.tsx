@@ -2,8 +2,8 @@ import React from 'react'
 import csstips from 'csstips'
 import { cssRaw } from 'typestyle'
 import EditorScreen from './Editor/EditorScreen'
-import { mountTheme } from '../theme'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+import { mountTheme } from '../services/theme'
 
 csstips.normalize()
 csstips.setupPage('#root')
@@ -34,5 +34,3 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
     <button onClick={resetErrorBoundary}>Try again</button>
   </article>
 }
-
-

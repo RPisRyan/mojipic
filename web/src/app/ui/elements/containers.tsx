@@ -1,6 +1,6 @@
-import { spaces } from '../../theme'
 import csstips from 'csstips'
 import { styled } from '../../../lib/typestyle-ext/styled'
+import { spaces } from '../../services/theme'
 
 export const ControlsBar = styled('div', {
   ...csstips.horizontal,

@@ -1,7 +1,8 @@
 import { Record, Map } from 'immutable'
-import { Point, Rect, Size } from '../lib/2d'
-import { sequence } from '../lib/sequences'
-import { emptyGlyph, Glyph, glyphArrayToString } from './glyph'
+import { Point, Rect, Size } from '../2d'
+import { sequence } from '../sequences'
+import { Glyph } from './glyph'
+import { GlyphArray } from './glyphArray'
 
 export type Cell = [Point, Glyph]
 
@@ -19,6 +20,14 @@ export class Drawing extends Record({
       contents: Map(cells),
       bounds: contentBounds(cells)
     })
+  }
+
+  static fromArray(array: GlyphArray) {
+    return this.fromContent(array.flatten())
+  }
+
+  static fromString(serialized: string) {
+    return this.fromArray(GlyphArray.fromString(serialized))
   }
 
   getCell(point: Point) {
@@ -75,7 +84,11 @@ export class Drawing extends Record({
     return this.set('bounds', bounds)
   }
 
-  *cells() {
+  cells() {
+    return Array.from(this.yieldCells())
+  }
+
+  private *yieldCells(): IterableIterator<Cell> {
     const { bounds, contents } = this
     if (isNaN(bounds.width) || isNaN(bounds.height)) {
       return []
@@ -86,16 +99,19 @@ export class Drawing extends Record({
       for (let x = left; x <= right; x++) {
         const point = new Point(x, y)
         const cell = contents.get(point)
-        yield [point, cell || emptyGlyph] as Cell
+        yield [point, cell || Glyph.none] as Cell
       }
     }
   }
 
-  toArray() {
+  toGlyphArray() {
     const { x, y, width, height } = this.bounds
-    const array: Glyph[][] = Array.from(new Array(height), () =>
-      Array.from(new Array(width),
-        () => null as Glyph)
+    const array = GlyphArray.new(
+      Array.from(
+        new Array(height), () =>
+        Array.from(new Array(width),
+          () => null as Glyph)
+      )
     )
     for (const [position, glyph] of this.cells()) {
       array[position.x - x][position.y - y] = glyph
@@ -104,7 +120,7 @@ export class Drawing extends Record({
   }
 
   toString(): string {
-    return glyphArrayToString(this.toArray())
+    return this.toGlyphArray().toString()
   }
 }
 

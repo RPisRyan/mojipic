@@ -4,19 +4,21 @@ import csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEraser, faCopy, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons'
 
-import { DrawingGrid } from './DrawingGrid'
 import { TileButton } from '../elements/TileButton'
 import EditableChar from './EditableChar'
-import { spaces } from '../../theme'
 import { ControlsBar, GlyphList } from '../elements/containers'
 import { GlyphOption } from '../elements/controls'
-import { useToolboxState } from '../../app/state/toolboxState'
-import { useEditor } from '../../state/useEditor'
-import { CanvasGrid } from './CanvasGrid'
+import { useEditor } from '../../services/editorState'
+import { CanvasGrid } from './Drawing'
+import { spaces } from '../../services/theme'
 
 export function Editor() {
-  const [toolbox] = useToolboxState()
-  const { activateTool, pickBrush, undo, clear, copyToClipboard } = useEditor()
+  const {
+    drawing,
+    toolbox,
+    activateTool, pickBrush,
+    //pickBrush, undo, clear, copyToClipboard 
+  } = useEditor()
 
   const showRecent = toolbox.recent.filter(it =>
     it !== toolbox.brush
@@ -30,14 +32,14 @@ export function Editor() {
           message="Select paintbrush tool"
         > */}
         <TileButton
-          active={toolbox.activeToolType === 'paint'}
-          onClick={() => activateTool('paint')}
+          active={toolbox.activeToolType === 'paintbrush'}
+          onClick={() => activateTool('paintbrush')}
         >
           {
-            toolbox.activeToolType === 'paint'
+            toolbox.activeToolType === 'paintbrush'
               ? <EditableChar
                 value={toolbox.brush}
-                onChange={pickBrush}
+                onChange={() => activateTool('paintbrush')}
               />
               : <span>{toolbox.brush}</span>
           }
@@ -68,19 +70,19 @@ export function Editor() {
     </div>
     <div className={css.commandButtons}>
       <TileButton
-        onClick={copyToClipboard}
+      // onClick={copyToClipboard}
       >
         <FontAwesomeIcon icon={faCopy} />
       </TileButton>
 
       <TileButton
-        onClick={() => undo()}
+      // onClick={() => undo()}
       >
         <FontAwesomeIcon icon={faUndo} />
       </TileButton>
 
       <TileButton
-        onClick={() => clear()}
+      // onClick={() => clear()}
       >
         <FontAwesomeIcon icon={faTrash} />
       </TileButton>
