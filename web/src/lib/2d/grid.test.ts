@@ -4,7 +4,7 @@ import { GridPosition } from './gridPosition'
 describe('grid', () => {
 
   it('can set', () => {
-    const grid = Grid.Empty
+    const grid = Grid.empty
       .set([new GridPosition(1, 1), 'A'])
       .set([new GridPosition(2, 2), 'B'])
     expect(grid.elements)
@@ -15,7 +15,7 @@ describe('grid', () => {
   })
 
   it('can delete', () => {
-    const grid = Grid.Empty
+    const grid = Grid.empty
       .set([new GridPosition(1, 1), 'A'])
       .set([new GridPosition(2, 2), 'B'])
       .delete(new GridPosition(1, 1))

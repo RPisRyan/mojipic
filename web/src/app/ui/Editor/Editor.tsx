@@ -14,10 +14,11 @@ import { DrawingSvg } from './DrawingSvg'
 
 export function Editor() {
   const {
-    drawing,
     toolbox,
-    activateTool, pickBrush,
-    //pickBrush, undo, clear, copyToClipboard 
+    activateTool,
+    pickBrush,
+    copyToClipboard,
+    clear
   } = useEditor()
 
   const showRecent = toolbox.recent.filter(it =>
@@ -70,7 +71,7 @@ export function Editor() {
     </div>
     <div className={css.commandButtons}>
       <TileButton
-      // onClick={copyToClipboard}
+        onClick={copyToClipboard}
       >
         <FontAwesomeIcon icon={faCopy} />
       </TileButton>
@@ -82,7 +83,7 @@ export function Editor() {
       </TileButton>
 
       <TileButton
-      // onClick={() => clear()}
+        onClick={clear}
       >
         <FontAwesomeIcon icon={faTrash} />
       </TileButton>

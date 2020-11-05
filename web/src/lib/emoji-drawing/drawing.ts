@@ -4,6 +4,7 @@ import { Grid, GridElement } from '../2d/grid'
 import type { Size } from '../2d'
 import { filledArray2D, tuple } from '../sequences'
 import { replaceAll } from '../strings'
+import { GridBounds } from '../2d/gridBounds'
 
 export type Tile = [GridPosition, Glyph]
 
@@ -42,14 +43,11 @@ export class Drawing extends Grid<Glyph> {
   paddedBounds(minSize: Size, maxSize: Size) {
     let bounds = this.bounds
 
-    const fillWidth = minSize.width - this.bounds.width
-    if (fillWidth > 0) {
-      bounds = bounds.adjustRight(fillWidth)
-    }
-
-    const fillHeight = minSize.height - this.bounds.height
-    if (fillHeight > 0) {
-      bounds = bounds.adjustTop(-fillHeight)
+    if (bounds.isNull) {
+      return new GridBounds(
+        new GridPosition(0, 0),
+        new GridPosition(minSize.width - 1, minSize.height - 1)
+      )
     }
 
     // expand right before left
@@ -66,6 +64,16 @@ export class Drawing extends Grid<Glyph> {
     }
     if (bounds.height < maxSize.height) {
       bounds = bounds.adjustBottom(1)
+    }
+
+    const fillWidth = minSize.width - bounds.width
+    if (fillWidth > 0) {
+      bounds = bounds.adjustRight(fillWidth)
+    }
+
+    const fillHeight = minSize.height - bounds.height
+    if (fillHeight > 0) {
+      bounds = bounds.adjustTop(-fillHeight)
     }
 
     return bounds

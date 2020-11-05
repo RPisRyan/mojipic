@@ -7,7 +7,7 @@ export type GridElement<T> = [GridPosition, T]
  * Immutable collection of 2D-positioned values.
  */
 export class Grid<T> {
-  static Empty = new Grid([])
+  static empty = new Grid([])
 
   protected constructor(public readonly elements: ReadonlyArray<GridElement<T>>) { }
 

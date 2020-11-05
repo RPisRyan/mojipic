@@ -59,6 +59,7 @@ export const Glyph = {
    */
   isEmpty(glyph: Glyph) {
     return glyph == null
+      || glyph === ' '
       || glyph === Glyph.space
       || glyph === Glyph.whiteSquare
   }

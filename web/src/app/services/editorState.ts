@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Glyph, Toolbox, ToolType } from '../../lib/emoji-drawing'
 import { Drawing } from '../../lib/emoji-drawing/drawing'
 import { Size } from '../../lib/2d/size'
@@ -25,6 +25,10 @@ export function useEditor() {
   const [drawing, setDrawing] = useDrawing()
   const [toolbox, setToolbox] = useToolbox()
 
+  useEffect(() => {
+    console.log(drawing.elements)
+  }, [drawing])
+
   const canvasBounds = useMemo(() => {
     return drawing.paddedBounds(minDrawingSize, maxDrawingSize)
   }, [drawing])
@@ -46,9 +50,13 @@ export function useEditor() {
       setDrawing(drawing)
     },
 
+    clear() {
+      setDrawing(new Drawing([]))
+    },
+
     async copyToClipboard() {
       // browser dependencies should be injectable
-      await navigator.clipboard.writeText(drawing.toString())
+      await navigator.clipboard.writeText(drawing.toString(true))
       notifier.success('copied')
     }
   }), [drawing, toolbox, setDrawing, setToolbox])  // any point to useMemo() when we are dependent on everything??
