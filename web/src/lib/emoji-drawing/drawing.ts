@@ -1,132 +1,36 @@
-import { Record, Map } from 'immutable'
-import { Point, Rect, Size } from '../2d'
-import { sequence } from '../sequences'
+import type { GridPosition } from '../2d/gridPosition'
 import { Glyph } from './glyph'
-import { GlyphArray } from './glyphArray'
+import { Grid } from '../2d/grid'
 
-export type Cell = [Point, Glyph]
+export type Tile = [GridPosition, Glyph]
 
-/**
- * Immutable type. Stores cells as a map of Point -> Glyph.
- * Bounds represent the content region.
- */
-export class Drawing extends Record({
-  contents: Map<Point, Glyph>(),
-  bounds: Rect.null
-}) {
-
-  static fromContent(cells: Cell[]) {
-    return new Drawing({
-      contents: Map(cells),
-      bounds: contentBounds(cells)
-    })
-  }
-
-  static fromArray(array: GlyphArray) {
-    return this.fromContent(array.flatten())
-  }
-
-  static fromString(serialized: string) {
-    return this.fromArray(GlyphArray.fromString(serialized))
-  }
-
-  getCell(point: Point) {
-    return this.contents.get(point)
-  }
-
-  setCell(cell: Cell) {
-    const contents = this.contents.set(...cell)
-    const bounds = new Rect(contentBounds(contents))
-    return this.set('contents', contents).set('bounds', bounds)
-  }
-
-  rowIsEmpty(row: number) {
-    return !sequence(this.contents.entries()).any(
-      ([position]) => position.y === row
-    )
-  }
-
-  columnIsEmpty(column: number) {
-    return !sequence(this.contents.entries()).any(
-      ([position]) => position.x === column
-    )
-  }
-
-  padBounds(minSize: Size, maxSize: Size) {
-    let bounds = this.bounds
-
-    const fillWidth = minSize.width - this.bounds.width
-    if (fillWidth > 0) {
-      bounds = bounds.adjustSize('right', fillWidth)
-    }
-
-    const fillHeight = minSize.height - this.bounds.height
-    if (fillHeight > 0) {
-      bounds = bounds.adjustSize('bottom', fillHeight)
-    }
-
-    // expand right before left
-    if (bounds.width < maxSize.width) {
-      bounds = bounds.adjustSize('right')
-    }
-    if (bounds.width < maxSize.width) {
-      bounds = bounds.adjustSize('left')
-    }
-
-    // expand top before bottom
-    if (bounds.height < maxSize.height) {
-      bounds = bounds.adjustSize('top')
-    }
-    if (bounds.height < maxSize.height) {
-      bounds = bounds.adjustSize('bottom')
-    }
-
-    return this.set('bounds', bounds)
-  }
-
-  cells() {
-    return Array.from(this.yieldCells())
-  }
-
-  private *yieldCells(): IterableIterator<Cell> {
-    const { bounds, contents } = this
-    if (isNaN(bounds.width) || isNaN(bounds.height)) {
-      return []
-    }
-
-    const { top, bottom, left, right } = bounds
-    for (let y = top; y <= bottom; y++) {
-      for (let x = left; x <= right; x++) {
-        const point = new Point(x, y)
-        const cell = contents.get(point)
-        yield [point, cell || Glyph.none] as Cell
-      }
-    }
-  }
-
-  toGlyphArray() {
-    const { x, y, width, height } = this.bounds
-    const array = GlyphArray.new(
-      Array.from(
-        new Array(height), () =>
-        Array.from(new Array(width),
-          () => null as Glyph)
+export class Drawing extends Grid<Glyph> {
+  static fromString(serialized: string): Drawing {
+    const rows = serialized.split('\n')
+      .map(rowChars =>
+        Glyph.splitter.splitGraphemes(rowChars.trim())
+          .map(glyph =>
+            Glyph.isEmpty(glyph)
+              ? Glyph.none
+              : glyph
+          )
       )
-    )
-    for (const [position, glyph] of this.cells()) {
-      array[position.x - x][position.y - y] = glyph
-    }
-    return array
+    return new Drawing(this.createElements(rows))
   }
 
-  toString(): string {
-    return this.toGlyphArray().toString()
-  }
-}
+  // constructor(elements: ReadonlyArray<Tile>) {
+  //   super(elements)
+  // }
 
-function contentBounds(cells: Iterable<[Point, Glyph]>) {
-  return sequence(cells).reduce(
-    (rect, [position]) => rect.enclosePoint(position),
-    Rect.null
-  )
+  toString(useWhiteSquares: boolean = false) {
+    const array = this.toArray()
+    const emptyChar = useWhiteSquares ? Glyph.whiteSquare : Glyph.space
+    return array.map(row => row.map(it => it || emptyChar)
+      .join('')).join('\n')
+  }
+
+  uniqueGlyphs() {
+    const allChars = this.elements.map(it => it[0])
+    return Array.from(new Set(allChars)).filter(it => it)
+  }
 }

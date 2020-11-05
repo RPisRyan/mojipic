@@ -9,8 +9,8 @@ import EditableChar from './EditableChar'
 import { ControlsBar, GlyphList } from '../elements/containers'
 import { GlyphOption } from '../elements/controls'
 import { useEditor } from '../../services/editorState'
-import { CanvasGrid } from './Drawing'
 import { spaces } from '../../services/theme'
+import { DrawingSvg } from './DrawingSvg'
 
 export function Editor() {
   const {
@@ -25,7 +25,7 @@ export function Editor() {
   )
   return <div className={css.editor}>
     <div className={style(csstips.vertical)} >
-      <CanvasGrid />
+      <DrawingSvg />
 
       <ControlsBar>
         {/* <HelpTooltip

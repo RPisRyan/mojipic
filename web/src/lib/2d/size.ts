@@ -1,10 +1,39 @@
 import { hash } from 'immutable'
 
 export class Size {
-  constructor(readonly width: number, readonly height: number) { }
+  public readonly width: number
+  public readonly height: number
+
+  constructor(width: number, height: number) {
+    this.width = Math.max(0, width)
+    this.height = Math.max(0, height)
+  }
+
+  plus({ width, height }: Size) {
+    return new Size(
+      this.width + width,
+      this.height + height
+    )
+  }
+
+  minus({ width, height }: Size) {
+    return new Size(
+      this.width - width,
+      this.height - height
+    )
+  }
+
+  adjustHeight(height: number) {
+    return new Size(this.width, this.height + height)
+  }
+
+  adjustWidth(width: number) {
+    return new Size(this.width + width, this.height)
+  }
 
   equals(other: any) {
-    return other.width === this.width && other.height === this.height
+    return other === this ||
+      (other.width === this.width && other.height === this.height)
   }
 
   hashCode() {

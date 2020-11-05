@@ -1,5 +1,4 @@
-import type { ValueObject } from 'immutable'
-import hash from 'hash-it'
+import { hash, ValueObject } from 'immutable'
 
 export class Point implements ValueObject {
   constructor(readonly x: number, readonly y: number) { }
@@ -16,8 +15,25 @@ export class Point implements ValueObject {
     return new Point(Number(split[0]), Number(split[1]))
   }
 
+  offsetX(x: number) {
+    return new Point(this.x + x, this.y)
+  }
+
+  offsetY(y: number) {
+    return new Point(this.x, this.y + y)
+  }
+
+  plus(offset: Point) {
+    return new Point(this.x + offset.x, this.y + offset.y)
+  }
+
+  minus(offset: Point) {
+    return new Point(this.x - offset.x, this.y - offset.y)
+  }
+
   equals(other: any) {
-    return other.x === this.x && other.y === this.y
+    return other === this ||
+      (other.x === this.x && other.y === this.y)
   }
 
   hashCode() {

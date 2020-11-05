@@ -1,15 +1,15 @@
 import { useMemo } from 'react'
 import { Glyph, Toolbox, ToolType } from '../../lib/emoji-drawing'
 import { Drawing } from '../../lib/emoji-drawing/drawing'
-import type { Point } from '../../lib/2d/point'
 import { Size } from '../../lib/2d/size'
 import { useStore } from '../../lib/reactives/hooks'
 import { Store } from '../../lib/reactives/Store'
 import { notify as notifier } from './notification'
 import { cacheDrawingLocal } from './cacheDrawingLocal'
+import type { GridPosition } from '../../lib/2d/gridPosition'
 
-const minDrawingSize = new Size(5, 5)
-const maxDrawingSize = new Size(12, 8)
+export const minDrawingSize = new Size(5, 5)
+export const maxDrawingSize = new Size(12, 8)
 
 const defaultDrawing = Drawing.fromString(` 🌈 \n🌈⭐️✨\n 🌈 `)
 
@@ -34,11 +34,12 @@ export function useEditor() {
       setToolbox(it => it.withBrush(brush))
     },
 
-    applyTool(position: Point) {
-      setDrawing(it =>
-        toolbox.activeTool.apply(it, position)
-          .padBounds(minDrawingSize, maxDrawingSize)
-      )
+    applyTool(position: GridPosition) {
+      setDrawing(it => toolbox.activeTool.apply(it, position))
+    },
+
+    loadDrawing(drawing: Drawing) {
+      setDrawing(drawing)
     },
 
     async copyToClipboard() {

@@ -1,68 +1,81 @@
-import { Record } from 'immutable'
+import { hash, Record } from 'immutable'
 import { Point } from './point'
 import { Size } from './size'
 
-export class Rect
-  extends Record({
-    x: NaN,
-    y: NaN,
-    width: NaN,
-    height: NaN
-  })
-  implements RectSides {
+export class Rect implements RectSides {
 
-  static fromPosition(position: Point, size: Size) {
-    return new Rect({
-      x: position.x,
-      y: position.y,
-      width: size.width,
-      height: size.height
-    })
+  constructor(public position: Point, public size: Size) {
   }
 
   static fromSides({ left, top, right, bottom }: RectSides) {
-    return new Rect({
-      x: left,
-      y: top,
-      width: Math.max(0, right - left),
-      height: Math.max(0, bottom - top)
-    })
+    return new Rect(
+      new Point(left, top),
+      new Size(Math.max(0, right - left), Math.max(0, bottom - top))
+    )
   }
 
-  static zero = Rect.fromPosition(Point.zero, Size.zero)
-  static null = new Rect()
+  static zero = new Rect(Point.zero, Size.zero)
+  static null = new Rect(Point.null, Size.null)
 
   get left() {
-    return this.x
+    return this.position.x
   }
   get top() {
-    return this.y
+    return this.position.y
   }
   get right() {
-    return this.x + this.width
+    return this.left + this.width
   }
   get bottom() {
     return this.top + this.height
   }
 
-  adjustSize(direction: keyof RectSides, increment: number = 1) {
-    switch (direction) {
-      case 'left':
-        return this.set('x', this.x - increment)
-          .set('width', this.width + increment)
-      case 'top':
-        return this.set('y', this.y - increment)
-          .set('height', this.height + increment)
-      case 'right':
-        return this.set('width', this.width + increment)
-      case 'bottom':
-        return this.set('height', this.height + increment)
-    }
+  get height() {
+    return this.size.height
+  }
+  get width() {
+    return this.size.width
+  }
+
+  atPosition(position: Point) {
+    return new Rect(position, this.size)
+  }
+
+  withSize(size: Size) {
+    return new Rect(this.position, size)
+  }
+
+  withTopMoved(yOffset: number) {
+    return new Rect(
+      this.position.offsetY(yOffset),
+      this.size.adjustHeight(-yOffset)
+    )
+  }
+
+  withBottomMoved(yOffset: number) {
+    return new Rect(
+      this.position,
+      this.size.adjustHeight(yOffset)
+    )
+  }
+
+  withLeftMoved(xOffset: number) {
+    return new Rect(
+      this.position.offsetX(xOffset),
+      this.size.adjustWidth(-xOffset)
+    )
+  }
+
+  withRightMoved(xOffset: number) {
+    return new Rect(
+      this.position,
+      this.size.adjustWidth(xOffset)
+    )
   }
 
   enclosePoint(point: Point) {
-    if (this.equals(Rect.null)) {
-      return Rect.fromPosition(point, Size.zero)
+    if (this.size.equals(Size.null) || this.position.equals(Point.null)) {
+      return new Rect(point, Size.zero)
     }
 
     if (point.equals(Point.null)) {
@@ -92,6 +105,20 @@ export class Rect
       right: Math.max(this.right, rect.right),
       bottom: Math.max(this.bottom, rect.bottom)
     })
+  }
+
+  equals(other: Rect) {
+    return other === this ||
+      (other.position.equals(this.position)
+        && other.size.equals(this.size))
+  }
+
+  hashCode() {
+    return hash([this.position.hashCode(), this.size.hashCode()])
+  }
+
+  toString() {
+    return `${this.left} ${this.top} ${this.right} ${this.bottom}`
   }
 }
 

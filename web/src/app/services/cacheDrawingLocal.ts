@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import type { Store } from '../../lib/reactives'
 import { Drawing } from '../../lib/emoji-drawing'
 import { logger } from './logger'
@@ -9,7 +8,9 @@ export function cacheDrawingLocal(drawingStore: Store<Drawing>) {
   try {
     const local = localStorage.getItem(localStorageKey)
     if (local) {
-      drawingStore.setState(Drawing.fromString(local))
+      drawingStore.setState(
+        Drawing.fromString(local)
+      )
     }
   }
   catch (ex) {
