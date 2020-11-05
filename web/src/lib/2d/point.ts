@@ -1,4 +1,5 @@
 import { hash, ValueObject } from 'immutable'
+import { replaceAll } from '../strings'
 
 export class Point implements ValueObject {
   constructor(readonly x: number, readonly y: number) { }
@@ -7,7 +8,7 @@ export class Point implements ValueObject {
     if (!serialized) {
       return Point.null
     }
-    const trimmed = serialized.replaceAll(/(\[|\])/, '')
+    const trimmed = replaceAll(serialized, /(\[|\])/, '')
     const split = trimmed.split(',')
     if (split.length !== 2) {
       return Point.null

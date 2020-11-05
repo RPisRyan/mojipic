@@ -1,5 +1,5 @@
 import { hash, ValueObject } from 'immutable'
-import { atLeast } from '../numbers'
+import { replaceAll } from '../strings'
 
 export class GridPosition implements ValueObject {
 
@@ -13,28 +13,13 @@ export class GridPosition implements ValueObject {
     if (!serialized) {
       return GridPosition.Null
     }
-    const trimmed = serialized.replaceAll(/(\[|\])/, '')
+    const trimmed = replaceAll(serialized, /(\[|\])/, '')
     const split = trimmed.split(',')
     if (split.length !== 2) {
       return GridPosition.Null
     }
     return new GridPosition(Number(split[0]), Number(split[1]))
   }
-
-  // union(other: GridPosition) {
-  //   if (other.row === NaN || other.column === NaN) {
-  //     return this
-  //   }
-
-  //   if (this.row === NaN || this.column === NaN) {
-  //     return other
-  //   }
-
-  //   return new GridPosition(
-  //     Math.max(this.column, other.column),
-  //     Math.max(this.row, other.row)
-  //   )
-  // }
 
   get isNull() {
     return isNaN(this.column) || isNaN(this.row)

@@ -1,6 +1,5 @@
-import { tuple } from '../sequences'
 import { GridBounds as GridBounds } from './gridBounds'
-import { GridPosition } from './gridPosition'
+import type { GridPosition } from './gridPosition'
 
 export type GridElement<T> = [GridPosition, T]
 
@@ -9,13 +8,6 @@ export type GridElement<T> = [GridPosition, T]
  */
 export class Grid<T> {
   static Empty = new Grid([])
-
-  static createElements<T>(array: ReadonlyArray<Array<T>>): GridElement<T>[] {
-    return array.flatMap((rowEntries: Array<T>, row) =>
-      rowEntries.map((value: T, column) =>
-        tuple(new GridPosition(column, row), value))
-    )
-  }
 
   protected constructor(public readonly elements: ReadonlyArray<GridElement<T>>) { }
 
@@ -48,23 +40,5 @@ export class Grid<T> {
 
   forEach(callback: (element: GridElement<T>) => void) {
     this.elements.forEach(callback)
-  }
-
-  /**
-   * To 2D array of values.
-   */
-  toArray(): Array<Array<T>> {
-    const extent = this.bounds
-    const origin = extent.min
-    const array: Array<Array<T>> = []
-    for (const [{ column, row }, value] of this.elements) {
-      let rowEntries: Array<T> = array[row - origin.row]
-      if (!rowEntries) {
-        rowEntries = []
-        array[row - origin.row] = rowEntries
-      }
-      rowEntries[column - origin.column] = value
-    }
-    return array
   }
 }

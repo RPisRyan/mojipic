@@ -1,27 +1,43 @@
-import type { GridPosition } from '../2d/gridPosition'
-import { Glyph } from './glyph'
-import { Grid } from '../2d/grid'
+import { GridPosition } from '../2d/gridPosition'
+import { Glyph, GlyphMatrix } from './glyph'
+import { Grid, GridElement } from '../2d/grid'
 import type { Size } from '../2d'
+import { filledArray2D, tuple } from '../sequences'
+import { replaceAll } from '../strings'
 
 export type Tile = [GridPosition, Glyph]
 
 export class Drawing extends Grid<Glyph> {
+
   static fromString(serialized: string): Drawing {
     const rows = serialized.split('\n')
-      .map(rowChars =>
-        Glyph.splitter.splitGraphemes(rowChars.trim())
+      .map(rowChars => {
+        const rowGlyphs = replaceAll(rowChars, Glyph.space!, ' ')
+        return Glyph.splitter.splitGraphemes(rowGlyphs.trim())
           .map(glyph =>
             Glyph.isEmpty(glyph)
               ? Glyph.none
               : glyph
           )
-      )
-    return new Drawing(this.createElements(rows))
+      })
+    return this.fromArray(rows)
   }
 
-  // constructor(elements: ReadonlyArray<Tile>) {
-  //   super(elements)
-  // }
+  static fromArray(array: Array<Array<Glyph>>): Drawing {
+    return new Drawing(array.flatMap((rowEntries: Array<Glyph>, row) =>
+      rowEntries.map(
+        (glyph: Glyph, column) =>
+          Glyph.isEmpty(glyph)
+            ? null
+            : tuple(new GridPosition(column, row), glyph)
+      )
+        .filter(it => it) as Array<GridElement<Glyph>>
+    ))
+  }
+
+  constructor(elements: ReadonlyArray<Tile>) {
+    super(elements)
+  }
 
   paddedBounds(minSize: Size, maxSize: Size) {
     let bounds = this.bounds
@@ -53,6 +69,24 @@ export class Drawing extends Grid<Glyph> {
     }
 
     return bounds
+  }
+
+  /**
+   * To 2D array of values.
+   */
+  toArray(): GlyphMatrix {
+    const bounds = this.bounds
+    const origin = bounds.min
+    const matrix: GlyphMatrix = filledArray2D(bounds.width, bounds.height, Glyph.none)
+    for (const [{ column, row }, value] of this.elements) {
+      let rowEntries: Array<Glyph> = matrix[row - origin.row]
+      if (!rowEntries) {
+        rowEntries = []
+        matrix[row - origin.row] = rowEntries
+      }
+      rowEntries[column - origin.column] = value
+    }
+    return matrix
   }
 
   toString(useWhiteSquares: boolean = false) {

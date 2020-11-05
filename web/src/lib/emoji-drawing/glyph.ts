@@ -2,6 +2,8 @@ import GraphemeSplitter from 'grapheme-splitter'
 
 export type Glyph = string | null
 
+export type GlyphMatrix = Array<Array<Glyph>>
+
 const spaceChars = {
   U2003: ' ',
   U2008: ' ',
