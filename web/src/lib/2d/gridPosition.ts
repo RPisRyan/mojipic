@@ -58,12 +58,12 @@ export class GridPosition implements ValueObject {
     )
   }
 
-  offsetX(x: number) {
-    return new GridPosition(this.column, this.row + x)
+  moveColumn(distance: number) {
+    return new GridPosition(this.column + distance, this.row)
   }
 
-  offsetY(y: number) {
-    return new GridPosition(this.column + y, this.row)
+  moveRow(distance: number) {
+    return new GridPosition(this.column, this.row + distance)
   }
 
   plus(offset: GridPosition) {

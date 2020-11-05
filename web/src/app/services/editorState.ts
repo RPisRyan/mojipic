@@ -25,6 +25,10 @@ export function useEditor() {
   const [drawing, setDrawing] = useDrawing()
   const [toolbox, setToolbox] = useToolbox()
 
+  const canvasBounds = useMemo(() => {
+    return drawing.paddedBounds(minDrawingSize, maxDrawingSize)
+  }, [drawing])
+
   const commands = useMemo(() => ({
     activateTool(tool: ToolType) {
       setToolbox(it => it.withActiveTool(tool))
@@ -51,6 +55,7 @@ export function useEditor() {
 
   return {
     drawing,
+    canvasBounds,
     toolbox,
     ...commands
   }

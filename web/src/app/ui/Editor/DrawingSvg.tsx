@@ -9,21 +9,22 @@ import { colors } from '../../services/theme'
 const tileSize = 10
 
 export function DrawingSvg() {
-  const { drawing, applyTool } = useEditor()
-  const extent = drawing.extent
-  const bounds = extent.expand(1)
+  const { drawing, applyTool, canvasBounds } = useEditor()
 
   const viewBox = [
-    bounds.min.column * tileSize,
-    bounds.min.row * tileSize,
-    bounds.width * tileSize,
-    bounds.height * tileSize
+    canvasBounds.min.column * tileSize,
+    canvasBounds.min.row * tileSize,
+    canvasBounds.width * tileSize,
+    canvasBounds.height * tileSize
   ].join(' ')
 
   return <svg viewBox={viewBox} className={css.drawing}>
     {
-      Array.from(bounds.enumerate()).map(position =>
-        renderTileBg(position, () => applyTool(position))
+      Array.from(canvasBounds.positions()).map(position =>
+        renderTileBg(
+          position,
+          () => applyTool(position)
+        )
       )
     }
     {
@@ -36,6 +37,7 @@ function renderTileBg(position: GridPosition, handleClick: () => void) {
   const { column, row } = position
   return <rect
     key={position.toString()}
+    data-position={position.toString()}
     className={css.tileBg}
     x={column * tileSize} y={row * tileSize}
     width={tileSize} height={tileSize}
@@ -62,7 +64,8 @@ function renderGlyph([position, glyph]: Tile) {
 
 const css = stylesheet({
   drawing: {
-    background: colors.light
+    background: colors.light,
+    cursor: 'pointer'
   },
   tileBg: {
     fill: 'white',

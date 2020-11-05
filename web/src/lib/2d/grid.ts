@@ -1,5 +1,5 @@
 import { tuple } from '../sequences'
-import { GridExtent } from './gridExtent'
+import { GridBounds as GridBounds } from './gridBounds'
 import { GridPosition } from './gridPosition'
 
 export type GridElement<T> = [GridPosition, T]
@@ -25,9 +25,9 @@ export class Grid<T> {
     return new (this.constructor as any)(elements)
   }
 
-  get extent(): GridExtent {
+  get bounds(): GridBounds {
     return this.elements
-      .reduce((extent, [position]) => extent.include(position), GridExtent.Null)
+      .reduce((extent, [position]) => extent.include(position), GridBounds.Null)
   }
 
   get(key: GridPosition) {
@@ -54,7 +54,7 @@ export class Grid<T> {
    * To 2D array of values.
    */
   toArray(): Array<Array<T>> {
-    const extent = this.extent
+    const extent = this.bounds
     const origin = extent.min
     const array: Array<Array<T>> = []
     for (const [{ column, row }, value] of this.elements) {
