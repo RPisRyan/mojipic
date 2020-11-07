@@ -4,7 +4,7 @@ import { stylesheet } from 'typestyle'
 import type { GridPosition } from '../../../lib/2d/gridPosition'
 import type { Tile } from '../../../lib/emoji-drawing'
 import { maxDrawingSize, minDrawingSize, useEditor } from '../../services/editorState'
-import { colors } from '../../services/theme'
+import { colors, styles } from '../../services/theme'
 
 const tileSize = 10
 const margin = 6
@@ -69,7 +69,8 @@ function renderGlyph([position, glyph]: Tile) {
 const css = stylesheet({
   drawing: {
     background: colors.light,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    ...styles.control
   },
   tileBg: {
     fill: 'white',
