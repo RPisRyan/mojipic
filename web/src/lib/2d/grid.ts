@@ -17,6 +17,10 @@ export class Grid<T> {
     return new (this.constructor as any)(elements)
   }
 
+  get isEmpty() {
+    return !this.elements || this.elements.length === 0
+  }
+
   get bounds(): GridBounds {
     return this.elements
       .reduce((extent, [position]) => extent.include(position), GridBounds.Null)
@@ -41,4 +45,5 @@ export class Grid<T> {
   forEach(callback: (element: GridElement<T>) => void) {
     this.elements.forEach(callback)
   }
+
 }

@@ -15,7 +15,7 @@ export class Drawing extends Grid<Glyph> {
     const rows = serialized.split('\n')
       .map(rowChars => {
         const rowGlyphs = replaceAll(rowChars, Glyph.space!, ' ')
-        return Glyph.splitter.splitGraphemes(rowGlyphs.trim())
+        return Glyph.splitter.splitGraphemes(rowGlyphs)
           .map(glyph =>
             Glyph.isEmpty(glyph)
               ? Glyph.none
@@ -28,13 +28,22 @@ export class Drawing extends Grid<Glyph> {
   static fromArray(array: Array<Array<Glyph>>): Drawing {
     return new Drawing(array.flatMap((rowEntries: Array<Glyph>, row) =>
       rowEntries.map(
-        (glyph: Glyph, column) =>
-          Glyph.isEmpty(glyph)
-            ? null
-            : tuple(new GridPosition(column, row), glyph)
+        (glyph: Glyph, column) => tuple(new GridPosition(column, row), glyph)
       )
-        .filter(it => it) as Array<GridElement<Glyph>>
     ))
+  }
+
+  static createEmpty({ width, height }: Size) {
+    if (width < 1 || height < 1) {
+      return new Drawing([])
+    }
+    const positions = [...GridPosition.generateRange(
+      new GridPosition(0, 0),
+      new GridPosition(width - 2, height - 2)
+    )]
+    return new Drawing(
+      positions.map(position => [position, Glyph.none])
+    )
   }
 
   constructor(elements: ReadonlyArray<Tile>) {

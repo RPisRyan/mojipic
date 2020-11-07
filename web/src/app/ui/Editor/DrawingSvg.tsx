@@ -3,24 +3,28 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import type { GridPosition } from '../../../lib/2d/gridPosition'
 import type { Tile } from '../../../lib/emoji-drawing'
-import { useEditor } from '../../services/editorState'
+import { maxDrawingSize, minDrawingSize, useEditor } from '../../services/editorState'
 import { colors } from '../../services/theme'
 
 const tileSize = 10
+const margin = 6
 
 export function DrawingSvg() {
-  const { drawing, applyTool, canvasBounds } = useEditor()
+  const { drawing, applyTool } = useEditor()
 
+  const paddedBounds = drawing.paddedBounds(minDrawingSize, maxDrawingSize)
+
+  const drawingBounds = drawing.bounds
   const viewBox = [
-    canvasBounds.min.column * tileSize,
-    canvasBounds.min.row * tileSize,
-    canvasBounds.width * tileSize,
-    canvasBounds.height * tileSize
+    drawingBounds.min.column * tileSize - margin,
+    drawingBounds.min.row * tileSize - margin,
+    drawingBounds.width * tileSize + margin * 2,
+    drawingBounds.height * tileSize + margin * 2
   ].join(' ')
 
   return <svg viewBox={viewBox} className={css.drawing}>
     {
-      Array.from(canvasBounds.positions()).map(position =>
+      Array.from(paddedBounds.positions()).map(position =>
         renderTileBg(
           position,
           () => applyTool(position)

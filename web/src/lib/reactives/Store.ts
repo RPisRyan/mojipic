@@ -1,4 +1,4 @@
-import type { Reactive, Subscriber, Store } from './types'
+import type { Subscriber, Store } from './types'
 
 export function Store<S>(initial: S): Store<S> {
   let current = initial

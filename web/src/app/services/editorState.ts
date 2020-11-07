@@ -25,14 +25,6 @@ export function useEditor() {
   const [drawing, setDrawing] = useDrawing()
   const [toolbox, setToolbox] = useToolbox()
 
-  // useEffect(() => {
-  //   console.log(drawing.elements)
-  // }, [drawing])
-
-  const canvasBounds = useMemo(() => {
-    return drawing.paddedBounds(minDrawingSize, maxDrawingSize)
-  }, [drawing])
-
   const commands = useMemo(() => ({
     activateTool(tool: ToolType) {
       setToolbox(it => it.withActiveTool(tool))
@@ -51,7 +43,7 @@ export function useEditor() {
     },
 
     clear() {
-      setDrawing(new Drawing([]))
+      setDrawing(Drawing.createEmpty(minDrawingSize))
     },
 
     async copyToClipboard() {
@@ -63,7 +55,6 @@ export function useEditor() {
 
   return {
     drawing,
-    canvasBounds,
     toolbox,
     ...commands
   }

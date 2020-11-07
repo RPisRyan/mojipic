@@ -21,6 +21,18 @@ export class GridPosition implements ValueObject {
     return new GridPosition(Number(split[0]), Number(split[1]))
   }
 
+  static * generateRange(
+    start: GridPosition,
+    end: GridPosition
+  ) {
+    if (start.row > end.row || start.column > end.column) {
+      return
+    }
+    for (let row = start.row; row < end.row; row++)
+      for (let column = start.column; column < end.column; column++)
+        yield new GridPosition(column, row)
+  }
+
   get isNull() {
     return isNaN(this.column) || isNaN(this.row)
   }
