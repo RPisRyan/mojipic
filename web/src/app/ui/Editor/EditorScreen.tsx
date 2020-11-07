@@ -6,11 +6,10 @@ import { LogoText } from '../elements/LogoText'
 import { linearGradient } from 'csx'
 import { Welcome } from '../Help/Welcome'
 import { AppModal } from '../elements/AppModal'
-import { useHelp } from '../../services/helpState'
 import { colors, palette, spaces } from '../../services/theme'
 
 export default function EditorScreen() {
-  const { welcomeVisible, welcome, done } = useHelp()
+  const { welcomeVisible, welcome, done } = {} as any
 
   return <div className={css.root}>
     <div className={css.application}>

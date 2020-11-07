@@ -7,7 +7,7 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 
 ### Tasks
 
-- [ ] Undo, with undo stack limit
+- [x] Undo, with undo stack limit
 - [ ] Drag to paint
 - [ ] Recent emoji
 - [ ] Popular emoji

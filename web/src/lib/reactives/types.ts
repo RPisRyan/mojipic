@@ -10,8 +10,3 @@ export type Subscriber<S> = (s: S) => void
 export type Dispatcher<A extends TypeDiscriminated> = {
   dispatch(action: A): void
 }
-
-export type Store<S> = Reactive<S> & {
-  getState(): S
-  setState(setter: S | ((s: S) => S)): void
-}

@@ -18,6 +18,7 @@ export function Editor() {
     activateTool,
     pickBrush,
     copyToClipboard,
+    undo,
     clear
   } = useEditor()
 
@@ -77,7 +78,7 @@ export function Editor() {
       </TileButton>
 
       <TileButton
-      // onClick={() => undo()}
+        onClick={() => undo()}
       >
         <FontAwesomeIcon icon={faUndo} />
       </TileButton>

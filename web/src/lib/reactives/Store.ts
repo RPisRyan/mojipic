@@ -1,4 +1,9 @@
-import type { Subscriber, Store } from './types'
+import type { Reactive, Subscriber } from './types'
+
+export type Store<S> = Reactive<S> & {
+  getState(): S
+  setState(setter: S | ((s: S) => S)): void
+}
 
 export function Store<S>(initial: S): Store<S> {
   let current = initial

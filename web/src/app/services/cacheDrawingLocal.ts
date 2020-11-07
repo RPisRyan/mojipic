@@ -1,5 +1,5 @@
-import type { Store } from '../../lib/reactives'
 import { Drawing } from '../../lib/emoji-drawing'
+import type { Store } from '../../lib/reactives'
 import { logger } from './logger'
 
 const localStorageKey = 'currentDrawing'
