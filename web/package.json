@@ -26,6 +26,7 @@
     "grapheme-splitter": "^1.0.4",
     "immer": "^7.0.9",
     "immutable": "^4.0.0-rc.12",
+    "loglevel": "^1.7.0",
     "mini-svg-data-uri": "^1.2.3",
     "notyf": "^3.9.0",
     "react": "^16.13.1",

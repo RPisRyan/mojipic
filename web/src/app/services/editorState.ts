@@ -7,6 +7,8 @@ import { notify as notifier } from './notification'
 import { cacheDrawingLocal } from './cacheDrawingLocal'
 import type { GridPosition } from '../../lib/2d/gridPosition'
 import { Stack } from '../../lib/immutable-objects/stack'
+import log from 'loglevel'
+import { useEffect } from 'react'
 
 export const minDrawingSize = new Size(5, 5)
 export const maxDrawingSize = new Size(12, 8)
@@ -20,7 +22,7 @@ export const useDrawing = () => useStore(drawingStore)
 export const toolboxStore = Store(Toolbox.default)
 export const useToolbox = () => useStore(toolboxStore)
 
-const historyStore = Store(new Stack<Drawing>([], 20))
+const historyStore = Store(new Stack<Drawing>([], undoStackLimit))
 export const useHistory = () => useStore(historyStore)
 
 cacheDrawingLocal(drawingStore)
@@ -30,11 +32,9 @@ export function useEditor() {
   const [toolbox, setToolbox] = useToolbox()
   const [history, setHistory] = useHistory()
 
-  // useEffect(() => {
-  //   console.log(
-  //     drawing
-  //   )
-  // }, [drawing])
+  useEffect(() => {
+    log.debug(drawing.toString())
+  }, [drawing])
 
   function setDrawingUndoable(newDrawing: Drawing) {
     setHistory(it => it.pushed(drawing))
@@ -71,7 +71,6 @@ export function useEditor() {
     },
 
     async copyToClipboard() {
-      // browser dependencies should be injectable
       await navigator.clipboard.writeText(drawing.toString(true))
       notifier.success('copied')
     }
