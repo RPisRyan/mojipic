@@ -26,6 +26,10 @@ export class Paintbrush implements Tool<'paintbrush'> {
   apply(drawing: Drawing, position: GridPosition): Drawing {
     return drawing.set([position, this.brush])
   }
+
+  withBrush(brush: Glyph) {
+    return new Paintbrush(brush)
+  }
 }
 
 const defaultTools = {
@@ -54,7 +58,7 @@ export class Toolbox {
 
   withBrush(brush: Glyph) {
     return produce(this, draft => {
-      draft.tools.paintbrush.brush = brush
+      draft.tools.paintbrush = draft.tools.paintbrush.withBrush(brush)
     })
   }
 

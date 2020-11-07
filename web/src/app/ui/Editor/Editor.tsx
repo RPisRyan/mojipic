@@ -40,7 +40,7 @@ export function Editor() {
             toolbox.activeToolType === 'paintbrush'
               ? <EditableChar
                 value={toolbox.brush}
-                onChange={() => activateTool('paintbrush')}
+                onChange={char => pickBrush(char)}
               />
               : <span>{toolbox.brush}</span>
           }

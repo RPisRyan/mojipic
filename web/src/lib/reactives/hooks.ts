@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { tuple } from '../sequences'
 import type { DispatchingStore } from './DispatchingStore'
 import type { StoreWithNamedDispatch, TypeDiscriminated } from './namedDispatch'
-import type { Store } from './Store'
-import type { Reactive } from './types'
+import type { Reactive, Store } from './types'
 
 export function useReactive<S>(source: Reactive<S>, initial: S) {
   const [state, setState] = useState<S>(initial)

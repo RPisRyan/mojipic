@@ -5,6 +5,7 @@ import type { Size } from '../2d'
 import { filledArray2D, tuple } from '../sequences'
 import { replaceAll } from '../strings'
 import { GridBounds } from '../2d/gridBounds'
+import { toFullWidth } from '../chars'
 
 export type Tile = [GridPosition, Glyph]
 
@@ -92,7 +93,7 @@ export class Drawing extends Grid<Glyph> {
         rowEntries = []
         matrix[row - origin.row] = rowEntries
       }
-      rowEntries[column - origin.column] = value
+      rowEntries[column - origin.column] = toFullWidth(value)
     }
     return matrix
   }

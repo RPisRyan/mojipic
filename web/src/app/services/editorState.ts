@@ -25,9 +25,9 @@ export function useEditor() {
   const [drawing, setDrawing] = useDrawing()
   const [toolbox, setToolbox] = useToolbox()
 
-  useEffect(() => {
-    console.log(drawing.elements)
-  }, [drawing])
+  // useEffect(() => {
+  //   console.log(drawing.elements)
+  // }, [drawing])
 
   const canvasBounds = useMemo(() => {
     return drawing.paddedBounds(minDrawingSize, maxDrawingSize)

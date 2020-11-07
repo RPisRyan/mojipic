@@ -3,7 +3,10 @@ const latinChars =
 const fullWidthLatinChars =
   '０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～'
 
-export function toFullWidth(text: string) {
+export function toFullWidth(text: string | null) {
+  if (!text) {
+    return text
+  }
   const chars = text.split('').map(c => {
     const idx = latinChars.indexOf(c)
     if (idx < 0) {
