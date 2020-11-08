@@ -1581,6 +1581,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/hash-it@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/hash-it/-/hash-it-4.0.0.tgz#7de8c90f863424e470ec29ee44492631b8290775"
+  integrity sha512-qYOWomYUJm0KcsdeEqnH6njwuYM3x+NTEIUm6oxqjCBK29FdDlrB9Zi1mj+P31Z6NY02HMu/jQXxQLVjsnIRcg==
+
 "@types/http-cache-semantics@*":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.0.tgz#9140779736aa2655635ee756e2467d787cfe8a2a"
@@ -2567,6 +2572,11 @@ csx@^10.0.1:
   dependencies:
     csstype "^2.5.1"
 
+curriable@^1.1.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/curriable/-/curriable-1.3.0.tgz#cb054bc7bbc1f440cbc613527b8a05b57e19e1ab"
+  integrity sha512-7kfjDPRSF+pguU0TlfSFBMCd8XlmF29ZAiXcq/zaN4LhZvWdvV0Y72AvaWFqInXZG9Yg1kA1UMkpE9lFBKMpQA==
+
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
@@ -3301,6 +3311,13 @@ has@^1.0.3:
   integrity sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==
   dependencies:
     function-bind "^1.1.1"
+
+hash-it@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/hash-it/-/hash-it-4.0.5.tgz#67aca6b970da09058b5ad0feb61661d9627f902a"
+  integrity sha512-bVZPdJn9GqaAkmGXcBoWG0MKn99VJYYC1X17UWQUPKFxsUSTYMhzz+RdBzCgtG61iT5IwfunE3NKVFZWkAc/OQ==
+  dependencies:
+    curriable "^1.1.0"
 
 he@^1.2.0:
   version "1.2.0"

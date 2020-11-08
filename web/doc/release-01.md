@@ -19,5 +19,5 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 ### Tasks
 
 - [x] Debug logging
-- [ ] Enforce minimum size when trimming drawing
-- [ ] Enforce minimum size when loading drawing
+- [x] Enforce minimum size when trimming drawing
+- [x] Enforce minimum size when loading drawing

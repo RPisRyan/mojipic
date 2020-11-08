@@ -1,4 +1,5 @@
-import { hash } from 'immutable'
+import hash from 'hash-it'
+import { UTIL_INSPECT_CUSTOM } from '../core'
 
 export class Size {
   public readonly width: number
@@ -38,6 +39,10 @@ export class Size {
 
   hashCode() {
     return hash([this.width, this.height])
+  }
+
+  [UTIL_INSPECT_CUSTOM]() {
+    return this.toString()
   }
 
   static null = new Size(NaN, NaN)

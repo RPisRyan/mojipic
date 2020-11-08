@@ -1,3 +1,4 @@
+import log from 'loglevel'
 import type { Reactive, Subscriber } from './types'
 
 export type Store<S> = Reactive<S> & {
@@ -19,6 +20,7 @@ export function Store<S>(initial: S): Store<S> {
   }
 
   function writeState(newState: S) {
+    log.debug('writeState', newState)
     current = newState
     for (const subscriber of subscribers) {
       subscriber(newState)

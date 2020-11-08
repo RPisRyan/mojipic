@@ -3,7 +3,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import type { GridPosition } from '../../../lib/2d/gridPosition'
 import type { Tile } from '../../../lib/emoji-drawing'
-import { maxDrawingSize, minDrawingSize, useEditor } from '../../services/editorState'
+import { drawingSettings, useEditor } from '../../services/editorState'
 import { colors, styles } from '../../services/theme'
 
 const tileSize = 10
@@ -12,7 +12,7 @@ const margin = 6
 export function DrawingSvg() {
   const { drawing, applyTool } = useEditor()
 
-  const paddedBounds = drawing.paddedBounds(minDrawingSize, maxDrawingSize)
+  const paddedBounds = drawing.paddedBounds(drawingSettings)
 
   const drawingBounds = drawing.bounds
   const viewBox = [

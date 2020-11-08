@@ -1,20 +1,22 @@
 import produce, { immerable } from 'immer'
 import type { GridPosition } from '../2d/gridPosition'
 import type { Drawing } from './drawing'
-import type { Glyph } from './glyph'
+import { Glyph } from './glyph'
+import type { DrawingSettings } from './types'
 
 export type ToolType = 'eraser' | 'paintbrush'
 
 export type Tool<T extends ToolType> = {
   readonly type: T,
-  apply(drawing: Drawing, position: GridPosition): Drawing
+  apply(drawing: Drawing, position: GridPosition, settings: DrawingSettings): Drawing
 }
 
 export class Eraser implements Tool<'eraser'> {
   public readonly type = 'eraser'
 
-  apply(drawing: Drawing, position: GridPosition): Drawing {
-    return drawing.delete(position)
+  apply(drawing: Drawing, position: GridPosition, settings: DrawingSettings): Drawing {
+    const newDrawing = drawing.set([position, Glyph.none])
+    return newDrawing.croppedToContent(settings.minSize)
   }
 }
 

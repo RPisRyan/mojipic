@@ -6,7 +6,7 @@ describe('gridBounds', () => {
   it('can include points', () => {
     const pos1 = new GridPosition(1, 3)
     const pos2 = new GridPosition(4, 1)
-    expect(GridBounds.Null.include(pos1).include(pos2))
+    expect(GridBounds.Null.including(pos1).including(pos2))
       .toEqual(
         new GridBounds(
           new GridPosition(1, 1),

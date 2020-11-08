@@ -1,4 +1,6 @@
-import { hash, ValueObject } from 'immutable'
+import hash from 'hash-it'
+import type { ValueObject } from 'immutable'
+import { UTIL_INSPECT_CUSTOM } from '../core'
 import { replaceAll } from '../strings'
 
 export class Point implements ValueObject {
@@ -43,6 +45,10 @@ export class Point implements ValueObject {
 
   toString() {
     return `${this.x},${this.y}`
+  }
+
+  [UTIL_INSPECT_CUSTOM]() {
+    return this.toString()
   }
 
   static zero = new Point(0, 0)

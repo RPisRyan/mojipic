@@ -1,9 +1,19 @@
+import { UTIL_INSPECT_CUSTOM } from '../core'
+import { atLeast } from '../numbers'
 import { GridPosition } from './gridPosition'
+import { Size } from './size'
 
 export class GridBounds {
   static readonly Null = Object.freeze(
     new GridBounds(GridPosition.Null, GridPosition.Null)
   )
+
+  static fromSize(size: Size) {
+    return new GridBounds(
+      GridPosition.Zero,
+      new GridPosition(size.width - 1, size.height - 1)
+    )
+  }
 
   constructor(
     public readonly min: GridPosition,
@@ -46,6 +56,17 @@ export class GridBounds {
     return this.max.row
   }
 
+  get size() {
+    return new Size(this.width, this.height)
+  }
+
+  contains({ column, row }: GridPosition) {
+    return column >= this.left
+      && column <= this.right
+      && row >= this.top
+      && row <= this.bottom
+  }
+
   adjustLeft(offset: number) {
     return new GridBounds(
       this.min.moveColumn(offset),
@@ -82,11 +103,17 @@ export class GridBounds {
     )
   }
 
-  include(position: GridPosition) {
+  including(position: GridPosition) {
     return new GridBounds(
       this.min.min(position),
       this.max.max(position)
     )
+  }
+
+  sizedAtLeast(size: Size) {
+    return this
+      .adjustTop(-1 * atLeast(0, size.height - this.height))
+      .adjustRight(atLeast(0, size.width - this.width))
   }
 
   * positions() {
@@ -97,7 +124,19 @@ export class GridBounds {
     }
   }
 
+  equals(other: GridBounds) {
+    if (this === other) {
+      return true
+    }
+    return this.min.equals(other.min)
+      && this.max.equals(other.max)
+  }
+
   toString() {
     return `${this.min.toString()} ... ${this.max.toString()}`
+  }
+
+  [UTIL_INSPECT_CUSTOM]() {
+    return this.toString()
   }
 }

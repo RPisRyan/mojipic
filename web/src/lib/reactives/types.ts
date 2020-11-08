@@ -10,3 +10,5 @@ export type Subscriber<S> = (s: S) => void
 export type Dispatcher<A extends TypeDiscriminated> = {
   dispatch(action: A): void
 }
+
+export const __ignore_snowpack_grr = undefined

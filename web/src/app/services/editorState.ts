@@ -1,17 +1,16 @@
-import { Glyph, Toolbox, ToolType } from '../../lib/emoji-drawing'
-import { Drawing } from '../../lib/emoji-drawing/drawing'
-import { Size } from '../../lib/2d/size'
-import { useStore } from '../../lib/reactives/hooks'
-import { Store } from '../../lib/reactives/Store'
+import { Drawing, DrawingSettings, Glyph, Toolbox, ToolType } from '../../lib/emoji-drawing'
+import { Size, GridPosition, GridBounds } from '../../lib/2d'
+import { Store, useStore } from '../../lib/reactives'
 import { notify as notifier } from './notification'
 import { cacheDrawingLocal } from './cacheDrawingLocal'
-import type { GridPosition } from '../../lib/2d/gridPosition'
-import { Stack } from '../../lib/immutable-objects/stack'
+import { Stack } from '../../lib/immutable-objects'
 import log from 'loglevel'
 import { useEffect } from 'react'
 
-export const minDrawingSize = new Size(5, 5)
-export const maxDrawingSize = new Size(12, 8)
+export const drawingSettings: DrawingSettings = {
+  minSize: new Size(3, 3),
+  maxSize: new Size(12, 8)
+}
 const undoStackLimit = 20
 
 const defaultDrawing = Drawing.fromString(` 🌈 \n🌈⭐️✨\n 🌈 `)
@@ -51,7 +50,7 @@ export function useEditor() {
     },
 
     applyTool(position: GridPosition) {
-      setDrawingUndoable(toolbox.activeTool.apply(drawing, position))
+      setDrawingUndoable(toolbox.activeTool.apply(drawing, position, drawingSettings))
     },
 
     loadDrawing(drawing: Drawing) {
@@ -67,7 +66,8 @@ export function useEditor() {
     },
 
     clear() {
-      setDrawingUndoable(Drawing.createEmpty(minDrawingSize))
+      setDrawingUndoable(
+        Drawing.createEmpty(GridBounds.fromSize(drawingSettings.minSize)))
     },
 
     async copyToClipboard() {

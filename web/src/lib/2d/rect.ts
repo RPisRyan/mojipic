@@ -1,4 +1,5 @@
-import { hash, Record } from 'immutable'
+import hash from 'hash-it'
+import { UTIL_INSPECT_CUSTOM } from '../core'
 import { Point } from './point'
 import { Size } from './size'
 
@@ -119,6 +120,10 @@ export class Rect implements RectSides {
 
   toString() {
     return `${this.left} ${this.top} ${this.right} ${this.bottom}`
+  }
+
+  [UTIL_INSPECT_CUSTOM]() {
+    return this.toString()
   }
 }
 

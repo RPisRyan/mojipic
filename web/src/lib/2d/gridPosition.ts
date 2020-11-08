@@ -1,5 +1,8 @@
-import { hash, ValueObject } from 'immutable'
+import hash from 'hash-it'
+import type { ValueObject } from 'immutable'
+import { UTIL_INSPECT_CUSTOM } from '../core'
 import { replaceAll } from '../strings'
+import type { GridBounds } from './gridBounds'
 
 export class GridPosition implements ValueObject {
 
@@ -19,18 +22,6 @@ export class GridPosition implements ValueObject {
       return GridPosition.Null
     }
     return new GridPosition(Number(split[0]), Number(split[1]))
-  }
-
-  static * generateRange(
-    start: GridPosition,
-    end: GridPosition
-  ) {
-    if (start.row > end.row || start.column > end.column) {
-      return
-    }
-    for (let row = start.row; row < end.row; row++)
-      for (let column = start.column; column < end.column; column++)
-        yield new GridPosition(column, row)
   }
 
   get isNull() {
@@ -82,6 +73,10 @@ export class GridPosition implements ValueObject {
 
   toString() {
     return `${this.column},${this.row}`
+  }
+
+  [UTIL_INSPECT_CUSTOM]() {
+    return this.toString()
   }
 
   static Zero = Object.freeze(new GridPosition(0, 0))
