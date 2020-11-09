@@ -1,20 +1,15 @@
-import React, { HTMLAttributes } from 'react'
+import React, { forwardRef, ForwardRefRenderFunction, HTMLAttributes, Ref, RefAttributes } from 'react'
 import { stylesheet, classes } from 'typestyle'
 import { em, percent } from 'csx'
 import { styles, colors, sizes } from '../../services/theme'
 
-// import Tippy from '@tippyjs/react'
-// import 'tippy.js/dist/tippy.css' // optional
-// <Tippy content={<span>Tooltip</span>}>
-
-export function TileButton({ className, active, ...restProps }: Props) {
-  return (
-    <button
+export const TileButton = React.forwardRef<HTMLButtonElement, Props>(
+  ({ className, active, ...restProps }, ref) =>
+    <button ref={ref}
       className={classes(css.squareButton, active && css.active, className)}
       {...restProps}
     />
-  )
-}
+)
 
 type Props = HTMLAttributes<HTMLButtonElement> & {
   active?: boolean

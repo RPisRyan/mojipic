@@ -1,16 +1,16 @@
 import React from 'react'
-import { stylesheet, style } from 'typestyle'
+import { stylesheet } from 'typestyle'
 import csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEraser, faCopy, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons'
 
 import { TileButton } from '../elements/TileButton'
 import EditableChar from './EditableChar'
-import { ControlsBar, GlyphList } from '../elements/containers'
-import { GlyphOption } from '../elements/controls'
 import { useEditor } from '../../services/editorState'
 import { spaces } from '../../services/theme'
 import { DrawingSvg } from './DrawingSvg'
+import { EmojiPicker } from './EmojiPicker'
+import { ControlDivider } from '../elements/ControlDivider'
 
 export function Editor() {
   const {
@@ -22,54 +22,12 @@ export function Editor() {
     clear
   } = useEditor()
 
-  const showRecent = toolbox.recent.filter(it =>
-    it !== toolbox.brush
-  )
   return <div className={css.editor}>
 
     <div className={css.canvas} >
       <DrawingSvg />
 
-      <ControlsBar>
-        {/* <HelpTooltip
-          message="Select paintbrush tool"
-        > */}
-        <TileButton
-          active={toolbox.activeToolType === 'paintbrush'}
-          onClick={() => activateTool('paintbrush')}
-        >
-          {
-            toolbox.activeToolType === 'paintbrush'
-              ? <EditableChar
-                value={toolbox.brush}
-                onChange={char => pickBrush(char)}
-              />
-              : <span>{toolbox.brush}</span>
-          }
-        </TileButton>
-        {/* </HelpTooltip> */}
-
-        <TileButton
-          active={toolbox.activeToolType === 'eraser'}
-          onClick={() => activateTool('eraser')}
-        >
-          <FontAwesomeIcon icon={faEraser} />
-        </TileButton>
-      </ControlsBar>
-
-      <GlyphList>
-        {
-          showRecent.map(brush =>
-            <GlyphOption
-              key={brush}
-              onClick={() => pickBrush(brush)}
-            >
-              {brush}
-            </GlyphOption>
-          )
-        }
-      </GlyphList>
-
+      <EmojiPicker />
     </div>
 
     <div className={css.commandButtons}>
@@ -90,9 +48,33 @@ export function Editor() {
       >
         <FontAwesomeIcon icon={faTrash} />
       </TileButton>
+
+      <ControlDivider direction="horizontal" />
+
+      <TileButton
+        active={toolbox.activeToolType === 'paintbrush'}
+        onClick={() => activateTool('paintbrush')}
+      >
+        {
+          toolbox.activeToolType === 'paintbrush'
+            ? <EditableChar
+              value={toolbox.brush}
+              onChange={char => pickBrush(char)}
+            />
+            : <span>{toolbox.brush}</span>
+        }
+      </TileButton>
+
+      <TileButton
+        active={toolbox.activeToolType === 'eraser'}
+        onClick={() => activateTool('eraser')}
+      >
+        <FontAwesomeIcon icon={faEraser} />
+      </TileButton>
+
     </div>
 
-  </div>
+  </div >
 }
 
 const css = stylesheet({
