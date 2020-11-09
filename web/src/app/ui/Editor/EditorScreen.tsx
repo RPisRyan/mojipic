@@ -40,8 +40,8 @@ const css = stylesheet({
   root: {
     display: 'grid',
     gridTemplateColumns: '1fr minmax(300px, 800px) 1fr',
-    height: '100%',
-    width: '100%'
+    height: '100vh',
+    width: '100vw'
   },
   application: {
     display: 'grid',

@@ -8,13 +8,15 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 ### Features
 
 - [x] Undo, with undo stack limit
-- [ ] Drag to paint
-- [ ] Recent emoji
+- [x] Recent emoji
+- [ ] Find any emoji
 - [ ] Popular emoji
-- [ ] Categorized/searchabel emoji
 - [ ] Analytics wiring
-- [ ] Auto-welcome message
-- [ ] Help button w/feedback
+- [ ] First-timer message, prompt to tap the canvas
+- [ ] Time-delayed prompt to copy to clipboard
+- [ ] Tell them what to do after copying to clipboard
+- [ ] Help button w/screenshot and feeback link
+- [ ] Drag to paint
 
 ### Tasks
 

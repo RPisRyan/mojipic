@@ -1,54 +1,34 @@
-import produce, { immerable } from 'immer'
-import type { GridPosition } from '../2d/gridPosition'
-import type { Drawing } from './drawing'
-import { Glyph } from './glyph'
-import type { DrawingSettings } from './types'
-
-export type ToolType = 'eraser' | 'paintbrush'
-
-export type Tool<T extends ToolType> = {
-  readonly type: T,
-  apply(drawing: Drawing, position: GridPosition, settings: DrawingSettings): Drawing
-}
-
-export class Eraser implements Tool<'eraser'> {
-  public readonly type = 'eraser'
-
-  apply(drawing: Drawing, position: GridPosition, settings: DrawingSettings): Drawing {
-    const newDrawing = drawing.set([position, Glyph.none])
-    return newDrawing.croppedToContent(settings.minSize)
-  }
-}
-
-export class Paintbrush implements Tool<'paintbrush'> {
-  public readonly type = 'paintbrush'
-
-  constructor(public readonly brush: Glyph) { }
-
-  apply(drawing: Drawing, position: GridPosition): Drawing {
-    return drawing.set([position, this.brush])
-  }
-
-  withBrush(brush: Glyph) {
-    return new Paintbrush(brush)
-  }
-}
+import { OrderedSet } from 'immutable'
+import type { Glyph } from './glyph'
+import { Paintbrush, Eraser, ToolType } from './tools'
 
 const defaultTools = {
   paintbrush: new Paintbrush('⭐️'),
   eraser: new Eraser()
 }
 
-export class Toolbox {
-  [immerable] = true
+type ToolboxData = {
+  tools: typeof defaultTools
+  activeToolType: ToolType
+  recent: OrderedSet<Glyph>
+}
 
-  private constructor(
-    readonly tools: typeof defaultTools,
-    readonly activeToolType: ToolType,
-    readonly recent: Glyph[]
-  ) { }
+export class Toolbox implements ToolboxData {
+  public readonly tools: typeof defaultTools
+  public readonly activeToolType: ToolType
+  public readonly recent: OrderedSet<Glyph>
 
-  static default = new Toolbox(defaultTools, 'paintbrush', [])
+  private constructor({ tools, activeToolType, recent }: ToolboxData) {
+    this.tools = tools
+    this.activeToolType = activeToolType
+    this.recent = recent
+  }
+
+  static default = new Toolbox({
+    tools: defaultTools,
+    activeToolType: 'paintbrush',
+    recent: OrderedSet<Glyph>([defaultTools.paintbrush.brush])
+  })
 
   get activeTool() {
     return this.tools[this.activeToolType]
@@ -58,17 +38,31 @@ export class Toolbox {
     return this.tools.paintbrush.brush
   }
 
+  withData(data: Partial<ToolboxData>) {
+    return new Toolbox(
+      { ...this, ...data }
+    )
+  }
+
   withBrush(brush: Glyph) {
-    return produce(this, draft => {
-      draft.tools.paintbrush = draft.tools.paintbrush.withBrush(brush)
+    return this.withData({
+      recent: this.recent.add(brush),
+      tools: {
+        ...this.tools,
+        paintbrush: this.tools.paintbrush.withBrush(brush)
+      }
     })
   }
 
   withActiveTool(type: ToolType) {
-    const newValue = produce(this, draft => {
-      draft.activeToolType = type
+    return this.withData({
+      activeToolType: type
     })
-    return newValue
+  }
+
+  withRecent(brushes: Glyph[]) {
+    return this.withData({
+      recent: this.recent.merge(brushes)
+    })
   }
 }
-

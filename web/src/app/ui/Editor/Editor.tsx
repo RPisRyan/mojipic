@@ -26,7 +26,8 @@ export function Editor() {
     it !== toolbox.brush
   )
   return <div className={css.editor}>
-    <div className={style(csstips.vertical)} >
+
+    <div className={css.canvas} >
       <DrawingSvg />
 
       <ControlsBar>
@@ -70,6 +71,7 @@ export function Editor() {
       </GlyphList>
 
     </div>
+
     <div className={css.commandButtons}>
       <TileButton
         onClick={copyToClipboard}
@@ -99,8 +101,10 @@ const css = stylesheet({
     gridTemplateColumns: 'auto min-content',
     gap: spaces.sm
   },
+  canvas: {
+  },
   commandButtons: {
     ...csstips.vertical,
     gap: spaces.sm
-  }
+  },
 })

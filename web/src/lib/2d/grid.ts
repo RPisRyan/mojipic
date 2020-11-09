@@ -1,7 +1,6 @@
 import { GridBounds as GridBounds } from './gridBounds'
+import type { GridElement } from './gridElement'
 import type { GridPosition } from './gridPosition'
-
-export type GridElement<T> = [GridPosition, T]
 
 /**
  * Immutable collection of 2D-positioned values.

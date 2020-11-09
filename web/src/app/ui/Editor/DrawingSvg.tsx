@@ -1,4 +1,4 @@
-import { px } from 'csx'
+import { percent, px, viewHeight } from 'csx'
 import React from 'react'
 import { stylesheet } from 'typestyle'
 import type { GridPosition } from '../../../lib/2d/gridPosition'
@@ -70,6 +70,8 @@ const css = stylesheet({
   drawing: {
     background: colors.light,
     cursor: 'pointer',
+    maxWidth: percent(100),
+    maxHeight: viewHeight(65),
     ...styles.control
   },
   tileBg: {

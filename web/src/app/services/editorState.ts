@@ -2,10 +2,11 @@ import { Drawing, DrawingSettings, Glyph, Toolbox, ToolType } from '../../lib/em
 import { Size, GridPosition, GridBounds } from '../../lib/2d'
 import { Store, useStore } from '../../lib/reactives'
 import { notify as notifier } from './notification'
-import { cacheDrawingLocal } from './cacheDrawingLocal'
+import { persistDrawing } from './persistDrawing'
 import { Stack } from '../../lib/immutable-objects'
 import log from 'loglevel'
 import { useEffect } from 'react'
+import { persistRecentBrushes } from './persistRecentBrushes'
 
 export const drawingSettings: DrawingSettings = {
   minSize: new Size(3, 3),
@@ -15,16 +16,17 @@ const undoStackLimit = 20
 
 const defaultDrawing = Drawing.fromString(` 🌈 \n🌈⭐️✨\n 🌈 `)
 
-export const drawingStore = Store(defaultDrawing)
+const drawingStore = Store(defaultDrawing)
 export const useDrawing = () => useStore(drawingStore)
 
-export const toolboxStore = Store(Toolbox.default)
+const toolboxStore = Store(Toolbox.default)
 export const useToolbox = () => useStore(toolboxStore)
 
 const historyStore = Store(new Stack<Drawing>([], undoStackLimit))
 export const useHistory = () => useStore(historyStore)
 
-cacheDrawingLocal(drawingStore)
+persistDrawing(drawingStore, toolboxStore)
+persistRecentBrushes(toolboxStore)
 
 export function useEditor() {
   const [drawing, setDrawing] = useDrawing()
@@ -42,7 +44,9 @@ export function useEditor() {
 
   const commands = {
     activateTool(tool: ToolType) {
-      setToolbox(it => it.withActiveTool(tool))
+      if (tool !== toolbox.activeToolType) {
+        setToolbox(it => it.withActiveTool(tool))
+      }
     },
 
     pickBrush(brush: Glyph) {
@@ -55,6 +59,7 @@ export function useEditor() {
 
     loadDrawing(drawing: Drawing) {
       setDrawing(drawing)
+      setToolbox(toolbox.withRecent(drawing.uniqueGlyphs()))
     },
 
     undo() {

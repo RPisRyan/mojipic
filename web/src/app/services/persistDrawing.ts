@@ -1,26 +1,29 @@
 import log from 'loglevel'
-import { Drawing } from '../../lib/emoji-drawing'
+import { Drawing, Toolbox } from '../../lib/emoji-drawing'
 import type { Store } from '../../lib/reactives'
 import { drawingSettings } from './editorState'
-import { logger } from './logger'
 
 const localStorageKey = 'currentDrawing'
 
-export function cacheDrawingLocal(drawingStore: Store<Drawing>) {
+export function persistDrawing(drawingStore: Store<Drawing>, toolboxStore: Store<Toolbox>) {
   try {
     const local = localStorage.getItem(localStorageKey)
     if (local) {
       log.debug('found local drawing', local)
+
       const drawing = Drawing.fromString(local)
       if (!drawing.isEmpty) {
         drawingStore.setState(
           Drawing.fromString(local).paddedTo(drawingSettings.minSize)
         )
+        toolboxStore.setState(
+          toolboxStore.getState().withRecent(drawing.uniqueGlyphs())
+        )
       }
     }
   }
   catch (ex) {
-    logger.warn('Failed to load drawing from local storage', ex)
+    log.warn('Failed to load drawing from local storage', ex)
   }
 
   return drawingStore.subscribe(drawing => {
@@ -28,7 +31,7 @@ export function cacheDrawingLocal(drawingStore: Store<Drawing>) {
       localStorage.setItem(localStorageKey, drawing.toString())
     }
     catch (ex) {
-      logger.warn("Failed to save to local storage", ex)
+      log.warn("Failed to save to local storage", ex)
     }
   })
 }

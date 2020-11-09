@@ -8,6 +8,7 @@ import { replaceAll } from '../strings'
 import { GridBounds } from '../2d/gridBounds'
 import { toFullWidth } from '../chars'
 import type { DrawingSettings } from './types'
+import { GridElement } from '../2d/gridElement'
 
 export type Tile = [GridPosition, Glyph]
 
@@ -204,8 +205,9 @@ export class Drawing extends Grid<Glyph> {
   }
 
   uniqueGlyphs() {
-    const allChars = this.elements.map(it => it[0])
-    return Array.from(new Set(allChars)).filter(it => it)
+    const allChars = this.elements.map(GridElement.pickValue)
+      .filter(it => !Glyph.isEmpty(it))
+    return Array.from(new Set(allChars))
   }
 
 }
