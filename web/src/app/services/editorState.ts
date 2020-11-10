@@ -50,11 +50,12 @@ export function useEditor() {
     },
 
     pickBrush(brush: Glyph) {
-      setToolbox(it => it.withBrush(brush))
+      setToolbox(it => it.withActiveTool('paintbrush').withBrush(brush))
     },
 
     applyTool(position: GridPosition) {
-      setDrawingUndoable(toolbox.activeTool.apply(drawing, position, drawingSettings))
+      setDrawingUndoable(
+        toolbox.activeTool.apply(drawing, position, drawingSettings))
     },
 
     loadDrawing(drawing: Drawing) {
