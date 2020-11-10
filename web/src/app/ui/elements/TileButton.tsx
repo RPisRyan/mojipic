@@ -26,6 +26,7 @@ const css = stylesheet({
     fontSize: sizes.characterButton,
     width: em(1.75),
     height: em(1.75),
+    lineHeight: 0.9,
     cursor: 'pointer',
     '$nest': {
       '&:hover': {

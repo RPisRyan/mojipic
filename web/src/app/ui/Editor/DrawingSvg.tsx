@@ -72,7 +72,7 @@ const css = stylesheet({
     background: colors.light,
     cursor: 'pointer',
     maxWidth: percent(100),
-    maxHeight: viewHeight(57)
+    maxHeight: viewHeight(52)
   },
   tileBg: {
     fill: 'white',

@@ -2,7 +2,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEraser, faCopy, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { faEraser, faCopy, faTrash, faUndo, faPlusCircle, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import { TileButton } from '../elements/TileButton'
 import EditableChar from './EditableChar'
@@ -12,6 +12,7 @@ import { DrawingSvg } from './DrawingSvg'
 import { EmojiPicker } from './EmojiPicker'
 import { ControlDivider } from '../elements/ControlDivider'
 import { percent } from 'csx'
+import { Greeting } from '../Help/Greeting'
 
 export function Editor() {
   const {
@@ -47,7 +48,7 @@ export function Editor() {
       <TileButton
         onClick={clear}
       >
-        <FontAwesomeIcon icon={faTrash} />
+        <FontAwesomeIcon icon={faPlusSquare} />
       </TileButton>
 
       <ControlDivider direction="horizontal" />
@@ -74,6 +75,8 @@ export function Editor() {
       </TileButton>
 
     </div>
+
+    <Greeting />
 
   </div >
 }

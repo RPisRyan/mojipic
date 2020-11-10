@@ -1,56 +1,32 @@
-// import { useMemo } from 'react'
-// import { DispatchingStore, addNamedDispatch } from '../../lib/reactives/DispatchingStore'
-// import { useStoreWithNamedDispatch } from '../../lib/reactives/hooks'
+import { Store, useStore } from '../../lib/reactives'
 
-// export type HelpState = {
-//   welcomeVisible?: true
-//   helpVisible?: true
-// }
+const seenGreetingKey = 'seenGreeting'
 
-// export type HelpAction = { type: 'help' }
-//   | { type: 'welcome' }
-//   | { type: 'done' }
+type HelpState = {
+  showGreeting: boolean
+}
 
-// function reduce(_: HelpState, action: HelpAction): HelpState {
-//   switch (action.type) {
-//     case 'welcome':
-//       return { welcomeVisible: true }
-//     case 'help':
-//       return { helpVisible: true }
-//     case 'done':
-//       return {}
-//     default: {
-//       exhaustiveCheck()
-//     }
-//   }
-// }
+const initial: HelpState = {
+  showGreeting: !localStorage.getItem(seenGreetingKey)
+}
 
-// function exhaustiveCheck(): never {
-//   throw new Error("Missing type")
-// }
+export const helpStore = Store<HelpState>(initial)
 
-// const initialState = {}
+export function useHelp() {
+  const [help, setHelp] = useStore(helpStore)
 
-// export const helpStore = addNamedDispatch(DispatchingStore(initialState, reduce))
+  const commands = {
+    hideGettingStarted() {
+      setHelp(it => ({
+        ...it,
+        showGreeting: false
+      }))
+      localStorage.setItem(seenGreetingKey, 'true')
+    }
+  }
 
-// export const useHelpState = () => useStoreWithNamedDispatch(helpStore)
-
-// export function useHelp() {
-//   const [state, dispatch] = useHelpState()
-
-//   const commands = useMemo(() => ({
-//     welcome() {
-//       dispatch('welcome', {})
-//     },
-//     done() {
-//       dispatch('done', {})
-//     }
-//   }), [dispatch])
-
-//   return {
-//     ...state,
-//     ...commands
-//   }
-// }
-
-export const _ = null
+  return {
+    help,
+    ...commands
+  }
+}
