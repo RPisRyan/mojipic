@@ -2,7 +2,7 @@ import React from 'react'
 import { stylesheet } from 'typestyle'
 import csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEraser, faCopy, faTrash, faUndo, faPlusCircle, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faEraser, faCopy, faUndo, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 
 import { TileButton } from '../elements/TileButton'
 import EditableChar from './EditableChar'
