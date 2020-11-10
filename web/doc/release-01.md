@@ -8,7 +8,7 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 ### Features
 
 - [x] Undo, with undo stack limit
-- [ ] Recent emoji
+- [x] Recent emoji
 - [x] Find any emoji
 - [ ] Popular emoji
 - [ ] Analytics wiring

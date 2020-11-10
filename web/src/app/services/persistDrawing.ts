@@ -16,9 +16,6 @@ export function persistDrawing(drawingStore: Store<Drawing>, toolboxStore: Store
         drawingStore.setState(
           Drawing.fromString(local).paddedTo(drawingSettings.minSize)
         )
-        toolboxStore.setState(
-          toolboxStore.getState().withRecent(drawing.uniqueGlyphs())
-        )
       }
     }
   }

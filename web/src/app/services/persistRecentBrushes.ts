@@ -10,8 +10,12 @@ export function persistRecentBrushes(toolboxStore: Store<Toolbox>) {
     const persisted = localStorage.getItem(localStorageKey)
     if (persisted) {
       const glyphs = Glyph.splitter.splitGraphemes(persisted)
-      toolboxStore.setState(
-        toolboxStore.getState().withRecent(glyphs))
+      if (glyphs.length > 0) {
+        let newState = toolboxStore.getState()
+          .withRecent(glyphs)
+          .withBrush(glyphs[0])
+        toolboxStore.setState(newState)
+      }
     }
   }
   catch (ex) {
@@ -20,7 +24,9 @@ export function persistRecentBrushes(toolboxStore: Store<Toolbox>) {
 
   return toolboxStore.subscribe(toolbox => {
     try {
-      localStorage.setItem(localStorageKey, toolbox.recent.slice(0, maxRecent).join(' '))
+      const glyphs = toolbox.recent.slice(0, maxRecent)
+      glyphs.reverse()
+      localStorage.setItem(localStorageKey, glyphs.join(' '))
     }
     catch (ex) {
       log.warn("Failed to save to local storage", ex)

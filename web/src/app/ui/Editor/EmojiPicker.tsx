@@ -1,25 +1,34 @@
-import React from 'react'
-import { NimblePicker, BaseEmoji } from 'emoji-mart'
-import { getEmojiData } from '../../../lib/emoji'
+import React, { useMemo } from 'react'
+import { NimblePicker, BaseEmoji, Emoji } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 import { percent } from 'csx'
 import { stylesheet } from 'typestyle'
 import { useEditor } from '../../services/editorState'
-
-const emojiData = getEmojiData('11.0')
+import { emojiData, lookupEmoji } from '../../services/emojiData'
+import { Glyph } from '../../../lib/emoji-drawing'
 
 export function EmojiPicker() {
-  const { pickBrush } = useEditor()
+  const { toolbox, pickBrush } = useEditor()
+
+  const recent = useMemo(() => {
+    const recent = toolbox.recent
+      .map(glyph => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id)
+      .filter(it => it) as string[]
+    return recent
+  }, [toolbox.recent])
+
   return <div className={css.emojiPicker}>
     <NimblePicker
-      data={emojiData || []}
+      enableFrequentEmojiSort={true}
+      data={emojiData}
+      recent={recent}
       title={''}
       emojiSize={32}
       showPreview={true}
       showSkinTones={true}
       style={{
         width: percent(100),
-        // maxHeight: percent(100)
+        maxHeight: percent(100)
       }}
       onSelect={(emoji: BaseEmoji) => pickBrush(emoji.native)}
     />

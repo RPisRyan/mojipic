@@ -1,5 +1,6 @@
 import { OrderedSet } from 'immutable'
-import type { Glyph } from './glyph'
+import { lookupEmoji } from '../../app/services/emojiData'
+import { Glyph } from './glyph'
 import { Paintbrush, Eraser, ToolType } from './tools'
 
 const defaultTools = {
@@ -13,40 +14,51 @@ type ToolboxData = {
   recent: OrderedSet<Glyph>
 }
 
-export class Toolbox implements ToolboxData {
-  public readonly tools: typeof defaultTools
-  public readonly activeToolType: ToolType
-  public readonly recent: OrderedSet<Glyph>
+export class Toolbox {
 
-  private constructor({ tools, activeToolType, recent }: ToolboxData) {
-    this.tools = tools
-    this.activeToolType = activeToolType
-    this.recent = recent
-  }
+  private constructor(private data: ToolboxData) { }
 
   static default = new Toolbox({
     tools: defaultTools,
     activeToolType: 'paintbrush',
-    recent: OrderedSet<Glyph>([defaultTools.paintbrush.brush])
+    recent: OrderedSet([defaultTools.paintbrush.brush])
   })
 
+  get tools() {
+    return this.data.tools
+  }
+
+  get activeToolType() {
+    return this.data.activeToolType
+  }
+
   get activeTool() {
-    return this.tools[this.activeToolType]
+    return this.data.tools[this.data.activeToolType]
   }
 
   get brush() {
     return this.tools.paintbrush.brush
   }
 
+  get recent() {
+    return this.data.recent.reverse().toArray()
+  }
+
+  recentIds() {
+    return this.recent.map(
+      glyph => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id)
+      .filter(it => it) as string[]
+  }
+
   withData(data: Partial<ToolboxData>) {
     return new Toolbox(
-      { ...this, ...data }
+      { ...this.data, ...data }
     )
   }
 
   withBrush(brush: Glyph) {
     return this.withData({
-      recent: this.recent.add(brush),
+      recent: this.data.recent.add(brush),
       tools: {
         ...this.tools,
         paintbrush: this.tools.paintbrush.withBrush(brush)
@@ -62,7 +74,7 @@ export class Toolbox implements ToolboxData {
 
   withRecent(brushes: Glyph[]) {
     return this.withData({
-      recent: this.recent.merge(brushes)
+      recent: this.data.recent.merge(brushes)
     })
   }
 }

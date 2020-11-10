@@ -16,13 +16,13 @@ const undoStackLimit = 20
 
 const defaultDrawing = Drawing.fromString(` 🌈 \n🌈⭐️✨\n 🌈 `)
 
-const drawingStore = Store(defaultDrawing)
+export const drawingStore = Store(defaultDrawing)
 export const useDrawing = () => useStore(drawingStore)
 
-const toolboxStore = Store(Toolbox.default)
+export const toolboxStore = Store(Toolbox.default)
 export const useToolbox = () => useStore(toolboxStore)
 
-const historyStore = Store(new Stack<Drawing>([], undoStackLimit))
+export const historyStore = Store(new Stack<Drawing>([], undoStackLimit))
 export const useHistory = () => useStore(historyStore)
 
 persistDrawing(drawingStore, toolboxStore)
