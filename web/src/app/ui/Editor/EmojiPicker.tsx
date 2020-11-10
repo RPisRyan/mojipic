@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { NimblePicker, BaseEmoji, Emoji } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
-import { percent } from 'csx'
+import { em, percent } from 'csx'
 import { stylesheet } from 'typestyle'
 import { useEditor } from '../../services/editorState'
 import { emojiData, lookupEmoji } from '../../services/emojiData'
@@ -24,8 +24,9 @@ export function EmojiPicker() {
       recent={recent}
       title={''}
       emojiSize={32}
-      showPreview={true}
-      showSkinTones={true}
+      emoji={''}
+      showPreview={false}
+      skinEmoji="hand"
       style={{
         width: percent(100),
         maxHeight: percent(100)
@@ -38,8 +39,14 @@ export function EmojiPicker() {
 const css = stylesheet({
   emojiPicker: {
     $nest: {
-      '.emoji-mart-bar': {
+      '.emoji-mart-bar:first-of-type': {
         display: 'none'
+      },
+      '.emoji-mart-bar:last-of-type': {
+        height: em(3)
+      },
+      '.emoji-mart-preview': {
+        height: em(3)
       }
     }
   }
