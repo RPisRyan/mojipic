@@ -16,12 +16,11 @@ export function EmojiPicker() {
       .filter(it => it) as string[]
     return recent
   }, [toolbox.recent])
-
   return <div className={css.emojiPicker}>
     <NimblePicker
       enableFrequentEmojiSort={true}
       data={emojiData}
-      recent={recent}
+      recent={(recent && recent.length > 0) ? recent : undefined}
       title={''}
       emojiSize={32}
       emoji={''}

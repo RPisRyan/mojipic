@@ -10,7 +10,6 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 - [x] Undo, with undo stack limit
 - [x] Recent emoji
 - [x] Find any emoji
-- [ ] Popular emoji
 - [ ] Analytics wiring
 - [ ] First-timer message, prompt to tap the canvas
 - [ ] Time-delayed prompt to copy to clipboard
@@ -23,3 +22,4 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 - [x] Debug logging
 - [x] Enforce minimum size when trimming drawing
 - [x] Enforce minimum size when loading drawing
+- [ ] Keep app on single screen
