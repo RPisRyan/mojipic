@@ -1,3 +1,7 @@
+/***
+ * Copyright © 2020 Form * Function Digital. All Rights Reserved.
+ */
+
 import { createElement } from 'react'
 import { render } from 'react-dom'
 import { Root } from './ui/Root'

@@ -1,3 +1,7 @@
+/***
+ * Copyright © 2020 Form * Function Digital. All Rights Reserved.
+ */
+
 import React from 'react'
 import csstips from 'csstips'
 import { cssRaw } from 'typestyle'
