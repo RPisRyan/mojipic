@@ -1,3 +1,7 @@
-# moji-stack
+# MojiPic
 
-For stacking of l'emojis.
+[mojipic.app](https://mojipic.app/)
+
+An app for making emoji pics.
+
+![MojiPic app screen](/mojipic-v1-screen)

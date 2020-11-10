@@ -13,7 +13,5 @@ render(
 // Learn more: https://www.snowpack.dev/#hot-module-replacement
 if (import.meta.hot) {
   import.meta.hot.accept((it: any) => {
-    // console.log('reload!!', it)
-    // window.location.reload()
   })
 }

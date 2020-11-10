@@ -20,3 +20,4 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 - [x] Enforce minimum size when trimming drawing
 - [x] Enforce minimum size when loading drawing
 - [x] Keep app on single screen
+- [ ] Invalid emoji: orangutan

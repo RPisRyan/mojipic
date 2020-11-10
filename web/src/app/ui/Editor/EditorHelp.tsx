@@ -16,7 +16,7 @@ export function EditorHelp() {
     <div className={css.content}>
       <img src="/images/help-screen.jpg" className={css.image} />
       <span className={css.contact}>
-        <a href="mailto:info@mojipic.app">Contact Us 🏆</a>
+        <a href="mailto:info@mojipic.app">Contact Us ✉️</a>
       </span>
 
     </div>
