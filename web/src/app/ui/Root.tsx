@@ -8,6 +8,8 @@ import { cssRaw } from 'typestyle'
 import EditorScreen from './Editor/EditorScreen'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { mountTheme } from '../services/theme'
+import log from 'loglevel'
+import { analytics } from '../services/firebase'
 
 csstips.normalize()
 csstips.setupPage('#root')
@@ -24,6 +26,7 @@ export function Root() {
   return <React.StrictMode>
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
+      onError={logError}
       onReset={() => location.reload()}
     >
       <EditorScreen />
@@ -37,4 +40,12 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
     <pre>{error?.message}</pre>
     <button onClick={resetErrorBoundary}>Try again</button>
   </article>
+}
+
+function logError(error: Error, info: { componentStack: string }) {
+  log.error(error, info)
+  analytics.logEvent('exception', {
+    description: `${error.toString()} \n components: ${info.componentStack}`,
+    fatal: true
+  })
 }

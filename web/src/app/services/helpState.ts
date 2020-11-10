@@ -1,4 +1,5 @@
 import { Store, useStore } from '../../lib/reactives'
+import { analytics } from './firebase'
 
 const seenGreetingKey = 'seenGreeting'
 
@@ -16,6 +17,13 @@ export const helpStore = Store<HelpState>(initial)
 export function useHelp() {
   const [help, setHelp] = useStore(helpStore)
 
+  function logView() {
+    analytics.logEvent('screen_view', {
+      app_name: 'mojipic',
+      screen_name: 'help'
+    })
+  }
+
   const commands = {
     hideGettingStarted() {
       setHelp({})
@@ -23,12 +31,17 @@ export function useHelp() {
     },
     openHelp() {
       setHelp({ showHelp: true })
+      logView()
     },
     closeHelp() {
       setHelp({})
     },
     toggleHelp() {
-      setHelp({ showHelp: !help.showHelp })
+      const showHelp = !help.showHelp
+      setHelp({ showHelp })
+      if (showHelp) {
+        logView()
+      }
     }
   }
 

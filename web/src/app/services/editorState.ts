@@ -7,6 +7,7 @@ import { Stack } from '../../lib/immutable-objects'
 import log from 'loglevel'
 import { useEffect } from 'react'
 import { persistRecentBrushes } from './persistRecentBrushes'
+import { analytics } from './firebase'
 
 export const drawingSettings: DrawingSettings = {
   minSize: new Size(3, 3),
@@ -51,6 +52,10 @@ export function useEditor() {
 
     pickBrush(brush: Glyph) {
       setToolbox(it => it.withActiveTool('paintbrush').withBrush(brush))
+      analytics.logEvent('select_content', {
+        content_type: 'emoji',
+        content_id: brush || ''
+      })
     },
 
     applyTool(position: GridPosition) {
@@ -74,11 +79,21 @@ export function useEditor() {
     clear() {
       setDrawingUndoable(
         Drawing.createEmpty(GridBounds.fromSize(drawingSettings.minSize)))
+      analytics.logEvent('select_content', {
+        content_type: 'drawing',
+        content_id: 'NEW'
+      })
     },
 
     async copyToClipboard() {
-      await navigator.clipboard.writeText(drawing.toString(true))
+      const drawingString = drawing.toString(true)
+      await navigator.clipboard.writeText(drawingString)
       notifier.success('copied')
+      analytics.logEvent('share', {
+        content_type: 'drawing',
+        content_id: drawingString,
+        method: 'clipboard'
+      })
     }
   }
 

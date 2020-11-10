@@ -10,7 +10,7 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 - [x] Undo, with undo stack limit
 - [x] Recent emoji
 - [x] Find any emoji
-- [ ] Analytics wiring
+- [x] Analytics wiring
 - [x] Greeting message, prompt to tap the canvas
 - [x] Help button w/screenshot and feeback link
 
@@ -20,4 +20,3 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 - [x] Enforce minimum size when trimming drawing
 - [x] Enforce minimum size when loading drawing
 - [x] Keep app on single screen
-- [ ] Invalid emoji: orangutan

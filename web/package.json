@@ -23,6 +23,7 @@
     "csstips": "^1.2.0",
     "csx": "^10.0.1",
     "emoji-mart": "^3.0.0",
+    "firebase": "^8.0.1",
     "fluent-iterable": "^0.1.6",
     "grapheme-splitter": "^1.0.4",
     "hash-it": "^4.0.5",

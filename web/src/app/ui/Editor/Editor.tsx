@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { stylesheet } from 'typestyle'
 import csstips from 'csstips'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,6 +13,7 @@ import { EmojiPicker } from './EmojiPicker'
 import { ControlDivider } from '../elements/ControlDivider'
 import { percent } from 'csx'
 import { Greeting } from '../Help/Greeting'
+import { analytics } from '../../services/firebase'
 
 export function Editor() {
   const {
@@ -23,6 +24,13 @@ export function Editor() {
     undo,
     clear
   } = useEditor()
+
+  useEffect(() => {
+    analytics.logEvent('screen_view', {
+      app_name: 'mojipic',
+      screen_name: 'editor'
+    })
+  }, [])
 
   return <div className={css.editor}>
 
