@@ -68,11 +68,11 @@ function renderGlyph([position, glyph]: Tile) {
 
 const css = stylesheet({
   drawing: {
+    border: `4px solid ${colors.medium}`,
     background: colors.light,
     cursor: 'pointer',
     maxWidth: percent(100),
-    maxHeight: viewHeight(65),
-    ...styles.control
+    maxHeight: viewHeight(57)
   },
   tileBg: {
     fill: 'white',

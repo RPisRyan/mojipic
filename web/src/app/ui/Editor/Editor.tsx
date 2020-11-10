@@ -11,6 +11,7 @@ import { spaces } from '../../services/theme'
 import { DrawingSvg } from './DrawingSvg'
 import { EmojiPicker } from './EmojiPicker'
 import { ControlDivider } from '../elements/ControlDivider'
+import { percent } from 'csx'
 
 export function Editor() {
   const {
@@ -84,6 +85,7 @@ const css = stylesheet({
     gap: spaces.sm
   },
   canvas: {
+    maxHeight: percent(100)
   },
   commandButtons: {
     ...csstips.vertical,

@@ -22,4 +22,4 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 - [x] Debug logging
 - [x] Enforce minimum size when trimming drawing
 - [x] Enforce minimum size when loading drawing
-- [ ] Keep app on single screen
+- [x] Keep app on single screen
