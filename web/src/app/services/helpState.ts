@@ -3,11 +3,12 @@ import { Store, useStore } from '../../lib/reactives'
 const seenGreetingKey = 'seenGreeting'
 
 type HelpState = {
-  showGreeting: boolean
+  showGreeting?: boolean
+  showHelp?: boolean
 }
 
 const initial: HelpState = {
-  showGreeting: !localStorage.getItem(seenGreetingKey)
+  showGreeting: !localStorage.getItem(seenGreetingKey),
 }
 
 export const helpStore = Store<HelpState>(initial)
@@ -17,11 +18,17 @@ export function useHelp() {
 
   const commands = {
     hideGettingStarted() {
-      setHelp(it => ({
-        ...it,
-        showGreeting: false
-      }))
+      setHelp({})
       localStorage.setItem(seenGreetingKey, 'true')
+    },
+    openHelp() {
+      setHelp({ showHelp: true })
+    },
+    closeHelp() {
+      setHelp({})
+    },
+    toggleHelp() {
+      setHelp({ showHelp: !help.showHelp })
     }
   }
 

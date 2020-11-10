@@ -12,10 +12,7 @@ Basic set of drawing features to allow seamless pic creation and sharing.
 - [x] Find any emoji
 - [ ] Analytics wiring
 - [x] Greeting message, prompt to tap the canvas
-- [ ] Time-delayed prompt to copy to clipboard
-- [ ] Tell them what to do after copying to clipboard
-- [ ] Help button w/screenshot and feeback link
-- [ ] Drag to paint
+- [x] Help button w/screenshot and feeback link
 
 ### Tasks
 

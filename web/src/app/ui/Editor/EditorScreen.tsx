@@ -4,35 +4,37 @@ import { Editor } from './Editor'
 import { stylesheet } from 'typestyle'
 import { LogoText } from '../elements/LogoText'
 import { linearGradient } from 'csx'
-import { Welcome } from '../Help/Welcome'
-import { AppModal } from '../elements/AppModal'
 import { colors, palette, spaces } from '../../services/theme'
+import { useHelp } from '../../services/helpState'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { EditorHelp } from './EditorHelp'
 
 export default function EditorScreen() {
-  const { welcomeVisible, welcome, done } = {} as any
+  const { help, toggleHelp } = useHelp()
 
   return <div className={css.root}>
+
     <div className={css.application}>
+
       <div className={css.headerBar}>
-        {/* todo: make helper that binds onClick, enabled */}
-        <span className={css.headerTitle} onClick={welcome}>
+        <span className={css.headerTitle}>
           <LogoText>Mojipic</LogoText>
         </span>
 
-        {/* todo: make command element that binds onClick, enabled */}
-        {/* <button onClick={showWelcome}>help</button> */}
+        <span className={css.headerRight}>
+          <FontAwesomeIcon icon={faQuestionCircle} onClick={toggleHelp} />
+        </span>
+
       </div>
       <div className={css.appBody}>
         <Editor />
       </div>
+
+      <EditorHelp />
+
     </div>
-    <AppModal
-      show={welcomeVisible}
-      onHide={done}
-      onBackdropClick={done}
-    >
-      <Welcome />
-    </AppModal>
+
   </div>
 }
 
@@ -44,6 +46,7 @@ const css = stylesheet({
     width: '100vw'
   },
   application: {
+    position: 'relative',
     display: 'grid',
     gridTemplateRows: 'min-content auto',
     gridColumn: 2
@@ -54,11 +57,17 @@ const css = stylesheet({
       palette.warm.darken(0.5).hex()
     ),
     color: colors.lightest,
-    padding: spaces.xs
+    padding: spaces.xs,
+    display: 'flex'
   },
   headerTitle: {
     textTransform: 'uppercase',
-    fontFamily: `'Roboto', sans-serif`
+    fontFamily: `'Roboto', sans-serif`,
+    flex: 1
+  },
+  headerRight: {
+    alignSelf: 'end',
+    cursor: 'pointer'
   },
   appBody: {
     backgroundColor: palette.warm.luminance(0.86).hex(),
