@@ -12,7 +12,7 @@ import { DrawingStore } from './drawingStore'
 
 export const drawingSettings: DrawingSettings = {
   minSize: new Size(3, 3),
-  maxSize: new Size(12, 8)
+  maxSize: new Size(16, 12)
 }
 const undoStackLimit = 20
 
