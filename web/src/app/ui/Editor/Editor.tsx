@@ -99,7 +99,8 @@ const css = stylesheet({
     maxHeight: percent(100)
   },
   commandButtons: {
-    ...csstips.vertical,
+    display: 'grid',
+    gridAutoRows: 'min-content',
     gap: spaces.sm
   },
 })
