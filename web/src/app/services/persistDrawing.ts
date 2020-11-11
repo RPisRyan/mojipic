@@ -1,22 +1,16 @@
 import log from 'loglevel'
-import { Drawing, Toolbox } from '../../lib/emoji-drawing'
+import type { Toolbox } from '../../lib/emoji-drawing'
 import type { Store } from '../../lib/reactives'
-import { drawingSettings } from './editorState'
+import type { DrawingStore } from './drawingStore'
 
 const localStorageKey = 'currentDrawing'
 
-export function persistDrawing(drawingStore: Store<Drawing>, toolboxStore: Store<Toolbox>) {
+export function persistDrawing(drawingStore: DrawingStore, toolboxStore: Store<Toolbox>) {
   try {
-    const local = localStorage.getItem(localStorageKey)
-    if (local) {
-      log.debug('found local drawing', local)
-
-      const drawing = Drawing.fromString(local)
-      if (!drawing.isEmpty) {
-        drawingStore.setState(
-          Drawing.fromString(local).paddedTo(drawingSettings.minSize)
-        )
-      }
+    const drawingLiteral = localStorage.getItem(localStorageKey)
+    if (drawingLiteral) {
+      log.debug('found local drawing', drawingLiteral)
+      drawingStore.loadDrawing(drawingLiteral)
     }
   }
   catch (ex) {

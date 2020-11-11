@@ -8,6 +8,7 @@ import log from 'loglevel'
 import { useEffect } from 'react'
 import { persistRecentBrushes } from './persistRecentBrushes'
 import { analytics } from './firebase'
+import { DrawingStore } from './drawingStore'
 
 export const drawingSettings: DrawingSettings = {
   minSize: new Size(3, 3),
@@ -17,7 +18,7 @@ const undoStackLimit = 20
 
 const defaultDrawing = Drawing.fromString(` 🌈 \n🌈⭐️✨\n 🌈 `)
 
-export const drawingStore = Store(defaultDrawing)
+export const drawingStore = DrawingStore(defaultDrawing)
 export const useDrawing = () => useStore(drawingStore)
 
 export const toolboxStore = Store(Toolbox.default)
@@ -86,7 +87,7 @@ export function useEditor() {
     },
 
     async copyToClipboard() {
-      const drawingString = drawing.toString(true)
+      const drawingString = drawing.toString(false)
       await navigator.clipboard.writeText(drawingString)
       notifier.success('copied')
       analytics.logEvent('share', {

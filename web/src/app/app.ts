@@ -4,16 +4,19 @@
 
 import { createElement } from 'react'
 import { render } from 'react-dom'
-import { initializeFirebase } from './services/firebase'
+import { initializeFirebase as initFirebase } from './services/firebase'
 import { Root } from './ui/Root'
 import log from 'loglevel'
-import { initializeExceptionHandling } from './services/exceptionHandling'
+import { initializeExceptionHandling as initExceptionHandling } from './services/exceptionHandling'
+import { initConsoleServices } from './services/globalServices'
 
 (window as any).log = log
 
-initializeFirebase()
+initFirebase()
 
-initializeExceptionHandling()
+initExceptionHandling()
+
+initConsoleServices()
 
 const rootElement = document.getElementById('root')
 render(
