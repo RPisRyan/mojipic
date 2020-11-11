@@ -13,7 +13,9 @@ export function persistRecentBrushes(toolboxStore: Store<Toolbox>) {
       if (glyphs.length > 0) {
         let newState = toolboxStore.getState()
           .withRecent(glyphs)
-          .withBrush(glyphs[0])
+        if (!Glyph.isEmpty(glyphs[0])) {
+          newState = newState.withBrush(glyphs[0])
+        }
         toolboxStore.setState(newState)
       }
     }

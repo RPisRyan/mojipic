@@ -1,4 +1,4 @@
 
 # Tech backlog
 
-- [ ] Wrap command functions in error logger
+- [ ] Send log.error to analytics
