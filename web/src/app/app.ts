@@ -2,14 +2,20 @@
  * Copyright © 2020 Form * Function Digital. All Rights Reserved.
  */
 
-import './services/firebase'
-
 import { createElement } from 'react'
 import { render } from 'react-dom'
+import { initializeFirebase } from './services/firebase'
 import { Root } from './ui/Root'
+import log from 'loglevel'
+import { initializeExceptionHandling } from './services/exceptionHandling'
+
+(window as any).log = log
+
+initializeFirebase()
+
+initializeExceptionHandling()
 
 const rootElement = document.getElementById('root')
-
 render(
   createElement(Root),
   rootElement
