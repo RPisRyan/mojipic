@@ -1,7 +1,7 @@
 import { em, linearGradient, rgb } from 'csx'
 import React, { PropsWithChildren } from 'react'
 import { stylesheet } from 'typestyle'
-import { palette } from '../../services/theme'
+import { colors, palette } from '../../services/theme'
 
 export function LogoText({ children }: Props) {
   return <>
@@ -31,6 +31,8 @@ const css = stylesheet({
       palette.chill.darken(3).hex()
     ),
     color: 'white',
-    fontFamily: `'Jaldi', sans-serif`
+    fontFamily: `'Jaldi', sans-serif`,
+    textTransform: 'uppercase',
+    boxShadow: `0 0 2px ${colors.medium}, 0 2px 2px ${colors.medium}`
   }
 })

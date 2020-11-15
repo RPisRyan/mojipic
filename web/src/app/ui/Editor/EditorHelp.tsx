@@ -2,7 +2,7 @@ import { percent, px, viewHeight } from 'csx'
 import React, { Fragment } from 'react'
 import { stylesheet } from 'typestyle'
 import { useHelp } from '../../services/helpState'
-import { colors } from '../../services/theme'
+import { colors, palette } from '../../services/theme'
 
 export function EditorHelp() {
   const { help, closeHelp } = useHelp()
@@ -16,7 +16,7 @@ export function EditorHelp() {
     <div className={css.content}>
       <img src="/images/help-screen.jpg" className={css.image} />
       <span className={css.contact}>
-        <a href="mailto:info@mojipic.app">Contact Us ✉️</a>
+        <a href="mailto:info@mojipic.app">Contact ✉️</a>
       </span>
 
     </div>
@@ -60,14 +60,13 @@ const css = stylesheet({
   },
   contact: {
     width: percent(100),
-    background: colors.medium,
+    background: palette.chill.hex(),
     display: 'flex',
     justifyContent: 'center',
     padding: '0.5em 0',
     $nest: {
       'a': {
         color: 'white',
-        textTransform: 'uppercase'
       }
     }
   }

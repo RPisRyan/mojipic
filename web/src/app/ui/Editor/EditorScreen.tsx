@@ -1,76 +1,66 @@
 import React from 'react'
 
-import { Editor } from './Editor'
-import { stylesheet } from 'typestyle'
+import { extend } from 'typestyle'
 import { LogoText } from '../elements/LogoText'
-import { linearGradient } from 'csx'
-import { colors, palette, spaces } from '../../services/theme'
-import { useHelp } from '../../services/helpState'
-import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { EditorHelp } from './EditorHelp'
+import { HelpButton } from '../elements/HelpButton'
+import { Greeting } from '../Help/Greeting'
+import { DrawingSvg } from './DrawingSvg'
+import { EditorControls } from './EditorControls'
+import { EmojiPicker } from './EmojiPicker'
+import { makeCss, fullScreenStyle } from '../../../lib/typestyle-ext'
+import { rem } from 'csx'
+import { colors, spaces } from '../../services/theme'
 
 export default function EditorScreen() {
-  const { help, toggleHelp } = useHelp()
+  return <div className={css.editorScreen}>
 
-  return <div className={css.root}>
-
-    <div className={css.application}>
-
-      <div className={css.headerBar}>
-        <span className={css.headerTitle}>
-          <LogoText>Mojipic</LogoText>
-        </span>
-
-        <span className={css.headerRight}>
-          <FontAwesomeIcon icon={faQuestionCircle} onClick={toggleHelp} />
-        </span>
-
-      </div>
-      <div className={css.appBody}>
-        <Editor />
-      </div>
-
-      <EditorHelp />
-
+    <div className={css.title}>
+      <LogoText>Mojipic</LogoText>
     </div>
+
+    <div className={css.help}>
+      <HelpButton />
+    </div>
+
+    <div className={css.drawing}>
+      <DrawingSvg />
+    </div>
+
+    <div className={css.controls}>
+      <EditorControls />
+    </div>
+
+    <div className={css.brushes}>
+      <EmojiPicker />
+    </div>
+
+    <Greeting />
 
   </div>
 }
 
-const css = stylesheet({
-  root: {
-    display: 'grid',
-    gridTemplateColumns: '1fr minmax(300px, 800px) 1fr',
-    height: '100vh',
-    width: '100vw'
-  },
-  application: {
-    position: 'relative',
-    display: 'grid',
-    gridTemplateRows: 'min-content auto',
-    gridColumn: 2
-  },
-  headerBar: {
-    background: linearGradient(
-      palette.warm.brighten(0.5).hex(),
-      palette.warm.darken(0.5).hex()
-    ),
-    color: colors.lightest,
-    padding: spaces.xs,
-    display: 'flex'
-  },
-  headerTitle: {
-    textTransform: 'uppercase',
-    fontFamily: `'Roboto', sans-serif`,
-    flex: 1
-  },
-  headerRight: {
-    alignSelf: 'end',
+const css = makeCss({
+  editorScreen: extend(
+    fullScreenStyle,
+    {
+      padding: spaces.sm,
+      display: 'grid',
+      gridTemplateAreas: `"title help" "drawing controls" "brushes brushes"`,
+      gridTemplateColumns: '1fr auto',
+      gridTemplateRows: '1em 1fr auto',
+      gap: spaces.sm,
+      background: colors.light,
+    }),
+  title: {},
+  help: {
+    justifySelf: 'center',
+    color: colors.darkest,
     cursor: 'pointer'
   },
-  appBody: {
-    backgroundColor: palette.warm.luminance(0.86).hex(),
-    padding: spaces.sm
-  }
+  drawing: {
+    minWidth: 0,
+    minHeight: 0
+  },
+  controls: {},
+  brushes: {}
 })

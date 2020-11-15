@@ -1,20 +1,21 @@
-import { percent, px, viewHeight } from 'csx'
+import { percent, px } from 'csx'
 import React from 'react'
-import { stylesheet } from 'typestyle'
+import { classes, stylesheet } from 'typestyle'
 import type { GridPosition } from '../../../lib/2d/gridPosition'
 import type { Tile } from '../../../lib/emoji-drawing'
+import type { StylableElementProps } from '../../../lib/react'
 import { drawingSettings, useEditor } from '../../services/editorState'
-import { colors, styles } from '../../services/theme'
+import { colors } from '../../services/theme'
 
 const tileSize = 10
-const margin = 6
+const margin = 1
 
-export function DrawingSvg() {
+export function DrawingSvg({ className, style }: StylableElementProps) {
   const { drawing, applyTool } = useEditor()
 
   const paddedBounds = drawing.paddedBounds(drawingSettings)
 
-  const drawingBounds = drawing.bounds
+  const drawingBounds = drawing.bounds.expand(1)
   const viewBox = [
     drawingBounds.min.column * tileSize - margin,
     drawingBounds.min.row * tileSize - margin,
@@ -22,7 +23,10 @@ export function DrawingSvg() {
     drawingBounds.height * tileSize + margin * 2
   ].join(' ')
 
-  return <svg viewBox={viewBox} className={css.drawing}>
+  return <svg
+    viewBox={viewBox}
+    className={classes(css.drawing, className)}
+    style={style}>
     {
       Array.from(paddedBounds.positions()).map(position =>
         renderTileBg(
@@ -68,11 +72,10 @@ function renderGlyph([position, glyph]: Tile) {
 
 const css = stylesheet({
   drawing: {
-    border: `4px solid ${colors.medium}`,
-    background: colors.light,
+
     cursor: 'pointer',
     maxWidth: percent(100),
-    maxHeight: viewHeight(52)
+    maxHeight: percent(100)
   },
   tileBg: {
     fill: 'white',

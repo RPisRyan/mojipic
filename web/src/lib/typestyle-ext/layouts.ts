@@ -1,4 +1,4 @@
-import { percent } from 'csx'
+import { percent, viewHeight, viewWidth } from 'csx'
 import type { NestedCSSProperties } from 'typestyle/lib/types'
 
 export const centerChild: NestedCSSProperties = {
@@ -31,10 +31,20 @@ export function stackChildren(stretch?: boolean): NestedCSSProperties {
   }
 }
 
-export const coverScreen: NestedCSSProperties = {
+export const fullScreenFixedStyle: NestedCSSProperties = {
   position: 'fixed',
   top: 0,
   bottom: 0,
   left: 0,
   right: 0,
+}
+
+export const fullScreenStyle: NestedCSSProperties = {
+  width: viewWidth(100),
+  height: viewHeight(100)
+}
+
+export const containedStyle: NestedCSSProperties = {
+  maxWidth: percent(100),
+  maxHeight: percent(100)
 }

@@ -3,7 +3,7 @@ import { stylesheet } from 'typestyle'
 
 import Modal from 'react-overlays/Modal'
 import { styled } from '../../../lib/typestyle-ext/styled'
-import { centerChild, coverScreen } from '../../../lib/typestyle-ext/layouts'
+import { centerChild, fullScreenFixedStyle } from '../../../lib/typestyle-ext/layouts'
 
 export function AppModal({ children, ...rest }: ComponentProps<typeof Modal>) {
   return <Modal
@@ -19,7 +19,7 @@ export function AppModal({ children, ...rest }: ComponentProps<typeof Modal>) {
 const bootstrapOverlayZIndex = 1040
 
 const Backdrop = styled('div', {
-  ...coverScreen,
+  ...fullScreenFixedStyle,
   zIndex: bootstrapOverlayZIndex,
   backgroundColor: '#000',
   opacity: 0.5,
@@ -27,7 +27,7 @@ const Backdrop = styled('div', {
 
 const css = stylesheet({
   appModal: {
-    ...coverScreen,
+    ...fullScreenFixedStyle,
     zIndex: bootstrapOverlayZIndex,
     pointerEvents: 'none',
     ...centerChild,
