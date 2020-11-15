@@ -54,7 +54,7 @@ export function useEditor() {
       setToolbox(it => it.withActiveTool('paintbrush').withBrush(brush))
       analytics.logEvent('select_content', {
         content_type: 'emoji',
-        content_id: brush || ''
+        item_id: brush || ''
       })
     },
 
@@ -81,7 +81,7 @@ export function useEditor() {
         Drawing.createEmpty(GridBounds.fromSize(drawingSettings.minSize)))
       analytics.logEvent('select_content', {
         content_type: 'drawing',
-        content_id: 'NEW'
+        item_id: 'NEW'
       })
     }
   }

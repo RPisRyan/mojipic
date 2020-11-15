@@ -11,7 +11,7 @@ export function useCopyToClipboard() {
     notify.success('copied')
     analytics.logEvent('share', {
       content_type: 'drawing',
-      content_id: drawingString,
+      item_id: drawingString,
       method: 'clipboard'
     })
   }
