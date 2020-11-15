@@ -17,6 +17,7 @@ export function EmojiPicker({ className, style }: StylableElementProps) {
       .filter(it => it) as string[]
     return recent
   }, [toolbox.recent])
+
   return <div className={classes(css.emojiPicker, className)} style={style}>
     <NimblePicker
       enableFrequentEmojiSort={true}

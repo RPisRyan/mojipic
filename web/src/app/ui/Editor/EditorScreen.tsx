@@ -8,7 +8,6 @@ import { DrawingSvg } from './DrawingSvg'
 import { EditorControls } from './EditorControls'
 import { EmojiPicker } from './EmojiPicker'
 import { makeCss, fullScreenStyle } from '../../../lib/typestyle-ext'
-import { rem } from 'csx'
 import { colors, palette, spaces } from '../../services/theme'
 
 export default function EditorScreen() {

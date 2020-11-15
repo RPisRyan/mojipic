@@ -4,7 +4,7 @@
 
 import React from 'react'
 import csstips from 'csstips'
-import { cssRaw } from 'typestyle'
+import { cssRaw, cssRule } from 'typestyle'
 import EditorScreen from './Editor/EditorScreen'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { mountTheme } from '../services/theme'
@@ -19,6 +19,10 @@ cssRaw(`
 @import url('https://fonts.googleapis.com/css2?family=Jaldi:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
 `)
+
+cssRule('body', {
+  '-webkit-tap-highlight-color': 'transparent'
+})
 
 mountTheme()
 

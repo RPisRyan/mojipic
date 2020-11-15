@@ -1,7 +1,6 @@
 import { Drawing, DrawingSettings, Glyph, Toolbox, ToolType } from '../../lib/emoji-drawing'
 import { Size, GridPosition, GridBounds } from '../../lib/2d'
 import { Store, useStore } from '../../lib/reactives'
-import { notify as notifier } from './notification'
 import { persistDrawing } from './persistDrawing'
 import { Stack } from '../../lib/immutable-objects'
 import log from 'loglevel'
@@ -83,17 +82,6 @@ export function useEditor() {
       analytics.logEvent('select_content', {
         content_type: 'drawing',
         content_id: 'NEW'
-      })
-    },
-
-    async copyToClipboard() {
-      const drawingString = drawing.toString(false)
-      await navigator.clipboard.writeText(drawingString)
-      notifier.success('copied')
-      analytics.logEvent('share', {
-        content_type: 'drawing',
-        content_id: drawingString,
-        method: 'clipboard'
       })
     }
   }

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { classes, stylesheet } from 'typestyle'
 import type { StylableElementProps } from '../../../lib/react'
+import { useCopyToClipboard } from '../../services/copyToClipboard'
 import { useEditor } from '../../services/editorState'
 import { spaces } from '../../services/theme'
 import { ControlDivider } from '../elements/ControlDivider'
@@ -14,10 +15,10 @@ export function EditorControls({ className, style }: StylableElementProps) {
     toolbox,
     activateTool,
     pickBrush,
-    copyToClipboard,
     undo,
     clear
   } = useEditor()
+  const { copyToClipboard } = useCopyToClipboard()
 
   return <div className={classes(css.commandButtons, className)} style={style}>
     <TileButton
