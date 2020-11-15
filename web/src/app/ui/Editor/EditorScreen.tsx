@@ -9,7 +9,7 @@ import { EditorControls } from './EditorControls'
 import { EmojiPicker } from './EmojiPicker'
 import { makeCss, fullScreenStyle } from '../../../lib/typestyle-ext'
 import { rem } from 'csx'
-import { colors, spaces } from '../../services/theme'
+import { colors, palette, spaces } from '../../services/theme'
 
 export default function EditorScreen() {
   return <div className={css.editorScreen}>
@@ -49,7 +49,7 @@ const css = makeCss({
       gridTemplateColumns: '1fr auto',
       gridTemplateRows: '1em 1fr auto',
       gap: spaces.sm,
-      background: colors.light,
+      background: palette.warm.luminance(0.92).hex(),
     }),
   title: {},
   help: {
