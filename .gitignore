@@ -1,8 +1,4 @@
 logs
 *.log
 *.cache
-
 .DS_Store
-.vscode
-node_modules
-.firebaserc
