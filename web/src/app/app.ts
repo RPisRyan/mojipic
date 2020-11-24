@@ -12,20 +12,26 @@ import { initConsoleServices } from './services/globalServices'
 
 (window as any).log = log
 
-initFirebase()
+async function start() {
 
-initExceptionHandling()
+  await initFirebase()
 
-initConsoleServices()
+  initExceptionHandling()
 
-const rootElement = document.getElementById('root')
-render(
-  createElement(Root),
-  rootElement
-)
+  initConsoleServices()
 
-// Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
-// Learn more: https://www.snowpack.dev/#hot-module-replacement
-if (import.meta.hot) {
-  import.meta.hot.accept()
+  const rootElement = document.getElementById('root')
+  render(
+    createElement(Root),
+    rootElement
+  )
+
+  // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
+  // Learn more: https://www.snowpack.dev/#hot-module-replacement
+  if (import.meta.hot) {
+    import.meta.hot.accept()
+  }
+
 }
+
+start()
