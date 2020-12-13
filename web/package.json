@@ -7,7 +7,8 @@
   "scripts": {
     "start": "snowpack dev --polyfill-node",
     "build": "snowpack build --polyfill-node",
-    "deploy": "snowpack build --polyfill-node && firebase deploy",
+    "deploy:firebase": "snowpack build --polyfill-node && firebase deploy",
+    "deploy:itch": "snowpack build --polyfill-node && butler push build rpisryan/mojipic:html",
     "test": "jest",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\""
