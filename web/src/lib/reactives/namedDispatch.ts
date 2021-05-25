@@ -23,7 +23,10 @@ export function makeNamedDispatch<A extends TypeDiscriminated>(
   return namedDispatch
 }
 
-export type NamedDispatch<A extends TypeDiscriminated> = (type: Discriminator<A>, payload: Omit<A, 'type'>) => void
+export type NamedDispatch<A extends TypeDiscriminated> = (
+  type: Discriminator<A>,
+  payload: Omit<A, 'type'>,
+) => void
 
 export type NamedDispatchUnique<
   A extends TypeDiscriminated,

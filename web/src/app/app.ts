@@ -9,7 +9,6 @@ import { Root } from './ui/Root'
 import log from 'loglevel'
 import { initializeExceptionHandling as initExceptionHandling } from './services/exceptionHandling'
 import { initConsoleServices } from './services/globalServices'
-
 ;(window as any).log = log
 
 async function start() {

@@ -20,7 +20,9 @@ export class Drawing extends Grid<Glyph> {
   static fromString(serialized: string): Drawing {
     const rows = serialized.split('\n').map((rowChars) => {
       const rowGlyphs = replaceAll(rowChars, Glyph.space!, ' ')
-      return Glyph.splitter.splitGraphemes(rowGlyphs).map((glyph) => (Glyph.isEmpty(glyph) ? Glyph.none : glyph))
+      return Glyph.splitter
+        .splitGraphemes(rowGlyphs)
+        .map((glyph) => (Glyph.isEmpty(glyph) ? Glyph.none : glyph))
     })
     return this.fromArray(rows)
   }
@@ -48,7 +50,11 @@ export class Drawing extends Grid<Glyph> {
   }
 
   get isEmpty() {
-    return !this.elements || this.elements.length === 0 || !this.elements.some(([, glyph]) => !Glyph.isEmpty(glyph))
+    return (
+      !this.elements ||
+      this.elements.length === 0 ||
+      !this.elements.some(([, glyph]) => !Glyph.isEmpty(glyph))
+    )
   }
 
   rowIsEmpty(row: number) {
@@ -56,7 +62,9 @@ export class Drawing extends Grid<Glyph> {
   }
 
   columnIsEmpty(column: number) {
-    return !this.elements.some(([position, glyph]) => position.column === column && Glyph.isEmpty(glyph))
+    return !this.elements.some(
+      ([position, glyph]) => position.column === column && Glyph.isEmpty(glyph),
+    )
   }
 
   croppedToContent(minSize: Size) {
@@ -129,7 +137,10 @@ export class Drawing extends Grid<Glyph> {
     let bounds = this.bounds
 
     if (bounds.isNull) {
-      return new GridBounds(new GridPosition(0, 0), new GridPosition(minSize.width - 1, minSize.height - 1))
+      return new GridBounds(
+        new GridPosition(0, 0),
+        new GridPosition(minSize.width - 1, minSize.height - 1),
+      )
     }
 
     // expand right before left
@@ -182,7 +193,9 @@ export class Drawing extends Grid<Glyph> {
   toString(useWhiteSquares: boolean = false) {
     const array = this.toArray()
     const emptyChar = useWhiteSquares ? Glyph.whiteSquare : Glyph.space
-    return array.map((row) => row.map((it) => (Glyph.isEmpty(it) ? emptyChar : toFullWidth(it))).join('')).join('\n')
+    return array
+      .map((row) => row.map((it) => (Glyph.isEmpty(it) ? emptyChar : toFullWidth(it))).join(''))
+      .join('\n')
   }
 
   uniqueGlyphs() {

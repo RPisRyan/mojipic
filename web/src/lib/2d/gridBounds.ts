@@ -78,7 +78,9 @@ export class GridBounds {
   }
 
   sizedAtLeast(size: Size) {
-    return this.adjustTop(-1 * atLeast(0, size.height - this.height)).adjustRight(atLeast(0, size.width - this.width))
+    return this.adjustTop(-1 * atLeast(0, size.height - this.height)).adjustRight(
+      atLeast(0, size.width - this.width),
+    )
   }
 
   *positions() {

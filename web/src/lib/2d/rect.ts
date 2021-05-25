@@ -7,7 +7,10 @@ export class Rect implements RectSides {
   constructor(public position: Point, public size: Size) {}
 
   static fromSides({ left, top, right, bottom }: RectSides) {
-    return new Rect(new Point(left, top), new Size(Math.max(0, right - left), Math.max(0, bottom - top)))
+    return new Rect(
+      new Point(left, top),
+      new Size(Math.max(0, right - left), Math.max(0, bottom - top)),
+    )
   }
 
   static zero = new Rect(Point.zero, Size.zero)

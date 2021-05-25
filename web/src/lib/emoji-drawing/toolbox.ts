@@ -44,7 +44,9 @@ export class Toolbox {
   }
 
   recentIds() {
-    return this.recent.map((glyph) => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id).filter((it) => it) as string[]
+    return this.recent
+      .map((glyph) => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id)
+      .filter((it) => it) as string[]
   }
 
   withData(data: Partial<ToolboxData>) {

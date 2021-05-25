@@ -1,11 +1,19 @@
-import React, { forwardRef, ForwardRefRenderFunction, HTMLAttributes, Ref, RefAttributes } from 'react'
+import React, {
+  HTMLAttributes,
+} from 'react'
 import { stylesheet, classes } from 'typestyle'
-import { em, percent } from 'csx'
+import { em } from 'csx'
 import { styles, colors, sizes } from '../../services/theme'
 
-export const TileButton = React.forwardRef<HTMLButtonElement, Props>(({ className, active, ...restProps }, ref) => (
-  <button ref={ref} className={classes(css.squareButton, active && css.active, className)} {...restProps} />
-))
+export const TileButton = React.forwardRef<HTMLButtonElement, Props>(
+  ({ className, active, ...restProps }, ref) => (
+    <button
+      ref={ref}
+      className={classes(css.squareButton, active && css.active, className)}
+      {...restProps}
+    />
+  ),
+)
 
 type Props = HTMLAttributes<HTMLButtonElement> & {
   active?: boolean

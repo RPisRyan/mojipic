@@ -12,7 +12,9 @@ describe('gridBounds', () => {
 
   it('can expand', () => {
     const extent = new GridBounds(new GridPosition(0, 0), new GridPosition(2, 3))
-    expect(extent.expand(1)).toEqual(new GridBounds(new GridPosition(-1, -1), new GridPosition(3, 4)))
+    expect(extent.expand(1)).toEqual(
+      new GridBounds(new GridPosition(-1, -1), new GridPosition(3, 4)),
+    )
   })
 
   it('calculates dimensions', () => {

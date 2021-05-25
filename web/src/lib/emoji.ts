@@ -14,7 +14,10 @@ export function getEmojiData(maxVersion: string): Data {
   }
 }
 
-function filterEmojis(emojis: { [key: string]: Emoji }, maxVersion: string): { [key: string]: Emoji } {
+function filterEmojis(
+  emojis: { [key: string]: Emoji },
+  maxVersion: string,
+): { [key: string]: Emoji } {
   const result: any = {}
   toEntries(emojis).forEach(([key, value]) => {
     if (availableInVersion(value, maxVersion)) {

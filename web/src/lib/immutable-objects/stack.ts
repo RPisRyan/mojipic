@@ -3,7 +3,8 @@ export class Stack<T> {
 
   pushed(item: T) {
     const sliceCount = this.maxItems ? this.items.length - this.maxItems + 1 : 0
-    const newItems = sliceCount > 0 ? [...this.items.slice(sliceCount), item] : [...this.items, item]
+    const newItems =
+      sliceCount > 0 ? [...this.items.slice(sliceCount), item] : [...this.items, item]
     return new Stack(newItems, this.maxItems)
   }
 

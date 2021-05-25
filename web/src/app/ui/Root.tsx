@@ -29,7 +29,11 @@ mountTheme()
 export function Root() {
   return (
     <React.StrictMode>
-      <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError} onReset={() => location.reload()}>
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onError={logError}
+        onReset={() => location.reload()}
+      >
         <EditorScreen />
       </ErrorBoundary>
     </React.StrictMode>

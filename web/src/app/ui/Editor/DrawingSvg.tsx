@@ -25,7 +25,9 @@ export function DrawingSvg({ className, style }: StylableElementProps) {
 
   return (
     <svg viewBox={viewBox} className={classes(css.drawing, className)} style={style}>
-      {Array.from(paddedBounds.positions()).map((position) => renderTileBg(position, () => applyTool(position)))}
+      {Array.from(paddedBounds.positions()).map((position) =>
+        renderTileBg(position, () => applyTool(position)),
+      )}
       {drawing.elements.map(renderGlyph)}
     </svg>
   )

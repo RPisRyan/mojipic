@@ -30,7 +30,10 @@ export function EditorControls({ className, style }: StylableElementProps) {
 
       <ControlDivider direction="horizontal" />
 
-      <TileButton active={toolbox.activeToolType === 'paintbrush'} onClick={() => activateTool('paintbrush')}>
+      <TileButton
+        active={toolbox.activeToolType === 'paintbrush'}
+        onClick={() => activateTool('paintbrush')}
+      >
         {toolbox.activeToolType === 'paintbrush' ? (
           <EditableChar value={toolbox.brush} onChange={(char) => pickBrush(char)} />
         ) : (
@@ -38,7 +41,10 @@ export function EditorControls({ className, style }: StylableElementProps) {
         )}
       </TileButton>
 
-      <TileButton active={toolbox.activeToolType === 'eraser'} onClick={() => activateTool('eraser')}>
+      <TileButton
+        active={toolbox.activeToolType === 'eraser'}
+        onClick={() => activateTool('eraser')}
+      >
         <FontAwesomeIcon icon={faEraser} />
       </TileButton>
     </div>
