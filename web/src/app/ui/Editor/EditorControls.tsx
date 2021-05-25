@@ -1,4 +1,4 @@
-import { faCopy, faUndo, faPlusSquare, faEraser } from '@fortawesome/free-solid-svg-icons'
+import { faCopy, faEraser, faPlusSquare, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { classes, stylesheet } from 'typestyle'
@@ -16,21 +16,22 @@ export function EditorControls({ className, style }: StylableElementProps) {
 
   return (
     <div className={classes(css.commandButtons, className)} style={style}>
-      <TileButton onClick={copyToClipboard}>
+      <TileButton title="Copy to clipboard" onClick={copyToClipboard}>
         <FontAwesomeIcon icon={faCopy} />
       </TileButton>
 
-      <TileButton onClick={() => undo()}>
+      <TileButton title="Undo" onClick={() => undo()}>
         <FontAwesomeIcon icon={faUndo} />
       </TileButton>
 
-      <TileButton onClick={clear}>
+      <TileButton title="Clear" onClick={clear}>
         <FontAwesomeIcon icon={faPlusSquare} />
       </TileButton>
 
       <ControlDivider direction="horizontal" />
 
       <TileButton
+        title="Paintbrush"
         active={toolbox.activeToolType === 'paintbrush'}
         onClick={() => activateTool('paintbrush')}
       >
@@ -42,6 +43,7 @@ export function EditorControls({ className, style }: StylableElementProps) {
       </TileButton>
 
       <TileButton
+        title="Eraser"
         active={toolbox.activeToolType === 'eraser'}
         onClick={() => activateTool('eraser')}
       >
