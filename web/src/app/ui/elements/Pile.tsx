@@ -4,7 +4,7 @@ export const Pile = styled('div', {
   display: 'grid',
   $nest: {
     '&>*': {
-      gridArea: '1 / 1'
-    }
-  }
+      gridArea: '1 / 1',
+    },
+  },
 })

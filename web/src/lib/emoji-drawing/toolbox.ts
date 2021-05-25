@@ -5,7 +5,7 @@ import { Paintbrush, Eraser, ToolType } from './tools'
 
 const defaultTools = {
   paintbrush: new Paintbrush('⭐️'),
-  eraser: new Eraser()
+  eraser: new Eraser(),
 }
 
 type ToolboxData = {
@@ -15,13 +15,12 @@ type ToolboxData = {
 }
 
 export class Toolbox {
-
-  private constructor(private data: ToolboxData) { }
+  private constructor(private data: ToolboxData) {}
 
   static default = new Toolbox({
     tools: defaultTools,
     activeToolType: 'paintbrush',
-    recent: OrderedSet([defaultTools.paintbrush.brush])
+    recent: OrderedSet([defaultTools.paintbrush.brush]),
   })
 
   get tools() {
@@ -45,15 +44,11 @@ export class Toolbox {
   }
 
   recentIds() {
-    return this.recent.map(
-      glyph => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id)
-      .filter(it => it) as string[]
+    return this.recent.map((glyph) => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id).filter((it) => it) as string[]
   }
 
   withData(data: Partial<ToolboxData>) {
-    return new Toolbox(
-      { ...this.data, ...data }
-    )
+    return new Toolbox({ ...this.data, ...data })
   }
 
   withBrush(brush: Glyph) {
@@ -61,20 +56,20 @@ export class Toolbox {
       recent: this.data.recent.add(brush),
       tools: {
         ...this.tools,
-        paintbrush: this.tools.paintbrush.withBrush(brush)
-      }
+        paintbrush: this.tools.paintbrush.withBrush(brush),
+      },
     })
   }
 
   withActiveTool(type: ToolType) {
     return this.withData({
-      activeToolType: type
+      activeToolType: type,
     })
   }
 
   withRecent(brushes: Glyph[]) {
     return this.withData({
-      recent: this.data.recent.merge(brushes)
+      recent: this.data.recent.merge(brushes),
     })
   }
 }

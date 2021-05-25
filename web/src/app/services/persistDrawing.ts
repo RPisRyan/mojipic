@@ -12,17 +12,15 @@ export function persistDrawing(drawingStore: DrawingStore, toolboxStore: Store<T
       log.debug('found local drawing', drawingLiteral)
       drawingStore.loadDrawing(drawingLiteral)
     }
-  }
-  catch (ex) {
+  } catch (ex) {
     log.warn('Failed to load drawing from local storage', ex)
   }
 
-  return drawingStore.subscribe(drawing => {
+  return drawingStore.subscribe((drawing) => {
     try {
       localStorage.setItem(localStorageKey, drawing.toString())
-    }
-    catch (ex) {
-      log.warn("Failed to save to local storage", ex)
+    } catch (ex) {
+      log.warn('Failed to save to local storage', ex)
     }
   })
 }

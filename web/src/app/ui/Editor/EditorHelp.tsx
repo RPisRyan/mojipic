@@ -10,17 +10,18 @@ export function EditorHelp() {
   if (!help.showHelp) {
     return <Fragment />
   }
-  return <div className={css.editorHelp} onClick={closeHelp}>
-    <div className={css.shadow} />
+  return (
+    <div className={css.editorHelp} onClick={closeHelp}>
+      <div className={css.shadow} />
 
-    <div className={css.content}>
-      <img src="/images/help-screen.jpg" className={css.image} />
-      <span className={css.contact}>
-        <a href="mailto:info@mojipic.app">Contact ✉️</a>
-      </span>
-
+      <div className={css.content}>
+        <img src="/images/help-screen.jpg" className={css.image} />
+        <span className={css.contact}>
+          <a href="mailto:info@mojipic.app">Contact ✉️</a>
+        </span>
+      </div>
     </div>
-  </div>
+  )
 }
 
 const css = stylesheet({
@@ -30,7 +31,7 @@ const css = stylesheet({
     bottom: 0,
     left: 0,
     right: 0,
-    display: 'grid'
+    display: 'grid',
   },
   shadow: {
     position: 'absolute',
@@ -50,13 +51,13 @@ const css = stylesheet({
     margin: 'auto',
     zIndex: 1,
     boxShadow: `2px 2px ${colors.darkest}`,
-    borderRadius: px(4)
+    borderRadius: px(4),
   },
   image: {
     maxWidth: percent(100),
     maxHeight: viewHeight(80),
     objectFit: 'contain',
-    display: 'table-cell'
+    display: 'table-cell',
   },
   contact: {
     width: percent(100),
@@ -65,9 +66,9 @@ const css = stylesheet({
     justifyContent: 'center',
     padding: '0.5em 0',
     $nest: {
-      'a': {
+      a: {
         color: 'white',
-      }
-    }
-  }
+      },
+    },
+  },
 })

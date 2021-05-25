@@ -11,64 +11,44 @@ import { TileButton } from '../elements/TileButton'
 import EditableChar from './EditableChar'
 
 export function EditorControls({ className, style }: StylableElementProps) {
-  const {
-    toolbox,
-    activateTool,
-    pickBrush,
-    undo,
-    clear
-  } = useEditor()
+  const { toolbox, activateTool, pickBrush, undo, clear } = useEditor()
   const { copyToClipboard } = useCopyToClipboard()
 
-  return <div className={classes(css.commandButtons, className)} style={style}>
-    <TileButton
-      onClick={copyToClipboard}
-    >
-      <FontAwesomeIcon icon={faCopy} />
-    </TileButton>
+  return (
+    <div className={classes(css.commandButtons, className)} style={style}>
+      <TileButton onClick={copyToClipboard}>
+        <FontAwesomeIcon icon={faCopy} />
+      </TileButton>
 
-    <TileButton
-      onClick={() => undo()}
-    >
-      <FontAwesomeIcon icon={faUndo} />
-    </TileButton>
+      <TileButton onClick={() => undo()}>
+        <FontAwesomeIcon icon={faUndo} />
+      </TileButton>
 
-    <TileButton
-      onClick={clear}
-    >
-      <FontAwesomeIcon icon={faPlusSquare} />
-    </TileButton>
+      <TileButton onClick={clear}>
+        <FontAwesomeIcon icon={faPlusSquare} />
+      </TileButton>
 
-    <ControlDivider direction="horizontal" />
+      <ControlDivider direction="horizontal" />
 
-    <TileButton
-      active={toolbox.activeToolType === 'paintbrush'}
-      onClick={() => activateTool('paintbrush')}
-    >
-      {
-        toolbox.activeToolType === 'paintbrush'
-          ? <EditableChar
-            value={toolbox.brush}
-            onChange={char => pickBrush(char)}
-          />
-          : <span>{toolbox.brush}</span>
-      }
-    </TileButton>
+      <TileButton active={toolbox.activeToolType === 'paintbrush'} onClick={() => activateTool('paintbrush')}>
+        {toolbox.activeToolType === 'paintbrush' ? (
+          <EditableChar value={toolbox.brush} onChange={(char) => pickBrush(char)} />
+        ) : (
+          <span>{toolbox.brush}</span>
+        )}
+      </TileButton>
 
-    <TileButton
-      active={toolbox.activeToolType === 'eraser'}
-      onClick={() => activateTool('eraser')}
-    >
-      <FontAwesomeIcon icon={faEraser} />
-    </TileButton>
-
-  </div>
+      <TileButton active={toolbox.activeToolType === 'eraser'} onClick={() => activateTool('eraser')}>
+        <FontAwesomeIcon icon={faEraser} />
+      </TileButton>
+    </div>
+  )
 }
 
 const css = stylesheet({
   commandButtons: {
     display: 'grid',
     gridAutoRows: 'min-content',
-    gap: spaces.sm
+    gap: spaces.sm,
   },
 })

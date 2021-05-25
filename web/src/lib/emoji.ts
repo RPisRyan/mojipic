@@ -3,7 +3,7 @@ import type { Data } from 'emoji-mart'
 import type { Emoji } from 'emoji-mart/dist-es/utils/data'
 import { toEntries } from './objects'
 
-const data = (dataRaw as any) as Data
+const data = dataRaw as any as Data
 
 export function getEmojiData(maxVersion: string): Data {
   return {
@@ -25,7 +25,7 @@ function filterEmojis(emojis: { [key: string]: Emoji }, maxVersion: string): { [
 }
 
 function availableInVersion(emoji: Emoji, maxVersion: string) {
-  return emoji.added_in == null || compareVersions((emoji.added_in as any) as string, maxVersion) <= 0
+  return emoji.added_in == null || compareVersions(emoji.added_in as any as string, maxVersion) <= 0
 }
 
 function compareVersions(a: string, b: string) {

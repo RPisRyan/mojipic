@@ -6,19 +6,11 @@ export type Props = Pick<ComponentProps<typeof Tippy>, 'children'> & {
   message: string
 }
 
-export function HelpTooltip({
-  message,
-  children
-}: Props) {
+export function HelpTooltip({ message, children }: Props) {
   const { help } = useHelp()
-  return <Tippy
-    content={
-      <span>message</span>
-    }
-    visible={
-      help.showHelp
-    }
-  >
-    {children}
-  </Tippy>
+  return (
+    <Tippy content={<span>message</span>} visible={help.showHelp}>
+      {children}
+    </Tippy>
+  )
 }

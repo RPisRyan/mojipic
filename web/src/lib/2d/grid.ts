@@ -8,7 +8,7 @@ import type { GridPosition } from './gridPosition'
 export class Grid<T> {
   static empty = new Grid([])
 
-  protected constructor(public readonly elements: ReadonlyArray<GridElement<T>>) { }
+  protected constructor(public readonly elements: ReadonlyArray<GridElement<T>>) {}
 
   // Might be able to constrain the constructor type of subtype (this)
   //  to avoid the need for `withElements`
@@ -17,8 +17,7 @@ export class Grid<T> {
   }
 
   get bounds(): GridBounds {
-    return this.elements
-      .reduce((extent, [position]) => extent.including(position), GridBounds.Null)
+    return this.elements.reduce((extent, [position]) => extent.including(position), GridBounds.Null)
   }
 
   get(key: GridPosition) {
@@ -32,13 +31,10 @@ export class Grid<T> {
   }
 
   delete(position: GridPosition) {
-    return this.withElements(
-      this.elements.filter(([elementPos]) => !elementPos.equals(position))
-    )
+    return this.withElements(this.elements.filter(([elementPos]) => !elementPos.equals(position)))
   }
 
   forEach(callback: (element: GridElement<T>) => void) {
     this.elements.forEach(callback)
   }
-
 }

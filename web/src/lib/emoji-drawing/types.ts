@@ -1,7 +1,7 @@
 import type { Size } from '../2d'
 
 export type DrawingSettings = {
-  minSize: Size,
+  minSize: Size
   maxSize: Size
 }
 

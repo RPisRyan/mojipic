@@ -13,31 +13,24 @@ import { GridElement } from '../2d/gridElement'
 export type Tile = [GridPosition, Glyph]
 
 export class Drawing extends Grid<Glyph> {
-
   constructor(elements: ReadonlyArray<Tile>) {
     super(elements)
   }
 
   static fromString(serialized: string): Drawing {
-    const rows = serialized.split('\n')
-      .map(rowChars => {
-        const rowGlyphs = replaceAll(rowChars, Glyph.space!, ' ')
-        return Glyph.splitter.splitGraphemes(rowGlyphs)
-          .map(glyph =>
-            Glyph.isEmpty(glyph)
-              ? Glyph.none
-              : glyph
-          )
-      })
+    const rows = serialized.split('\n').map((rowChars) => {
+      const rowGlyphs = replaceAll(rowChars, Glyph.space!, ' ')
+      return Glyph.splitter.splitGraphemes(rowGlyphs).map((glyph) => (Glyph.isEmpty(glyph) ? Glyph.none : glyph))
+    })
     return this.fromArray(rows)
   }
 
   static fromArray(array: Array<Array<Glyph>>): Drawing {
-    return new Drawing(array.flatMap((rowEntries: Array<Glyph>, row) =>
-      rowEntries.map(
-        (glyph: Glyph, column) => tuple(new GridPosition(column, row), glyph)
-      )
-    ))
+    return new Drawing(
+      array.flatMap((rowEntries: Array<Glyph>, row) =>
+        rowEntries.map((glyph: Glyph, column) => tuple(new GridPosition(column, row), glyph)),
+      ),
+    )
   }
 
   static createEmpty(bounds: GridBounds) {
@@ -45,30 +38,25 @@ export class Drawing extends Grid<Glyph> {
       return new Drawing([])
     }
     const positions = [...bounds.positions()]
-    return new Drawing(
-      positions.map(position => [position, Glyph.none])
-    )
+    return new Drawing(positions.map((position) => [position, Glyph.none]))
   }
 
   get contentBounds() {
-    return this.elements.filter(([, glyph]) => !Glyph.isEmpty(glyph))
+    return this.elements
+      .filter(([, glyph]) => !Glyph.isEmpty(glyph))
       .reduce((extent, [position]) => extent.including(position), GridBounds.Null)
   }
 
   get isEmpty() {
-    return !this.elements
-      || this.elements.length === 0
-      || !this.elements.some(([, glyph]) => !Glyph.isEmpty(glyph))
+    return !this.elements || this.elements.length === 0 || !this.elements.some(([, glyph]) => !Glyph.isEmpty(glyph))
   }
 
   rowIsEmpty(row: number) {
-    return !this.elements.some(
-      ([position, glyph]) => position.row === row && Glyph.isEmpty(glyph))
+    return !this.elements.some(([position, glyph]) => position.row === row && Glyph.isEmpty(glyph))
   }
 
   columnIsEmpty(column: number) {
-    return !this.elements.some(
-      ([position, glyph]) => position.column === column && Glyph.isEmpty(glyph))
+    return !this.elements.some(([position, glyph]) => position.column === column && Glyph.isEmpty(glyph))
   }
 
   croppedToContent(minSize: Size) {
@@ -113,9 +101,7 @@ export class Drawing extends Grid<Glyph> {
   }
 
   croppedTo(bounds: GridBounds) {
-    return this.withElements(this.elements.filter(
-      ([position]) => bounds.contains(position)
-    ))
+    return this.withElements(this.elements.filter(([position]) => bounds.contains(position)))
   }
 
   paddedTo(minSize: Size) {
@@ -143,10 +129,7 @@ export class Drawing extends Grid<Glyph> {
     let bounds = this.bounds
 
     if (bounds.isNull) {
-      return new GridBounds(
-        new GridPosition(0, 0),
-        new GridPosition(minSize.width - 1, minSize.height - 1)
-      )
+      return new GridBounds(new GridPosition(0, 0), new GridPosition(minSize.width - 1, minSize.height - 1))
     }
 
     // expand right before left
@@ -199,15 +182,11 @@ export class Drawing extends Grid<Glyph> {
   toString(useWhiteSquares: boolean = false) {
     const array = this.toArray()
     const emptyChar = useWhiteSquares ? Glyph.whiteSquare : Glyph.space
-    return array.map(row => row.map(it =>
-      Glyph.isEmpty(it) ? emptyChar : toFullWidth(it))
-      .join('')).join('\n')
+    return array.map((row) => row.map((it) => (Glyph.isEmpty(it) ? emptyChar : toFullWidth(it))).join('')).join('\n')
   }
 
   uniqueGlyphs() {
-    const allChars = this.elements.map(GridElement.pickValue)
-      .filter(it => !Glyph.isEmpty(it))
+    const allChars = this.elements.map(GridElement.pickValue).filter((it) => !Glyph.isEmpty(it))
     return Array.from(new Set(allChars))
   }
-
 }

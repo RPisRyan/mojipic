@@ -5,7 +5,7 @@ const css = stylesheet({
   overlay: {
     position: 'relative',
     width: '100%',
-    height: '100%'
+    height: '100%',
   },
   child: {
     position: 'absolute',
@@ -14,23 +14,21 @@ const css = stylesheet({
     margin: 0,
     border: 'none',
     width: '100%',
-    height: '100%'
-  }
+    height: '100%',
+  },
 })
 
 type Props = PropsWithChildren<{}>
 
 export default function OverlayFill(props: Props) {
-  return <div className={css.overlay}>
-    {
-      Children.map(props.children as ReactElement[], (child: ReactElement) =>
-        cloneElement(child,
-          {
-            className: classes(child.props.className, css.child),
-            ...child.props
-          }
-        )
-      )
-    }
-  </div>
+  return (
+    <div className={css.overlay}>
+      {Children.map(props.children as ReactElement[], (child: ReactElement) =>
+        cloneElement(child, {
+          className: classes(child.props.className, css.child),
+          ...child.props,
+        }),
+      )}
+    </div>
+  )
 }

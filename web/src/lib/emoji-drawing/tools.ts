@@ -6,7 +6,7 @@ import type { DrawingSettings } from './types'
 export type ToolType = 'eraser' | 'paintbrush'
 
 export type Tool<T extends ToolType> = {
-  readonly type: T,
+  readonly type: T
   apply(drawing: Drawing, position: GridPosition, settings: DrawingSettings): Drawing
 }
 
@@ -22,7 +22,7 @@ export class Eraser implements Tool<'eraser'> {
 export class Paintbrush implements Tool<'paintbrush'> {
   public readonly type = 'paintbrush'
 
-  constructor(public readonly brush: Glyph) { }
+  constructor(public readonly brush: Glyph) {}
 
   apply(drawing: Drawing, position: GridPosition): Drawing {
     return drawing.set([position, this.brush])

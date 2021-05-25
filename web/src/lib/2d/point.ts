@@ -4,7 +4,7 @@ import { UTIL_INSPECT_CUSTOM } from '../core'
 import { replaceAll } from '../strings'
 
 export class Point implements ValueObject {
-  constructor(readonly x: number, readonly y: number) { }
+  constructor(readonly x: number, readonly y: number) {}
 
   static fromString(serialized: string) {
     if (!serialized) {
@@ -35,8 +35,7 @@ export class Point implements ValueObject {
   }
 
   equals(other: any) {
-    return other === this ||
-      (other.x === this.x && other.y === this.y)
+    return other === this || (other.x === this.x && other.y === this.y)
   }
 
   hashCode() {

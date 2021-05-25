@@ -12,12 +12,12 @@ const buttonBase: NestedCSSProperties = {
   cursor: 'pointer',
   $nest: {
     '&:focus': {
-      outline: 0
+      outline: 0,
     },
     '&:hover': {
       filter: 'brightness(95%)',
-    }
-  }
+    },
+  },
 }
 
 export const GlyphOption = styled('button', {
@@ -25,5 +25,5 @@ export const GlyphOption = styled('button', {
   ...centerChild,
   fontSize: percent(150),
   width: sizes.characterButton,
-  height: sizes.characterButton
+  height: sizes.characterButton,
 })

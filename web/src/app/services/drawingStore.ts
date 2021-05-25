@@ -8,20 +8,16 @@ export function DrawingStore(initial: Drawing) {
   const store = Store(initial)
 
   const methods = {
-
     loadDrawing(literal: string) {
       const drawing = Drawing.fromString(literal)
       if (!drawing.isEmpty) {
-        store.setState(
-          drawing.paddedTo(drawingSettings.minSize)
-        )
+        store.setState(drawing.paddedTo(drawingSettings.minSize))
       }
-    }
-
+    },
   }
 
   return {
     ...store,
-    ...methods
+    ...methods,
   }
 }

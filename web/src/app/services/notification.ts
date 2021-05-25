@@ -3,5 +3,5 @@ import 'notyf/notyf.min.css'
 
 export const notify = new Notyf({
   duration: 1200,
-  position: { x: 'center', y: 'bottom' }
+  position: { x: 'center', y: 'bottom' },
 })

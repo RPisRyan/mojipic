@@ -11,17 +11,11 @@ export class Size {
   }
 
   plus({ width, height }: Size) {
-    return new Size(
-      this.width + width,
-      this.height + height
-    )
+    return new Size(this.width + width, this.height + height)
   }
 
   minus({ width, height }: Size) {
-    return new Size(
-      this.width - width,
-      this.height - height
-    )
+    return new Size(this.width - width, this.height - height)
   }
 
   adjustHeight(height: number) {
@@ -33,8 +27,7 @@ export class Size {
   }
 
   equals(other: any) {
-    return other === this ||
-      (other.width === this.width && other.height === this.height)
+    return other === this || (other.width === this.width && other.height === this.height)
   }
 
   hashCode() {

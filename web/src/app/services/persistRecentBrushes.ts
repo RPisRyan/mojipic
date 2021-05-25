@@ -11,27 +11,24 @@ export function persistRecentBrushes(toolboxStore: Store<Toolbox>) {
     if (persisted) {
       const glyphs = Glyph.splitter.splitGraphemes(persisted)
       if (glyphs.length > 0) {
-        let newState = toolboxStore.getState()
-          .withRecent(glyphs)
+        let newState = toolboxStore.getState().withRecent(glyphs)
         if (!Glyph.isEmpty(glyphs[0])) {
           newState = newState.withBrush(glyphs[0])
         }
         toolboxStore.setState(newState)
       }
     }
-  }
-  catch (ex) {
+  } catch (ex) {
     log.warn('Failed to load drawing from local storage', ex)
   }
 
-  return toolboxStore.subscribe(toolbox => {
+  return toolboxStore.subscribe((toolbox) => {
     try {
       const glyphs = toolbox.recent.slice(0, maxRecent)
       glyphs.reverse()
       localStorage.setItem(localStorageKey, glyphs.join(' '))
-    }
-    catch (ex) {
-      log.warn("Failed to save to local storage", ex)
+    } catch (ex) {
+      log.warn('Failed to save to local storage', ex)
     }
   })
 }

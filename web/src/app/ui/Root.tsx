@@ -21,35 +21,35 @@ cssRaw(`
 `)
 
 cssRule('body', {
-  '-webkit-tap-highlight-color': 'transparent'
+  '-webkit-tap-highlight-color': 'transparent',
 })
 
 mountTheme()
 
 export function Root() {
-  return <React.StrictMode>
-    <ErrorBoundary
-      FallbackComponent={ErrorFallback}
-      onError={logError}
-      onReset={() => location.reload()}
-    >
-      <EditorScreen />
-    </ErrorBoundary>
-  </React.StrictMode>
+  return (
+    <React.StrictMode>
+      <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError} onReset={() => location.reload()}>
+        <EditorScreen />
+      </ErrorBoundary>
+    </React.StrictMode>
+  )
 }
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
-  return <article role="alert">
-    <p>Something went wrong:</p>
-    <pre>{error?.message}</pre>
-    <button onClick={resetErrorBoundary}>Try again</button>
-  </article>
+  return (
+    <article role="alert">
+      <p>Something went wrong:</p>
+      <pre>{error?.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </article>
+  )
 }
 
 function logError(error: Error, info: { componentStack: string }) {
   log.error(error, info)
   analytics.logEvent('exception', {
     description: `${error.toString()} \n components: ${info.componentStack}`,
-    fatal: true
+    fatal: true,
   })
 }

@@ -1,6 +1,6 @@
 import { em } from 'csx'
 import React from 'react'
-import { classes, stylesheet } from "typestyle"
+import { classes, stylesheet } from 'typestyle'
 import { colors, sizes } from '../../services/theme'
 
 type Props = {
@@ -22,6 +22,6 @@ const css = stylesheet({
     width: em(1.75),
   },
   vertical: {
-    height: em(1.75)
-  }
+    height: em(1.75),
+  },
 })

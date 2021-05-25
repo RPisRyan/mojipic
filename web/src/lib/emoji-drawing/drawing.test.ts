@@ -5,7 +5,6 @@ import { Glyph } from './glyph'
 import { Map } from 'immutable'
 
 describe('drawing', () => {
-
   it('can convert from array', () => {
     const array = [
       [_, A, _],
@@ -40,19 +39,23 @@ describe('drawing', () => {
       ['🏈', _, _],
     ])
 
-    expect(drawing.toString(true)).toEqual(`
+    expect(drawing.toString(true)).toEqual(
+      `
 ◻️😄◻️
 ◻️◻️👌
 🏈◻️◻️
-    `.trim())
+    `.trim(),
+    )
   })
 
   it('can deserialize', () => {
-    const drawing = Drawing.fromString(`
+    const drawing = Drawing.fromString(
+      `
 ◻️😄◻️
 ◻️◻️👌
 🏈◻️◻️
-    `.trim())
+    `.trim(),
+    )
 
     expect(drawing.elements).toContainEqual([new GridPosition(1, 0), '😄'])
     expect(drawing.elements).toContainEqual([new GridPosition(2, 1), '👌'])
@@ -70,14 +73,13 @@ describe('drawing', () => {
       [_, _],
     ]
     expect(cropped.bounds.size).toEqual(new Size(2, 2))
-    expect(cropped.elements)
-      .toEqual(Drawing.fromArray(expected).elements)
+    expect(cropped.elements).toEqual(Drawing.fromArray(expected).elements)
   })
 
   it('can pad to size', () => {
     const drawing = Drawing.fromArray([
-      [_, A,],
-      [_, _,],
+      [_, A],
+      [_, _],
     ])
     const padded = drawing.paddedTo(new Size(3, 4))
     const expected = [
@@ -88,10 +90,12 @@ describe('drawing', () => {
     ]
     expect(padded.bounds.size).toEqual(new Size(3, 4))
     expect(padded.elements.length).toEqual(12)
-    expect(padded.toArray())
-      .toEqual(expected)
+    expect(padded.toArray()).toEqual(expected)
   })
-
 })
 
-const A = 'A', B = 'B', C = 'C', D = 'D', _ = Glyph.none
+const A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  _ = Glyph.none

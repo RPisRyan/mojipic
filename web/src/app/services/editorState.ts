@@ -11,7 +11,7 @@ import { DrawingStore } from './drawingStore'
 
 export const drawingSettings: DrawingSettings = {
   minSize: new Size(3, 3),
-  maxSize: new Size(16, 12)
+  maxSize: new Size(16, 12),
 }
 const undoStackLimit = 20
 
@@ -39,28 +39,27 @@ export function useEditor() {
   }, [drawing])
 
   function setDrawingUndoable(newDrawing: Drawing) {
-    setHistory(it => it.pushed(drawing))
+    setHistory((it) => it.pushed(drawing))
     setDrawing(newDrawing)
   }
 
   const commands = {
     activateTool(tool: ToolType) {
       if (tool !== toolbox.activeToolType) {
-        setToolbox(it => it.withActiveTool(tool))
+        setToolbox((it) => it.withActiveTool(tool))
       }
     },
 
     pickBrush(brush: Glyph) {
-      setToolbox(it => it.withActiveTool('paintbrush').withBrush(brush))
+      setToolbox((it) => it.withActiveTool('paintbrush').withBrush(brush))
       analytics.logEvent('select_content', {
         content_type: 'emoji',
-        item_id: brush || ''
+        item_id: brush || '',
       })
     },
 
     applyTool(position: GridPosition) {
-      setDrawingUndoable(
-        toolbox.activeTool.apply(drawing, position, drawingSettings))
+      setDrawingUndoable(toolbox.activeTool.apply(drawing, position, drawingSettings))
     },
 
     loadDrawing(drawing: Drawing) {
@@ -77,18 +76,17 @@ export function useEditor() {
     },
 
     clear() {
-      setDrawingUndoable(
-        Drawing.createEmpty(GridBounds.fromSize(drawingSettings.minSize)))
+      setDrawingUndoable(Drawing.createEmpty(GridBounds.fromSize(drawingSettings.minSize)))
       analytics.logEvent('select_content', {
         content_type: 'drawing',
-        item_id: 'NEW'
+        item_id: 'NEW',
       })
-    }
+    },
   }
 
   return {
     drawing,
     toolbox,
-    ...commands
+    ...commands,
   }
 }

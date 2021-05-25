@@ -13,13 +13,12 @@ const spaceChars = {
 // Not sure about this one
 // const blankGlyph_2008_2003 = spaceChars.U2008 + spaceChars.U2003
 
-// Works pretty well, but causes some devices to 
+// Works pretty well, but causes some devices to
 //  avoid large emoji. This is probably because the
 //  chars are text.
 const blankGlyph_U2009_U2003 = spaceChars.U2009 + spaceChars.U2003
 
 export const Glyph = {
-
   /**
    * Representation of empty Glyph in logic.
    */
@@ -58,9 +57,6 @@ export const Glyph = {
    * Is it equal to any of the empty glyph representations?
    */
   isEmpty(glyph: Glyph) {
-    return glyph == null
-      || glyph === ' '
-      || glyph === Glyph.space
-      || glyph === Glyph.whiteSquare
-  }
+    return glyph == null || glyph === ' ' || glyph === Glyph.space || glyph === Glyph.whiteSquare
+  },
 }

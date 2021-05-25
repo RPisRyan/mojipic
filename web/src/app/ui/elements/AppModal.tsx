@@ -6,14 +6,11 @@ import { styled } from '../../../lib/typestyle-ext/styled'
 import { centerChild, fullScreenFixedStyle } from '../../../lib/typestyle-ext/layouts'
 
 export function AppModal({ children, ...rest }: ComponentProps<typeof Modal>) {
-  return <Modal
-    className={css.appModal}
-    keyboard={true}
-    renderBackdrop={Backdrop}
-    {...rest}
-  >
-    {children}
-  </Modal>
+  return (
+    <Modal className={css.appModal} keyboard={true} renderBackdrop={Backdrop} {...rest}>
+      {children}
+    </Modal>
+  )
 }
 
 const bootstrapOverlayZIndex = 1040
@@ -33,8 +30,8 @@ const css = stylesheet({
     ...centerChild,
     $nest: {
       '> *': {
-        pointerEvents: 'all'
-      }
-    }
-  }
+        pointerEvents: 'all',
+      },
+    },
+  },
 })

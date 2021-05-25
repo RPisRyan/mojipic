@@ -4,15 +4,12 @@ import { makeNamedDispatch, TypeDiscriminated } from './namedDispatch'
 import type { Store } from './Store'
 import type { Reactive, Subscriber } from './types'
 
-export type DispatchingStore<S, A> = Store<S>
-  & Reactive<S>
-  & {
+export type DispatchingStore<S, A> = Store<S> &
+  Reactive<S> & {
     dispatch(...actions: A[]): void
   }
 
-export function DispatchingStore<S, A>(
-  initial: S,
-  reduce: Reducer<S, A>) {
+export function DispatchingStore<S, A>(initial: S, reduce: Reducer<S, A>) {
   let current = initial
   const subscribers = new Set<Subscriber<S>>()
 
@@ -49,25 +46,23 @@ export function DispatchingStore<S, A>(
     },
     setState(value: S) {
       writeState(value)
-    }
+    },
   }
 }
 
-export function addNamedDispatch<S, A extends TypeDiscriminated>(
-  store: DispatchingStore<S, A>
-) {
+export function addNamedDispatch<S, A extends TypeDiscriminated>(store: DispatchingStore<S, A>) {
   return {
     ...store,
-    dispatchAction: makeNamedDispatch(store.dispatch)
+    dispatchAction: makeNamedDispatch(store.dispatch),
   }
 }
 
 export function storeWithView<S, A, V extends S>(
   store: DispatchingStore<S, A>,
-  createView: Convert<S, V>
+  createView: Convert<S, V>,
 ): DispatchingStore<V, A> {
   function subscribe(subscriber: Subscriber<V>) {
-    return store.subscribe(s => subscriber(createView(s)))
+    return store.subscribe((s) => subscriber(createView(s)))
   }
 
   return {
@@ -77,6 +72,6 @@ export function storeWithView<S, A, V extends S>(
     getState() {
       return createView(store.getState())
     },
-    setState: store.setState as any //// todo: fix
+    setState: store.setState as any, //// todo: fix
   }
 }

@@ -10,10 +10,9 @@ import log from 'loglevel'
 import { initializeExceptionHandling as initExceptionHandling } from './services/exceptionHandling'
 import { initConsoleServices } from './services/globalServices'
 
-(window as any).log = log
+;(window as any).log = log
 
 async function start() {
-
   await initFirebase()
 
   initExceptionHandling()
@@ -21,17 +20,13 @@ async function start() {
   initConsoleServices()
 
   const rootElement = document.getElementById('root')
-  render(
-    createElement(Root),
-    rootElement
-  )
+  render(createElement(Root), rootElement)
 
   // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
   // Learn more: https://www.snowpack.dev/#hot-module-replacement
   if (import.meta.hot) {
     import.meta.hot.accept()
   }
-
 }
 
 start()

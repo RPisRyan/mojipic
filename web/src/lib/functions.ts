@@ -1,4 +1,3 @@
-
 export type VoidFunction = () => void
 
 export type NullaryFunction<R> = () => R

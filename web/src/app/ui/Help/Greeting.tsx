@@ -15,13 +15,18 @@ export function Greeting() {
     disabled: !help.showGreeting,
   })
 
-  return <>{help.showGreeting &&
-    <div ref={ref} className={css.getStarted}>
-      Welcome! Tap the grid to place emoji.
-      <br />
-      Copy to clipboard&nbsp;<FontAwesomeIcon icon={faCopy} /> for sharing.
-    </div>
-  }</>
+  return (
+    <>
+      {help.showGreeting && (
+        <div ref={ref} className={css.getStarted}>
+          Welcome! Tap the grid to place emoji.
+          <br />
+          Copy to clipboard&nbsp;
+          <FontAwesomeIcon icon={faCopy} /> for sharing.
+        </div>
+      )}
+    </>
+  )
 }
 
 const css = stylesheet({
@@ -36,6 +41,6 @@ const css = stylesheet({
     cursor: 'pointer',
     userSelect: 'none',
     border: `4px solid ${palette.chill.hex()}`,
-    background: palette.chill.luminance(0.8).hex()
-  }
+    background: palette.chill.luminance(0.8).hex(),
+  },
 })

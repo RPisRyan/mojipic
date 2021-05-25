@@ -20,7 +20,7 @@ export function useHelp() {
   function logView() {
     analytics.logEvent('screen_view', {
       app_name: 'mojipic',
-      screen_name: 'help'
+      screen_name: 'help',
     })
   }
 
@@ -42,11 +42,11 @@ export function useHelp() {
       if (showHelp) {
         logView()
       }
-    }
+    },
   }
 
   return {
     help,
-    ...commands
+    ...commands,
   }
 }

@@ -6,8 +6,8 @@ import type { NestedCSSProperties } from 'typestyle/lib/types'
  *  - assigns gridArea from key name
  */
 export function makeCss<Classes extends Record<string, NestedCSSProperties>>(
-  classes: Classes)
-  : { [ClassName in keyof Classes]: string } {
+  classes: Classes,
+): { [ClassName in keyof Classes]: string } {
   for (const key in classes) {
     const rule = classes[key]
     if (!rule.gridArea) {

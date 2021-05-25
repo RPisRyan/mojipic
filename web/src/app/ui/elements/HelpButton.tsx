@@ -6,8 +6,10 @@ import { EditorHelp } from '../Editor/EditorHelp'
 
 export function HelpButton() {
   const { toggleHelp } = useHelp()
-  return <>
-    <FontAwesomeIcon icon={faQuestionCircle} onClick={toggleHelp} />
-    <EditorHelp />
-  </>
+  return (
+    <>
+      <FontAwesomeIcon icon={faQuestionCircle} onClick={toggleHelp} />
+      <EditorHelp />
+    </>
+  )
 }

@@ -11,15 +11,11 @@ export function useReactive<S>(source: Reactive<S>, initial: S) {
   return tuple(state, source)
 }
 
-export function useReducerStore<S, A>(
-  { getState, subscribe, dispatch }: DispatchingStore<S, A>) {
+export function useReducerStore<S, A>({ getState, subscribe, dispatch }: DispatchingStore<S, A>) {
   const initial = getState()
   const [state, setState] = useState<S>(initial)
   useEffect(() => subscribe(setState), [subscribe])
-  return tuple(
-    state,
-    dispatch
-  )
+  return tuple(state, dispatch)
 }
 
 export function useStore<S>(store: Store<S>) {
@@ -27,20 +23,16 @@ export function useStore<S>(store: Store<S>) {
   const initial = getState()
   const [state, setLocalState] = useState<S>(initial)
   useEffect(() => subscribe(setLocalState), [subscribe])
-  return tuple(
-    state,
-    setState,
-    store
-  )
+  return tuple(state, setState, store)
 }
 
-export function useStoreWithNamedDispatch<S, A extends TypeDiscriminated>(
-  { getState, subscribe, dispatchAction }: StoreWithNamedDispatch<S, A>) {
+export function useStoreWithNamedDispatch<S, A extends TypeDiscriminated>({
+  getState,
+  subscribe,
+  dispatchAction,
+}: StoreWithNamedDispatch<S, A>) {
   const initial = getState()
   const [state, setState] = useState<S>(initial)
   useEffect(() => subscribe(setState), [subscribe])
-  return tuple(
-    state,
-    dispatchAction
-  )
+  return tuple(state, dispatchAction)
 }

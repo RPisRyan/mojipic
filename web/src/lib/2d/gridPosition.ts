@@ -5,12 +5,7 @@ import { replaceAll } from '../strings'
 import type { GridBounds } from './gridBounds'
 
 export class GridPosition implements ValueObject {
-
-  constructor(
-    public readonly column: number,
-    public readonly row: number
-  ) {
-  }
+  constructor(public readonly column: number, public readonly row: number) {}
 
   static fromString(serialized: string) {
     if (!serialized) {
@@ -31,19 +26,13 @@ export class GridPosition implements ValueObject {
   min(other: GridPosition) {
     if (other.isNull) return this
     if (this.isNull) return other
-    return new GridPosition(
-      Math.min(this.column, other.column),
-      Math.min(this.row, other.row)
-    )
+    return new GridPosition(Math.min(this.column, other.column), Math.min(this.row, other.row))
   }
 
   max(other: GridPosition) {
     if (other.isNull) return this
     if (this.isNull) return other
-    return new GridPosition(
-      Math.max(this.column, other.column),
-      Math.max(this.row, other.row)
-    )
+    return new GridPosition(Math.max(this.column, other.column), Math.max(this.row, other.row))
   }
 
   moveColumn(distance: number) {
@@ -63,8 +52,7 @@ export class GridPosition implements ValueObject {
   }
 
   equals(other: GridPosition) {
-    return other === this ||
-      (other.column === this.column && other.row === this.row)
+    return other === this || (other.column === this.column && other.row === this.row)
   }
 
   hashCode() {

@@ -5,21 +5,21 @@ import type { NestedCSSProperties } from 'typestyle/lib/types'
 
 export function mountTheme() {
   cssRule('html', {
-    fontSize: 'clamp(14px, 5vw, 30px)'
+    fontSize: 'clamp(14px, 5vw, 30px)',
   })
 }
 
 export const sizes = {
   clickableMin: 24,
   clickableMax: 96,
-  characterButton: em(1.25)
+  characterButton: em(1.25),
 }
 
 export const spaces = {
   xs: rem(0.25),
   sm: rem(0.5),
   md: rem(1),
-  lg: rem(2)
+  lg: rem(2),
 }
 
 const black = chroma([0, 0, 0])
@@ -31,7 +31,7 @@ const neutral = {
   medium: black.luminance(0.5),
   dark: black.luminance(0.2),
   darkest: black.luminance(0.05),
-  black: black.luminance(0.01)
+  black: black.luminance(0.01),
 }
 
 // https://www.color-hex.com/color-palette/700
@@ -41,11 +41,11 @@ export const palette = {
   chill: chroma([0, 174, 219]),
   energy: chroma([243, 119, 53]),
   warm: chroma([255, 196, 37]),
-  neutral: neutral
+  neutral: neutral,
 }
 
 export type ControlState = {
-  active: boolean,
+  active: boolean
   hover: boolean
 }
 
@@ -54,9 +54,7 @@ export const colors = {
     if (active) {
       return palette.energy.brighten(1).hex()
     }
-    return hover
-      ? neutral.light.hex()
-      : neutral.lightest.hex()
+    return hover ? neutral.light.hex() : neutral.lightest.hex()
   },
   getControlBorder({ active }: ControlState): string {
     if (active) {
@@ -71,27 +69,27 @@ export const colors = {
   medium: neutral.medium.hex(),
   dark: neutral.dark.hex(),
   darkest: neutral.darkest.hex(),
-  black: neutral.black.hex()
+  black: neutral.black.hex(),
 }
 
 export const styles: Record<string, NestedCSSProperties> = {
   centerContent: {
     display: 'flex',
     alignContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   groupBorder: {
     borderColor: colors.border,
     borderWidth: 1,
-    borderRadius: 3
+    borderRadius: 3,
   },
   control: {
     boxShadow: `0 0 2px ${neutral.medium}, 0 2px 2px ${neutral.medium}`,
-  }
+  },
 }
 
 export const fonts: Record<string, NestedCSSProperties> = {
   handWritten: {
-    fontFamily: `'Patrick Hand', cursive`
-  }
+    fontFamily: `'Patrick Hand', cursive`,
+  },
 }

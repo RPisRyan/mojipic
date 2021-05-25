@@ -4,15 +4,10 @@ import { Point } from './point'
 import { Size } from './size'
 
 export class Rect implements RectSides {
-
-  constructor(public position: Point, public size: Size) {
-  }
+  constructor(public position: Point, public size: Size) {}
 
   static fromSides({ left, top, right, bottom }: RectSides) {
-    return new Rect(
-      new Point(left, top),
-      new Size(Math.max(0, right - left), Math.max(0, bottom - top))
-    )
+    return new Rect(new Point(left, top), new Size(Math.max(0, right - left), Math.max(0, bottom - top)))
   }
 
   static zero = new Rect(Point.zero, Size.zero)
@@ -47,31 +42,19 @@ export class Rect implements RectSides {
   }
 
   withTopMoved(yOffset: number) {
-    return new Rect(
-      this.position.offsetY(yOffset),
-      this.size.adjustHeight(-yOffset)
-    )
+    return new Rect(this.position.offsetY(yOffset), this.size.adjustHeight(-yOffset))
   }
 
   withBottomMoved(yOffset: number) {
-    return new Rect(
-      this.position,
-      this.size.adjustHeight(yOffset)
-    )
+    return new Rect(this.position, this.size.adjustHeight(yOffset))
   }
 
   withLeftMoved(xOffset: number) {
-    return new Rect(
-      this.position.offsetX(xOffset),
-      this.size.adjustWidth(-xOffset)
-    )
+    return new Rect(this.position.offsetX(xOffset), this.size.adjustWidth(-xOffset))
   }
 
   withRightMoved(xOffset: number) {
-    return new Rect(
-      this.position,
-      this.size.adjustWidth(xOffset)
-    )
+    return new Rect(this.position, this.size.adjustWidth(xOffset))
   }
 
   enclosePoint(point: Point) {
@@ -87,7 +70,7 @@ export class Rect implements RectSides {
       left: Math.min(this.left, point.x),
       top: Math.min(this.top, point.y),
       right: Math.max(this.right, point.x),
-      bottom: Math.max(this.bottom, point.y)
+      bottom: Math.max(this.bottom, point.y),
     })
   }
 
@@ -104,14 +87,12 @@ export class Rect implements RectSides {
       left: Math.min(this.left, rect.left),
       top: Math.min(this.top, rect.top),
       right: Math.max(this.right, rect.right),
-      bottom: Math.max(this.bottom, rect.bottom)
+      bottom: Math.max(this.bottom, rect.bottom),
     })
   }
 
   equals(other: Rect) {
-    return other === this ||
-      (other.position.equals(this.position)
-        && other.size.equals(this.size))
+    return other === this || (other.position.equals(this.position) && other.size.equals(this.size))
   }
 
   hashCode() {

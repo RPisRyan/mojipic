@@ -9,7 +9,7 @@ export function onGlobalError(handler: OnErrorEventHandlerNonNull) {
     source?: string,
     lineno?: number,
     colno?: number,
-    error?: Error
+    error?: Error,
   ) => {
     if (handler) {
       handler(event, source, lineno, colno, error)
@@ -27,9 +27,13 @@ export function onGlobalError(handler: OnErrorEventHandlerNonNull) {
 /**
  * Summarize exception for logging
  */
-export function summarizeException(event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) {
+export function summarizeException(
+  event: Event | string,
+  source?: string,
+  lineno?: number,
+  colno?: number,
+  error?: Error,
+) {
   const description = error?.message || event.toString()
-  return source
-    ? description + ' @ ' + source + ':' + lineno + ':' + colno
-    : description
+  return source ? description + ' @ ' + source + ':' + lineno + ':' + colno : description
 }

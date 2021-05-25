@@ -13,42 +13,44 @@ export function EmojiPicker({ className, style }: StylableElementProps) {
 
   const recent = useMemo(() => {
     const recent = toolbox.recent
-      .map(glyph => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id)
-      .filter(it => it) as string[]
+      .map((glyph) => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id)
+      .filter((it) => it) as string[]
     return recent
   }, [toolbox.recent])
 
-  return <div className={classes(css.emojiPicker, className)} style={style}>
-    <NimblePicker
-      enableFrequentEmojiSort={true}
-      data={emojiData}
-      recent={(recent && recent.length > 0) ? recent : undefined}
-      title={''}
-      emojiSize={32}
-      emoji={''}
-      showPreview={false}
-      skinEmoji="hand"
-      style={{
-        width: percent(100),
-        height: percent(100)
-      }}
-      onSelect={(emoji: BaseEmoji) => pickBrush(emoji.native)}
-    />
-  </div>
+  return (
+    <div className={classes(css.emojiPicker, className)} style={style}>
+      <NimblePicker
+        enableFrequentEmojiSort={true}
+        data={emojiData}
+        recent={recent && recent.length > 0 ? recent : undefined}
+        title={''}
+        emojiSize={32}
+        emoji={''}
+        showPreview={false}
+        skinEmoji="hand"
+        style={{
+          width: percent(100),
+          height: percent(100),
+        }}
+        onSelect={(emoji: BaseEmoji) => pickBrush(emoji.native)}
+      />
+    </div>
+  )
 }
 
 const css = stylesheet({
   emojiPicker: {
     $nest: {
       '.emoji-mart-bar:first-of-type': {
-        display: 'none'
+        display: 'none',
       },
       '.emoji-mart-bar:last-of-type': {
-        height: em(3)
+        height: em(3),
       },
       '.emoji-mart-preview': {
-        height: em(3)
-      }
-    }
-  }
+        height: em(3),
+      },
+    },
+  },
 })

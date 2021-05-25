@@ -5,9 +5,7 @@ type CalculatorState = {
   value: number
 }
 
-type CalculatorAction =
-  { type: 'add', amount: number }
-  | { type: 'clear' }
+type CalculatorAction = { type: 'add'; amount: number } | { type: 'clear' }
 
 function calculatorReduce(state: CalculatorState, action: CalculatorAction) {
   switch (action.type) {

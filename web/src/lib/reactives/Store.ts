@@ -35,11 +35,10 @@ export function Store<S>(initial: S): Store<S> {
     },
     setState(setter: S | ((s: S) => S)) {
       if (typeof setter === 'function') {
-        writeState((setter as ((s: S) => S))(current))
+        writeState((setter as (s: S) => S)(current))
       } else {
         writeState(setter as S)
       }
-    }
+    },
   }
-
 }

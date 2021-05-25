@@ -1,4 +1,3 @@
-
 export function clamp([min, max]: [number, number], value: number) {
   return atLeast(min, atLeast(max, value))
 }
