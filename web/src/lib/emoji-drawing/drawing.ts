@@ -1,17 +1,22 @@
 import { Map } from 'immutable'
-import { GridPosition } from '../2d/gridPosition'
-import { Glyph, GlyphMatrix } from './glyph'
-import { Grid } from '../2d/grid'
 import type { Size } from '../2d'
+import { Grid } from '../2d/grid'
+import { GridBounds } from '../2d/gridBounds'
+import { GridElement } from '../2d/gridElement'
+import { GridPosition } from '../2d/gridPosition'
+import { toFullWidth } from '../chars'
 import { filledArray2D, tuple } from '../sequences'
 import { replaceAll } from '../strings'
-import { GridBounds } from '../2d/gridBounds'
-import { toFullWidth } from '../chars'
+import { Glyph, GlyphMatrix } from './glyph'
 import type { DrawingSettings } from './types'
-import { GridElement } from '../2d/gridElement'
 
 export type Tile = [GridPosition, Glyph]
 
+/**
+ * Grid which can contain characters/emoji.
+ * All operations are non-mutating, returning new data (principle: Closure of Operations).
+ * Plays nicely with React-style state updates.
+ */
 export class Drawing extends Grid<Glyph> {
   constructor(elements: ReadonlyArray<Tile>) {
     super(elements)
@@ -43,6 +48,9 @@ export class Drawing extends Grid<Glyph> {
     return new Drawing(positions.map((position) => [position, Glyph.none]))
   }
 
+  /**
+   * The smallest bounds of the non-empty cells.
+   */
   get contentBounds() {
     return this.elements
       .filter(([, glyph]) => !Glyph.isEmpty(glyph))
@@ -67,6 +75,9 @@ export class Drawing extends Grid<Glyph> {
     )
   }
 
+  /**
+   * Returns a drawing with empty cells cropped.
+   */
   croppedToContent(minSize: Size) {
     let bounds = this.bounds
     const contentBounds = this.contentBounds
@@ -112,6 +123,9 @@ export class Drawing extends Grid<Glyph> {
     return this.withElements(this.elements.filter(([position]) => bounds.contains(position)))
   }
 
+  /**
+   * Returns drawing padded to reach miminum size.
+   */
   paddedTo(minSize: Size) {
     const bounds = this.bounds.sizedAtLeast(minSize)
     if (bounds.equals(this.bounds)) {
@@ -133,6 +147,9 @@ export class Drawing extends Grid<Glyph> {
     return Map(this.elements)
   }
 
+  /**
+   * Returns bounds that have been padded to reach given minimum bounds size.
+   */
   paddedBounds({ minSize, maxSize }: DrawingSettings) {
     let bounds = this.bounds
 

@@ -4,6 +4,10 @@ import { makeNamedDispatch, TypeDiscriminated } from './namedDispatch'
 import type { Store } from './Store'
 import type { Reactive, Subscriber } from './types'
 
+/**
+ * A Store which accepts typed actions for state mutations.
+ * The provided reducer is used to dispatch an action.
+ */
 export type DispatchingStore<S, A> = Store<S> &
   Reactive<S> & {
     dispatch(...actions: A[]): void

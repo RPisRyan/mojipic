@@ -4,6 +4,14 @@ import type { DispatchingStore } from './DispatchingStore'
 /**
  * Creates dispatch function with separate type and payload:
  *   `dispatch(actionType, actionPayload)`
+ * This provides a more convenient syntax for invoking actions.
+ * Intellisense can more easily provide the name of the action types:
+ * ```
+ * // before
+ * dispatch({ type: 'add', amount: 1 })
+ * // after
+ * dispatchNamed('add', { amount: 1 })
+ * ```
  * @param dispatch - Conventional dispatch for action object
  */
 export function makeNamedDispatch<A extends TypeDiscriminated>(

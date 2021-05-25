@@ -6,6 +6,9 @@ export type Store<S> = Reactive<S> & {
   setState(setter: S | ((s: S) => S)): void
 }
 
+/**
+ * A state store which accepts subscribers for state updates.
+ */
 export function Store<S>(initial: S): Store<S> {
   let current = initial
   const subscribers = new Set<Subscriber<S>>()

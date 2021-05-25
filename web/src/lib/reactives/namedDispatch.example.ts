@@ -19,5 +19,8 @@ function calculatorReduce(state: CalculatorState, action: CalculatorAction) {
 function useDiscriminatedCalc() {
   const [state, dispatch] = useReducer(calculatorReduce, { value: 0 })
   const dispatchNamed = makeNamedDispatch(dispatch)
+  // This syntax is whole point of `makeNamedDispatch()`.
+  // A bit more convenient than using `type` prop on the action payload,
+  //  as the available action types are provided by intellisence immediately.
   dispatchNamed('add', { amount: 1 })
 }
