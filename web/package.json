@@ -39,7 +39,6 @@
     "react-overlays": "^4.1.1",
     "react-use-gesture": "^7.0.16",
     "react-use-measure": "^2.0.1",
-    "roughjs": "^4.3.1",
     "typestyle": "^2.1.0"
   },
   "devDependencies": {
