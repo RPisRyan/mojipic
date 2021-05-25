@@ -16,18 +16,21 @@ An app for making emoji pics.
 ## Setup
 
 ```
+cd web
 yarn
 ```
 
 ## Run
 
 ```
+# ./web
 yarn start
 ```
 
 ## Test
 
 ```
+# ./web
 yarn test
 ```
 
