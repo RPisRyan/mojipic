@@ -1,14 +1,10 @@
-/***
- * Copyright © 2020 Form * Function Digital. All Rights Reserved.
- */
-
+import log from 'loglevel'
 import { createElement } from 'react'
 import { render } from 'react-dom'
-import { initializeFirebase as initFirebase } from './services/firebase'
-import { Root } from './ui/Root'
-import log from 'loglevel'
 import { initializeExceptionHandling as initExceptionHandling } from './services/exceptionHandling'
+import { initializeFirebase as initFirebase } from './services/firebase'
 import { initConsoleServices } from './services/globalServices'
+import { Root } from './ui/Root'
 ;(window as any).log = log
 
 async function start() {

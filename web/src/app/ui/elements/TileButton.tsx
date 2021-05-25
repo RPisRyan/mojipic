@@ -1,6 +1,4 @@
-import React, {
-  HTMLAttributes,
-} from 'react'
+import React, { HTMLAttributes } from 'react'
 import { stylesheet, classes } from 'typestyle'
 import { em } from 'csx'
 import { styles, colors, sizes } from '../../services/theme'

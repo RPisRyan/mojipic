@@ -1,5 +1,5 @@
 import log from 'loglevel'
-import { Drawing, Glyph, Toolbox } from '../../lib/emoji-drawing'
+import { Glyph, Toolbox } from '../../lib/emoji-drawing'
 import type { Store } from '../../lib/reactives'
 
 const localStorageKey = 'recentBrushes'

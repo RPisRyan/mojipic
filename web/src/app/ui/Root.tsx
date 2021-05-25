@@ -1,15 +1,11 @@
-/***
- * Copyright © 2020 Form * Function Digital. All Rights Reserved.
- */
-
-import React from 'react'
 import csstips from 'csstips'
-import { cssRaw, cssRule } from 'typestyle'
-import EditorScreen from './Editor/EditorScreen'
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
-import { mountTheme } from '../services/theme'
 import log from 'loglevel'
+import React from 'react'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+import { cssRaw, cssRule } from 'typestyle'
 import { analytics } from '../services/firebase'
+import { mountTheme } from '../services/theme'
+import EditorScreen from './Editor/EditorScreen'
 
 csstips.normalize()
 csstips.setupPage('#root')
