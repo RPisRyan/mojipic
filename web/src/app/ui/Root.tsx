@@ -3,8 +3,7 @@ import log from 'loglevel'
 import React from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { cssRaw, cssRule } from 'typestyle'
-import { analytics } from '../services/firebase'
-import { mountTheme } from '../services/theme'
+import { analytics, mountTheme } from '../services'
 import EditorScreen from './Editor/EditorScreen'
 
 csstips.normalize()

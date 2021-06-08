@@ -1,7 +1,7 @@
 import { em } from 'csx'
 import React from 'react'
 import { classes, stylesheet } from 'typestyle'
-import { colors, sizes } from '../../services/theme'
+import { colors, sizes } from '../../services'
 
 type Props = {
   direction: 'horizontal' | 'vertical'

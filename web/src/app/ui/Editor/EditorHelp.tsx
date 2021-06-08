@@ -1,8 +1,7 @@
 import { percent, px, viewHeight } from 'csx'
 import React, { Fragment } from 'react'
 import { stylesheet } from 'typestyle'
-import { useHelp } from '../../services/helpState'
-import { colors, palette } from '../../services/theme'
+import { colors, palette, useHelp } from '../../services'
 
 export function EditorHelp() {
   const { help, closeHelp } = useHelp()

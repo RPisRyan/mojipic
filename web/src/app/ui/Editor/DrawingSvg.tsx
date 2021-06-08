@@ -4,8 +4,7 @@ import { classes, stylesheet } from 'typestyle'
 import type { GridPosition } from '../../../lib/2d'
 import type { Tile } from '../../../lib/emoji-drawing'
 import type { StylableElementProps } from '../../../lib/react'
-import { drawingSettings, useEditor } from '../../services/editorState'
-import { colors } from '../../services/theme'
+import { colors, drawingSettings, useEditor } from '../../services'
 
 const tileSize = 10
 const margin = 1

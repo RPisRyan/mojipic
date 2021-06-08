@@ -1,14 +1,13 @@
 import React from 'react'
 
 import { extend } from 'typestyle'
-import { LogoText } from '../elements/LogoText'
-import { HelpButton } from '../elements/HelpButton'
+import { HelpButton, LogoText } from '../elements'
 import { Greeting } from '../Help/Greeting'
 import { DrawingSvg } from './DrawingSvg'
 import { EditorControls } from './EditorControls'
 import { EmojiPicker } from './EmojiPicker'
 import { fullScreenStyle, makeCss } from '../../../lib/typestyle-ext'
-import { colors, palette, spaces } from '../../services/theme'
+import { colors, palette, spaces } from '../../services'
 
 export default function EditorScreen() {
   return (

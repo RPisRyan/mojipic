@@ -3,11 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import { classes, stylesheet } from 'typestyle'
 import type { StylableElementProps } from '../../../lib/react'
-import { useCopyToClipboard } from '../../services/copyToClipboard'
-import { useEditor } from '../../services/editorState'
-import { spaces } from '../../services/theme'
-import { ControlDivider } from '../elements/ControlDivider'
-import { TileButton } from '../elements/TileButton'
+import { spaces, useCopyToClipboard, useEditor } from '../../services'
+import { ControlDivider, TileButton } from '../elements'
 import EditableChar from './EditableChar'
 
 export function EditorControls({ className, style }: StylableElementProps) {
