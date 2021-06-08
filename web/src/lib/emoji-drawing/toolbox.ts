@@ -1,7 +1,7 @@
 import { OrderedSet } from 'immutable'
 import { lookupEmoji } from '../../app/services/emojiData'
 import { Glyph } from './glyph'
-import { Paintbrush, Eraser, ToolType } from './tools'
+import { Eraser, Paintbrush, ToolType } from './tools'
 
 const defaultTools = {
   paintbrush: new Paintbrush('⭐️'),
@@ -15,13 +15,14 @@ type ToolboxData = {
 }
 
 export class Toolbox {
-  private constructor(private data: ToolboxData) {}
-
   static default = new Toolbox({
     tools: defaultTools,
     activeToolType: 'paintbrush',
     recent: OrderedSet([defaultTools.paintbrush.brush]),
   })
+
+  private constructor(private data: ToolboxData) {
+  }
 
   get tools() {
     return this.data.tools

@@ -4,27 +4,24 @@ import { Point } from './point'
 import { Size } from './size'
 
 export class Rect implements RectSides {
-  constructor(public position: Point, public size: Size) {}
-
-  static fromSides({ left, top, right, bottom }: RectSides) {
-    return new Rect(
-      new Point(left, top),
-      new Size(Math.max(0, right - left), Math.max(0, bottom - top)),
-    )
-  }
-
   static zero = new Rect(Point.zero, Size.zero)
   static null = new Rect(Point.null, Size.null)
+
+  constructor(public position: Point, public size: Size) {
+  }
 
   get left() {
     return this.position.x
   }
+
   get top() {
     return this.position.y
   }
+
   get right() {
     return this.left + this.width
   }
+
   get bottom() {
     return this.top + this.height
   }
@@ -32,8 +29,16 @@ export class Rect implements RectSides {
   get height() {
     return this.size.height
   }
+
   get width() {
     return this.size.width
+  }
+
+  static fromSides({ left, top, right, bottom }: RectSides) {
+    return new Rect(
+      new Point(left, top),
+      new Size(Math.max(0, right - left), Math.max(0, bottom - top)),
+    )
   }
 
   atPosition(position: Point) {

@@ -8,14 +8,14 @@ export function EditorHelp() {
   const { help, closeHelp } = useHelp()
 
   if (!help.showHelp) {
-    return <Fragment />
+    return <Fragment/>
   }
   return (
     <div className={css.editorHelp} onClick={closeHelp}>
-      <div className={css.shadow} />
+      <div className={css.shadow}/>
 
       <div className={css.content}>
-        <img src="/images/help-screen.jpg" className={css.image} />
+        <img src="/images/help-screen.jpg" className={css.image}/>
         <span className={css.contact}>
           <a href="mailto:info@mojipic.app">Contact ✉️</a>
         </span>

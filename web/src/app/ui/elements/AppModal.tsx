@@ -2,8 +2,7 @@ import React, { ComponentProps } from 'react'
 import { stylesheet } from 'typestyle'
 
 import Modal from 'react-overlays/Modal'
-import { styled } from '../../../lib/typestyle-ext/styled'
-import { centerChild, fullScreenFixedStyle } from '../../../lib/typestyle-ext/layouts'
+import { centerChild, fullScreenFixedStyle, styled } from '../../../lib/typestyle-ext'
 
 export function AppModal({ children, ...rest }: ComponentProps<typeof Modal>) {
   return (

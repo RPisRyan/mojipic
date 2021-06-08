@@ -2,6 +2,8 @@ import hash from 'hash-it'
 import { UTIL_INSPECT_CUSTOM } from '../core'
 
 export class Size {
+  static null = new Size(NaN, NaN)
+  static zero = new Size(0, 0)
   public readonly width: number
   public readonly height: number
 
@@ -37,7 +39,4 @@ export class Size {
   [UTIL_INSPECT_CUSTOM]() {
     return this.toString()
   }
-
-  static null = new Size(NaN, NaN)
-  static zero = new Size(0, 0)
 }

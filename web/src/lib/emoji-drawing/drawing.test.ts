@@ -2,7 +2,6 @@ import { Size } from '../2d'
 import { GridPosition } from '../2d/gridPosition'
 import { Drawing } from './drawing'
 import { Glyph } from './glyph'
-import { Map } from 'immutable'
 
 describe('drawing', () => {
   it('can convert from array', () => {

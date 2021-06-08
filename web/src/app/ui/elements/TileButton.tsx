@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from 'react'
-import { stylesheet, classes } from 'typestyle'
+import { classes, stylesheet } from 'typestyle'
 import { em } from 'csx'
-import { styles, colors, sizes } from '../../services/theme'
+import { colors, sizes, styles } from '../../services/theme'
 
 export const TileButton = React.forwardRef<HTMLButtonElement, Props>(
   ({ className, active, ...restProps }, ref) => (

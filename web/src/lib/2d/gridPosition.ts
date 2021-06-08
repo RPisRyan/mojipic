@@ -2,10 +2,17 @@ import hash from 'hash-it'
 import type { ValueObject } from 'immutable'
 import { UTIL_INSPECT_CUSTOM } from '../core'
 import { replaceAll } from '../strings'
-import type { GridBounds } from './gridBounds'
 
 export class GridPosition implements ValueObject {
-  constructor(public readonly column: number, public readonly row: number) {}
+  static Zero = Object.freeze(new GridPosition(0, 0))
+  static Null = Object.freeze(new GridPosition(NaN, NaN))
+
+  constructor(public readonly column: number, public readonly row: number) {
+  }
+
+  get isNull() {
+    return isNaN(this.column) || isNaN(this.row)
+  }
 
   static fromString(serialized: string) {
     if (!serialized) {
@@ -17,10 +24,6 @@ export class GridPosition implements ValueObject {
       return GridPosition.Null
     }
     return new GridPosition(Number(split[0]), Number(split[1]))
-  }
-
-  get isNull() {
-    return isNaN(this.column) || isNaN(this.row)
   }
 
   min(other: GridPosition) {
@@ -66,7 +69,4 @@ export class GridPosition implements ValueObject {
   [UTIL_INSPECT_CUSTOM]() {
     return this.toString()
   }
-
-  static Zero = Object.freeze(new GridPosition(0, 0))
-  static Null = Object.freeze(new GridPosition(NaN, NaN))
 }

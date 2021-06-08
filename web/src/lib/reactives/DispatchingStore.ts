@@ -10,8 +10,8 @@ import type { Reactive, Subscriber } from './types'
  */
 export type DispatchingStore<S, A> = Store<S> &
   Reactive<S> & {
-    dispatch(...actions: A[]): void
-  }
+  dispatch(...actions: A[]): void
+}
 
 export function DispatchingStore<S, A>(initial: S, reduce: Reducer<S, A>) {
   let current = initial

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { stylesheet, classes } from 'typestyle'
+import { classes, stylesheet } from 'typestyle'
 
 type Props = {
   value: string | null
@@ -26,7 +26,8 @@ export default function EditableChar(props: Props) {
           props.onChange((event.target as HTMLInputElement).value)
           setIsEditing(false)
         }}
-        onChange={() => {}}
+        onChange={() => {
+        }}
         onBlur={() => setIsEditing(false)}
       />
     )

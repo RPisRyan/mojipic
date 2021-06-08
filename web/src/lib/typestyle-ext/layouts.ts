@@ -10,13 +10,13 @@ export const centerChild: NestedCSSProperties = {
 export function stackChildren(stretch?: boolean): NestedCSSProperties {
   const stretchy: NestedCSSProperties = stretch
     ? {
-        gridTemplateColumns: percent(100),
-        gridTemplateRows: percent(100),
-      }
+      gridTemplateColumns: percent(100),
+      gridTemplateRows: percent(100),
+    }
     : {
-        gridTemplateColumns: 'auto',
-        gridTemplateRows: 'auto',
-      }
+      gridTemplateColumns: 'auto',
+      gridTemplateRows: 'auto',
+    }
   return {
     display: 'grid',
     ...stretchy,

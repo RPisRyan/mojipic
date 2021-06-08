@@ -9,7 +9,7 @@ type Props = {
 
 export function ControlDivider({ direction }: Props) {
   const directionClass = css[direction]
-  return <div className={classes(css.controlDivider, directionClass)} />
+  return <div className={classes(css.controlDivider, directionClass)}/>
 }
 
 const css = stylesheet({

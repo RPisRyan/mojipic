@@ -1,4 +1,4 @@
-import { em, linearGradient, rgb } from 'csx'
+import { em, linearGradient } from 'csx'
 import React, { PropsWithChildren } from 'react'
 import { stylesheet } from 'typestyle'
 import { colors, palette } from '../../services/theme'
@@ -19,9 +19,6 @@ export function LogoText({ children }: Props) {
 }
 
 type Props = PropsWithChildren<{}>
-
-const topColor = rgb(73, 170, 235)
-const bottomColor = rgb(37, 102, 202)
 
 const css = stylesheet({
   letter: {

@@ -22,6 +22,23 @@ export class Drawing extends Grid<Glyph> {
     super(elements)
   }
 
+  /**
+   * The smallest bounds of the non-empty cells.
+   */
+  get contentBounds() {
+    return this.elements
+      .filter(([, glyph]) => !Glyph.isEmpty(glyph))
+      .reduce((extent, [position]) => extent.including(position), GridBounds.Null)
+  }
+
+  get isEmpty() {
+    return (
+      !this.elements ||
+      this.elements.length === 0 ||
+      !this.elements.some(([, glyph]) => !Glyph.isEmpty(glyph))
+    )
+  }
+
   static fromString(serialized: string): Drawing {
     const rows = serialized.split('\n').map((rowChars) => {
       const rowGlyphs = replaceAll(rowChars, Glyph.space!, ' ')
@@ -46,23 +63,6 @@ export class Drawing extends Grid<Glyph> {
     }
     const positions = [...bounds.positions()]
     return new Drawing(positions.map((position) => [position, Glyph.none]))
-  }
-
-  /**
-   * The smallest bounds of the non-empty cells.
-   */
-  get contentBounds() {
-    return this.elements
-      .filter(([, glyph]) => !Glyph.isEmpty(glyph))
-      .reduce((extent, [position]) => extent.including(position), GridBounds.Null)
-  }
-
-  get isEmpty() {
-    return (
-      !this.elements ||
-      this.elements.length === 0 ||
-      !this.elements.some(([, glyph]) => !Glyph.isEmpty(glyph))
-    )
   }
 
   rowIsEmpty(row: number) {

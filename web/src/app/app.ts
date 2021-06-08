@@ -5,7 +5,9 @@ import { initializeExceptionHandling as initExceptionHandling } from './services
 import { initializeFirebase as initFirebase } from './services/firebase'
 import { initConsoleServices } from './services/globalServices'
 import { Root } from './ui/Root'
-;(window as any).log = log
+
+
+(window as any).log = log
 
 async function start() {
   await initFirebase()

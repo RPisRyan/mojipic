@@ -8,8 +8,8 @@ export function HelpButton() {
   const { toggleHelp } = useHelp()
   return (
     <>
-      <FontAwesomeIcon title="Help" icon={faQuestionCircle} onClick={toggleHelp} />
-      <EditorHelp />
+      <FontAwesomeIcon title="Help" icon={faQuestionCircle} onClick={toggleHelp}/>
+      <EditorHelp/>
     </>
   )
 }

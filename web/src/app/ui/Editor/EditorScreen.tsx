@@ -7,7 +7,7 @@ import { Greeting } from '../Help/Greeting'
 import { DrawingSvg } from './DrawingSvg'
 import { EditorControls } from './EditorControls'
 import { EmojiPicker } from './EmojiPicker'
-import { makeCss, fullScreenStyle } from '../../../lib/typestyle-ext'
+import { fullScreenStyle, makeCss } from '../../../lib/typestyle-ext'
 import { colors, palette, spaces } from '../../services/theme'
 
 export default function EditorScreen() {
@@ -18,22 +18,22 @@ export default function EditorScreen() {
       </div>
 
       <div className={css.help}>
-        <HelpButton />
+        <HelpButton/>
       </div>
 
       <div className={css.drawing}>
-        <DrawingSvg />
+        <DrawingSvg/>
       </div>
 
       <div className={css.controls}>
-        <EditorControls />
+        <EditorControls/>
       </div>
 
       <div className={css.brushes}>
-        <EmojiPicker />
+        <EmojiPicker/>
       </div>
 
-      <Greeting />
+      <Greeting/>
     </div>
   )
 }

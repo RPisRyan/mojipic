@@ -1,7 +1,6 @@
 import { percent } from 'csx'
-import { styled } from '../../../lib/typestyle-ext/styled'
+import { centerChild, styled } from '../../../lib/typestyle-ext'
 import type { NestedCSSProperties } from 'typestyle/lib/types'
-import { centerChild } from '../../../lib/typestyle-ext/layouts'
 import { colors, sizes } from '../../services/theme'
 
 const buttonBase: NestedCSSProperties = {

@@ -1,5 +1,5 @@
 import { Drawing, DrawingSettings, Glyph, Toolbox, ToolType } from '../../lib/emoji-drawing'
-import { Size, GridPosition, GridBounds } from '../../lib/2d'
+import { GridBounds, GridPosition, Size } from '../../lib/2d'
 import { Store, useStore } from '../../lib/reactives'
 import { persistDrawing } from './persistDrawing'
 import { Stack } from '../../lib/immutable-objects'

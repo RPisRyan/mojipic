@@ -1,7 +1,7 @@
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { em } from 'csx'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { useRootClose } from 'react-overlays'
 import { stylesheet } from 'typestyle'
 import { useHelp } from '../../services/helpState'
@@ -20,9 +20,9 @@ export function Greeting() {
       {help.showGreeting && (
         <div ref={ref} className={css.getStarted}>
           Welcome! Tap the grid to place emoji.
-          <br />
+          <br/>
           Copy to clipboard&nbsp;
-          <FontAwesomeIcon icon={faCopy} /> for sharing.
+          <FontAwesomeIcon icon={faCopy}/> for sharing.
         </div>
       )}
     </>

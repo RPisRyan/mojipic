@@ -1,14 +1,9 @@
 import { UTIL_INSPECT_CUSTOM } from '../core'
-import { atLeast } from '../numbers'
 import { GridPosition } from './gridPosition'
 import { Size } from './size'
 
 export class GridBounds {
   static readonly Null = Object.freeze(new GridBounds(GridPosition.Null, GridPosition.Null))
-
-  static fromSize(size: Size) {
-    return new GridBounds(GridPosition.Zero, new GridPosition(size.width - 1, size.height - 1))
-  }
 
   constructor(public readonly min: GridPosition, public readonly max: GridPosition) {
     if (max.column < min.column || max.row < min.row) {
@@ -48,6 +43,10 @@ export class GridBounds {
     return new Size(this.width, this.height)
   }
 
+  static fromSize(size: Size) {
+    return new GridBounds(GridPosition.Zero, new GridPosition(size.width - 1, size.height - 1))
+  }
+
   contains({ column, row }: GridPosition) {
     return column >= this.left && column <= this.right && row >= this.top && row <= this.bottom
   }
@@ -78,12 +77,13 @@ export class GridBounds {
   }
 
   sizedAtLeast(size: Size) {
-    return this.adjustTop(-1 * atLeast(0, size.height - this.height)).adjustRight(
-      atLeast(0, size.width - this.width),
-    )
+    return this.adjustTop(
+      -1 * Math.max(0, size.height - this.height))
+      .adjustRight(Math.max(0, size.width - this.width),
+      )
   }
 
-  *positions() {
+  * positions() {
     for (let row = this.min.row; row <= this.max.row; row++) {
       for (let column = this.min.column; column <= this.max.column; column++) {
         yield new GridPosition(column, row)

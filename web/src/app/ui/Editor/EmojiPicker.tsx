@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { NimblePicker, BaseEmoji, Emoji } from 'emoji-mart'
+import { BaseEmoji, NimblePicker } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 import { em, percent } from 'csx'
 import { classes, stylesheet } from 'typestyle'

@@ -30,7 +30,7 @@ export function Root() {
         onError={logError}
         onReset={() => location.reload()}
       >
-        <EditorScreen />
+        <EditorScreen/>
       </ErrorBoundary>
     </React.StrictMode>
   )

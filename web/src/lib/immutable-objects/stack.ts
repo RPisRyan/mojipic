@@ -1,5 +1,6 @@
 export class Stack<T> {
-  constructor(public readonly items: T[] = [], public readonly maxItems?: number) {}
+  constructor(public readonly items: T[] = [], public readonly maxItems?: number) {
+  }
 
   pushed(item: T) {
     const sliceCount = this.maxItems ? this.items.length - this.maxItems + 1 : 0

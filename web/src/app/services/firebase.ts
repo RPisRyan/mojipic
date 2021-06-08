@@ -3,7 +3,8 @@ import firebase from 'firebase/app'
 import 'firebase/analytics'
 
 export let analytics: ReturnType<typeof firebase.analytics> = {
-  logEvent: () => {},
+  logEvent: () => {
+  },
 } as any
 
 export async function initializeFirebase() {
@@ -18,5 +19,6 @@ export async function initializeFirebase() {
       log.info('Initializing analytics')
       analytics = firebase.analytics()
     }
-  } catch {}
+  } catch {
+  }
 }

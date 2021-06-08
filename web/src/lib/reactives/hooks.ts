@@ -27,10 +27,10 @@ export function useStore<S>(store: Store<S>) {
 }
 
 export function useStoreWithNamedDispatch<S, A extends TypeDiscriminated>({
-  getState,
-  subscribe,
-  dispatchAction,
-}: StoreWithNamedDispatch<S, A>) {
+                                                                            getState,
+                                                                            subscribe,
+                                                                            dispatchAction,
+                                                                          }: StoreWithNamedDispatch<S, A>) {
   const initial = getState()
   const [state, setState] = useState<S>(initial)
   useEffect(() => subscribe(setState), [subscribe])

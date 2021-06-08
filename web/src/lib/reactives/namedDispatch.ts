@@ -17,10 +17,10 @@ import type { DispatchingStore } from './DispatchingStore'
 export function makeNamedDispatch<A extends TypeDiscriminated>(
   dispatch: Dispatch<A>,
 ): // todo: figure out how to make payload argument optional if type has no payload
-<T extends Discriminator<A>, AUnique extends UniqueActionType<A, T>>(
-  uniqueType: T,
-  payload: UniquePayload<AUnique>,
-) => void {
+  <T extends Discriminator<A>, AUnique extends UniqueActionType<A, T>>(
+    uniqueType: T,
+    payload: UniquePayload<AUnique>,
+  ) => void {
   function namedDispatch<T extends Discriminator<A>, AUnique extends UniqueActionType<A, T>>(
     uniqueType: T,
     // how to require payload when needed?
@@ -28,6 +28,7 @@ export function makeNamedDispatch<A extends TypeDiscriminated>(
   ) {
     dispatch({ type: uniqueType, ...payload } as AUnique)
   }
+
   return namedDispatch
 }
 
@@ -36,17 +37,15 @@ export type NamedDispatch<A extends TypeDiscriminated> = (
   payload: Omit<A, 'type'>,
 ) => void
 
-export type NamedDispatchUnique<
-  A extends TypeDiscriminated,
+export type NamedDispatchUnique<A extends TypeDiscriminated,
   T extends Discriminator<A>,
   AUnique extends UniqueActionType<A, T>,
-> = (uniqueType: T, payload?: UniquePayload<AUnique>) => void
+  > = (uniqueType: T, payload?: UniquePayload<AUnique>) => void
 
-export type NamedEmptyDispatchUnique<
-  A extends TypeDiscriminated,
+export type NamedEmptyDispatchUnique<A extends TypeDiscriminated,
   T extends Discriminator<A>,
   AUnique extends NoPayloadAction<UniqueActionType<A, T>>,
-> = (uniqueType: T) => void
+  > = (uniqueType: T) => void
 
 export type TypeDiscriminated = { type: string }
 

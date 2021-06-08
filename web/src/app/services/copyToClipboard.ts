@@ -4,6 +4,7 @@ import { notify } from './notification'
 
 export function useCopyToClipboard() {
   const [drawing] = useDrawing()
+
   async function copyToClipboard() {
     const drawingString = drawing.toString(false) + `\nmojipic.app`
     await navigator.clipboard.writeText(drawingString)
@@ -14,5 +15,6 @@ export function useCopyToClipboard() {
       method: 'clipboard',
     })
   }
+
   return { copyToClipboard }
 }

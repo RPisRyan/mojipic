@@ -4,7 +4,11 @@ import { UTIL_INSPECT_CUSTOM } from '../core'
 import { replaceAll } from '../strings'
 
 export class Point implements ValueObject {
-  constructor(readonly x: number, readonly y: number) {}
+  static zero = new Point(0, 0)
+  static null = new Point(NaN, NaN)
+
+  constructor(readonly x: number, readonly y: number) {
+  }
 
   static fromString(serialized: string) {
     if (!serialized) {
@@ -49,7 +53,4 @@ export class Point implements ValueObject {
   [UTIL_INSPECT_CUSTOM]() {
     return this.toString()
   }
-
-  static zero = new Point(0, 0)
-  static null = new Point(NaN, NaN)
 }
