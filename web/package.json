@@ -55,5 +55,8 @@
     "prettier": "^2.0.5",
     "snowpack": "^2.11.0",
     "typescript": "^3.9.7"
+  },
+  "resolutions": {
+    "css-what": "^5.0.1"
   }
 }
