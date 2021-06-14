@@ -3432,11 +3432,6 @@ firebase@^8.0.1:
     "@firebase/storage" "0.5.2"
     "@firebase/util" "1.1.0"
 
-fluent-iterable@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/fluent-iterable/-/fluent-iterable-0.1.6.tgz#d8ac795d9c91cb58644de4361afea728a697f7a4"
-  integrity sha512-M7okFjqX3E+6c6lKODTu3vnmb7ymhq3mzCDYdqnV9j7RyqbV95M+F4JxTrNEZZQ6WUjjwagwwb+wXr/K539DOg==
-
 follow-redirects@^1.0.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
