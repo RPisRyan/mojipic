@@ -1,7 +1,7 @@
 import { analytics } from './firebase'
 import { notify } from './notification'
 import { useRecoilValue } from 'recoil'
-import { drawingAtom } from './drawingState'
+import { drawingAtom } from './drawingAtom'
 
 export function useCopyToClipboard() {
   const drawing = useRecoilValue(drawingAtom)

@@ -6,7 +6,7 @@ import { consoleServicesEffect } from './globalServices'
 const defaultDrawing = Drawing.fromString(` 🌈 \n🌈⭐️✨\n 🌈 `)
 
 export const drawingAtom = atom({
-  key: 'drawingState',
+  key: 'drawing',
   default: defaultDrawing,
   effects_UNSTABLE: [
     persistDrawingEffect,

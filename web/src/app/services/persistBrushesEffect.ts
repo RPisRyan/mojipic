@@ -1,28 +1,35 @@
 import log from 'loglevel'
 import { Glyph, Toolbox } from '../../lib/emoji-drawing'
-import type { Store } from '../../lib/reactives'
+import { AtomEffect, DefaultValue } from 'recoil'
 
 const localStorageKey = 'recentBrushes'
 const maxRecent = 15
 
-export function persistRecentBrushes(toolboxStore: Store<Toolbox>) {
+/**
+ * Maintain recent brushes list in local storage
+ */
+export const persistBrushesEffect: AtomEffect<Toolbox> = ({ setSelf, onSet }) => {
   try {
     const persisted = localStorage.getItem(localStorageKey)
     if (persisted) {
       const glyphs = Glyph.splitter.splitGraphemes(persisted)
       if (glyphs.length > 0) {
-        let newState = toolboxStore.getState().withRecent(glyphs)
+        let newState = Toolbox.default.withRecent(glyphs)
         if (!Glyph.isEmpty(glyphs[0])) {
           newState = newState.withBrush(glyphs[0])
         }
-        toolboxStore.setState(newState)
+        setSelf(newState)
       }
     }
   } catch (ex) {
     log.warn('Failed to load drawing from local storage', ex)
   }
 
-  return toolboxStore.subscribe((toolbox) => {
+  onSet((toolbox) => {
+    if (toolbox instanceof DefaultValue) {
+      return
+    }
+
     try {
       const glyphs = toolbox.recent.slice(0, maxRecent)
       glyphs.reverse()
