@@ -1,13 +1,13 @@
 import { Drawing, DrawingSettings, Glyph, Toolbox, ToolType } from '../../lib/emoji-drawing'
 import { GridBounds, GridPosition, Size } from '../../lib/2d'
 import { Store, useStore } from '../../lib/reactives'
-import { persistDrawing } from './persistDrawing'
 import { Stack } from '../../lib/immutable-objects'
 import log from 'loglevel'
 import { useEffect } from 'react'
 import { persistRecentBrushes } from './persistRecentBrushes'
 import { analytics } from './firebase'
-import { DrawingStore } from './drawingStore'
+import { drawingAtom } from './drawingState'
+import { useRecoilState } from 'recoil'
 
 export const drawingSettings: DrawingSettings = {
   minSize: new Size(3, 3),
@@ -15,22 +15,17 @@ export const drawingSettings: DrawingSettings = {
 }
 const undoStackLimit = 20
 
-const defaultDrawing = Drawing.fromString(` 🌈 \n🌈⭐️✨\n 🌈 `)
-
-export const drawingStore = DrawingStore(defaultDrawing)
-export const useDrawing = () => useStore(drawingStore)
-
 export const toolboxStore = Store(Toolbox.default)
 export const useToolbox = () => useStore(toolboxStore)
 
 export const historyStore = Store(new Stack<Drawing>([], undoStackLimit))
 export const useHistory = () => useStore(historyStore)
 
-persistDrawing(drawingStore, toolboxStore)
+// persistDrawing(drawingStore, toolboxStore)
 persistRecentBrushes(toolboxStore)
 
 export function useEditor() {
-  const [drawing, setDrawing] = useDrawing()
+  const [drawing, setDrawing] = useRecoilState(drawingAtom)
   const [toolbox, setToolbox] = useToolbox()
   const [history, setHistory] = useHistory()
 

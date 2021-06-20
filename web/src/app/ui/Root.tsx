@@ -5,6 +5,7 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { cssRaw, cssRule } from 'typestyle'
 import { analytics, mountTheme } from '../services'
 import EditorScreen from './Editor/EditorScreen'
+import { RecoilRoot } from 'recoil'
 
 csstips.normalize()
 csstips.setupPage('#root')
@@ -29,7 +30,9 @@ export function Root() {
         onError={logError}
         onReset={() => location.reload()}
       >
-        <EditorScreen/>
+        <RecoilRoot>
+          <EditorScreen/>
+        </RecoilRoot>
       </ErrorBoundary>
     </React.StrictMode>
   )

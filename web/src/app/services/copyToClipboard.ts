@@ -1,9 +1,10 @@
-import { useDrawing } from './editorState'
 import { analytics } from './firebase'
 import { notify } from './notification'
+import { useRecoilValue } from 'recoil'
+import { drawingAtom } from './drawingState'
 
 export function useCopyToClipboard() {
-  const [drawing] = useDrawing()
+  const drawing = useRecoilValue(drawingAtom)
 
   async function copyToClipboard() {
     const drawingString = drawing.toString(false) + `\nmojipic.app`

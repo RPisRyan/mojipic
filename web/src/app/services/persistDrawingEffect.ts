@@ -1,22 +1,26 @@
 import log from 'loglevel'
-import type { Toolbox } from '../../lib/emoji-drawing'
-import type { Store } from '../../lib/reactives'
-import type { DrawingStore } from './drawingStore'
+import type { AtomEffect } from 'recoil'
+import type { Drawing } from '../../lib/emoji-drawing'
+import { loadDrawingAction } from './drawingActions'
 
 const localStorageKey = 'currentDrawing'
 
-export function persistDrawing(drawingStore: DrawingStore, toolboxStore: Store<Toolbox>) {
+/**
+ * Maintain latest drawing in local storage
+ */
+export const persistDrawingEffect: AtomEffect<Drawing> = ({ setSelf, onSet }) => {
+  const loadDrawing = loadDrawingAction(setSelf)
   try {
     const drawingLiteral = localStorage.getItem(localStorageKey)
     if (drawingLiteral) {
       log.debug('found local drawing', drawingLiteral)
-      drawingStore.loadDrawing(drawingLiteral)
+      loadDrawing(drawingLiteral)
     }
   } catch (ex) {
     log.warn('Failed to load drawing from local storage', ex)
   }
 
-  return drawingStore.subscribe((drawing) => {
+  onSet((drawing) => {
     try {
       localStorage.setItem(localStorageKey, drawing.toString())
     } catch (ex) {
