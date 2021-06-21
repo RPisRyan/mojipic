@@ -2,6 +2,8 @@
 
 [mojipic.app](https://mojipic.app/)
 
+![CI](https://github.com/RPisRyan/mojipic/actions/workflows/node.js.yml/badge.svg)
+
 An app for making emoji pics.
 
 > ☁️☁️☁️🌈🌈  
