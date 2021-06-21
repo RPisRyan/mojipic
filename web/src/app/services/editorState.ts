@@ -51,11 +51,6 @@ export function useEditor() {
       setDrawingUndoable(toolbox.activeTool.apply(drawing, position, drawingSettings))
     },
 
-    loadDrawing(drawing: Drawing) {
-      setDrawing(drawing)
-      setToolbox(toolbox.withRecent(drawing.uniqueGlyphs()))
-    },
-
     undo() {
       const [newHistory, popped] = history.popped()
       if (popped) {

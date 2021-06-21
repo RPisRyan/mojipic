@@ -1,28 +1,19 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { BaseEmoji, NimblePicker } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 import { em, percent } from 'csx'
 import { classes, stylesheet } from 'typestyle'
-import { emojiData, lookupEmoji, useEditor } from '../../services'
-import { Glyph } from '../../../lib/emoji-drawing'
+import { emojiData, useEditor } from '../../services'
 import type { StylableElementProps } from '../../../lib/react'
 
 export function EmojiPicker({ className, style }: StylableElementProps) {
-  const { toolbox, pickBrush } = useEditor()
-
-  const recent = useMemo(() => {
-    const recent = toolbox.recent
-      .map((glyph) => !Glyph.isEmpty(glyph) && lookupEmoji(glyph!)?.id)
-      .filter((it) => it) as string[]
-    return recent
-  }, [toolbox.recent])
+  const { pickBrush } = useEditor()
 
   return (
     <div className={classes(css.emojiPicker, className)} style={style}>
       <NimblePicker
         enableFrequentEmojiSort={true}
         data={emojiData}
-        recent={recent && recent.length > 0 ? recent : undefined}
         title={''}
         emojiSize={32}
         emoji={''}
