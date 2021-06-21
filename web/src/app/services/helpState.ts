@@ -1,5 +1,5 @@
-import { Store, useStore } from '../../lib/reactives'
 import { analytics } from './firebase'
+import { atom, useRecoilState } from 'recoil'
 
 const seenGreetingKey = 'seenGreeting'
 
@@ -12,10 +12,13 @@ const initial: HelpState = {
   showGreeting: !localStorage.getItem(seenGreetingKey),
 }
 
-export const helpStore = Store<HelpState>(initial)
+export const helpAtom = atom({
+  key: 'help',
+  default: initial,
+})
 
 export function useHelp() {
-  const [help, setHelp] = useStore(helpStore)
+  const [help, setHelp] = useRecoilState(helpAtom)
 
   function logView() {
     analytics.logEvent('screen_view', {
