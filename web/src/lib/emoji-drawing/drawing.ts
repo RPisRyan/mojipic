@@ -62,16 +62,6 @@ export class Drawing extends Grid<Glyph> {
     return new Drawing(positions.map((position) => [position, Glyph.none]))
   }
 
-  rowIsEmpty(row: number) {
-    return !this.elements.some(([position, glyph]) => position.row === row && Glyph.isEmpty(glyph))
-  }
-
-  columnIsEmpty(column: number) {
-    return !this.elements.some(
-      ([position, glyph]) => position.column === column && Glyph.isEmpty(glyph),
-    )
-  }
-
   /**
    * Returns a drawing with empty cells cropped.
    */

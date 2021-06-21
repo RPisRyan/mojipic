@@ -39,3 +39,7 @@ yarn test
 The logic for the drawing canvas is in [drawing.ts](web/src/lib/emoji-drawing/drawing.ts).
 The class is treated as immutable. Operations on the drawing return a new object, 
 so they can be used for React state updates.
+ 
+[Recoil](https://recoiljs.org/) is used for state management.
+Basic `useState` at the root would have worked fine, as the app is small,
+but I'm here to learn! 🤓
