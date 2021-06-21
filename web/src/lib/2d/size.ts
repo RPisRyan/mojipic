@@ -20,14 +20,6 @@ export class Size {
     return new Size(this.width - width, this.height - height)
   }
 
-  adjustHeight(height: number) {
-    return new Size(this.width, this.height + height)
-  }
-
-  adjustWidth(width: number) {
-    return new Size(this.width + width, this.height)
-  }
-
   equals(other: any) {
     return other === this || (other.width === this.width && other.height === this.height)
   }

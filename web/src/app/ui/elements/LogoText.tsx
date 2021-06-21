@@ -1,7 +1,7 @@
 import { em, linearGradient } from 'csx'
 import React, { PropsWithChildren } from 'react'
 import { stylesheet } from 'typestyle'
-import { colors, palette } from '../../services/theme'
+import { colors, palette } from '../../services'
 
 export function LogoText({ children }: Props) {
   return (

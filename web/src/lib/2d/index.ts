@@ -1,3 +1,5 @@
 export * from './size'
+export * from './grid'
 export * from './gridPosition'
 export * from './gridBounds'
+export * from './gridElement'

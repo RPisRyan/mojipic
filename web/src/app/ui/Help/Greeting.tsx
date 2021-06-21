@@ -4,8 +4,7 @@ import { em } from 'csx'
 import React, { useRef } from 'react'
 import { useRootClose } from 'react-overlays'
 import { stylesheet } from 'typestyle'
-import { useHelp } from '../../services/helpState'
-import { colors, palette } from '../../services/theme'
+import { colors, palette, useHelp } from '../../services'
 
 export function Greeting() {
   const ref = useRef(null)

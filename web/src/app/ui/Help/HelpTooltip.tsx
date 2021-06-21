@@ -1,6 +1,6 @@
 import Tippy from '@tippyjs/react'
 import React, { ComponentProps } from 'react'
-import { useHelp } from '../../services/helpState'
+import { useHelp } from '../../services'
 
 export type Props = Pick<ComponentProps<typeof Tippy>, 'children'> & {
   message: string

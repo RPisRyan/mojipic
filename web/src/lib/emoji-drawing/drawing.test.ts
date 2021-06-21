@@ -1,5 +1,4 @@
-import { Size } from '../2d'
-import { GridPosition } from '../2d/gridPosition'
+import { GridPosition, Size } from '../2d'
 import { Drawing } from './drawing'
 import { Glyph } from './glyph'
 
@@ -96,5 +95,4 @@ describe('drawing', () => {
 const A = 'A',
   B = 'B',
   C = 'C',
-  D = 'D',
   _ = Glyph.none

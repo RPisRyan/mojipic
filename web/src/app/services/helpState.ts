@@ -32,10 +32,6 @@ export function useHelp() {
       setHelp({})
       localStorage.setItem(seenGreetingKey, 'true')
     },
-    openHelp() {
-      setHelp({ showHelp: true })
-      logView()
-    },
     closeHelp() {
       setHelp({})
     },
