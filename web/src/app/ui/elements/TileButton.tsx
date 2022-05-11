@@ -2,16 +2,18 @@ import React, { HTMLAttributes } from 'react'
 import { classes, stylesheet } from 'typestyle'
 import { em } from 'csx'
 import { colors, sizes, styles } from '../../services'
+import Tooltip from '@mui/material/Tooltip'
 
-export const TileButton = React.forwardRef<HTMLButtonElement, Props>(
-  ({ className, active, ...restProps }, ref) => (
-    <button
-      ref={ref}
-      className={classes(css.squareButton, active && css.active, className)}
-      {...restProps}
-    />
-  ),
-)
+export function TileButton({ className, active, title, ...restProps }: Props) {
+  return (
+    <Tooltip title={title || ''} placement={'left'} enterDelay={1000}>
+      <button
+        className={classes(css.squareButton, active && css.active, className)}
+        {...restProps}
+      />
+    </Tooltip>
+  )
+}
 
 type Props = HTMLAttributes<HTMLButtonElement> & {
   active?: boolean

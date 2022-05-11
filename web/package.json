@@ -15,9 +15,12 @@
     "lint": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
+    "@mui/material": "^5.7.0",
     "@tippyjs/react": "^4.2.0",
     "@types/emoji-mart": "^3.0.4",
     "body-scroll-lock": "^3.1.5",
@@ -31,8 +34,8 @@
     "immutable": "^4.0.0-rc.12",
     "loglevel": "^1.7.0",
     "notyf": "^3.9.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
     "react-error-boundary": "^3.0.2",
     "react-overlays": "^4.1.1",
     "react-use-gesture": "^7.0.16",

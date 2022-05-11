@@ -28,7 +28,7 @@ export function EditorControls({ className, style }: StylableElementProps) {
       <ControlDivider direction="horizontal" />
 
       <TileButton
-        title="Paintbrush"
+        title="Paintbrush: Select emoji brush below, or click me to type in a emoji/character"
         active={toolbox.activeToolType === 'paintbrush'}
         onClick={() => activateTool('paintbrush')}
       >
@@ -40,7 +40,7 @@ export function EditorControls({ className, style }: StylableElementProps) {
       </TileButton>
 
       <TileButton
-        title="Background"
+        title="Background: Set background to the currently selected brush"
         onClick={() => setBackgroundGlyph(toolbox.brush)}
       >
         <span>{backgroundGlyph}</span>
@@ -51,14 +51,14 @@ export function EditorControls({ className, style }: StylableElementProps) {
         active={toolbox.activeToolType === 'eraser'}
         onClick={() => activateTool('eraser')}
       >
-        <FontAwesomeIcon icon={faEraser} />
+        <div><FontAwesomeIcon icon={faEraser} /></div>
       </TileButton>
 
-      <ControlDivider direction={'horizontal'} />
+      {/* <ControlDivider direction={'horizontal'} />
 
-      <TileButton>
+      <TileButton title={'Help'} >
         <HelpButton />
-      </TileButton>
+      </TileButton> */}
     </div>
   )
 }
