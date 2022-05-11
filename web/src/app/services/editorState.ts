@@ -3,7 +3,7 @@ import { GridBounds, GridPosition, Size } from '../../lib/2d'
 import log from 'loglevel'
 import { useEffect } from 'react'
 import { analytics } from './firebase'
-import { drawingAtom } from './drawingAtom'
+import { backgroundGlyphState, drawingAtom } from './drawingState'
 import { useRecoilState } from 'recoil'
 import { toolboxAtom } from './toolboxAtom'
 import { historyAtom } from './historyState'
@@ -17,6 +17,9 @@ export function useEditor() {
   const [drawing, setDrawing] = useRecoilState(drawingAtom)
   const [toolbox, setToolbox] = useRecoilState(toolboxAtom)
   const [history, setHistory] = useRecoilState(historyAtom)
+  const [backgroundGlyph, setBackgroundGlyph] = useRecoilState(backgroundGlyphState)
+
+  const drawingWithBackground = drawing.withBackground(backgroundGlyph)
 
   useEffect(() => {
     log.debug(drawing.toString())
@@ -65,7 +68,10 @@ export function useEditor() {
 
   return {
     drawing,
+    drawingWithBackground,
     toolbox,
+    backgroundGlyph,
+    setBackgroundGlyph,
     ...commands,
   }
 }

@@ -1,4 +1,4 @@
-import { Drawing } from '../../lib/emoji-drawing'
+import { Drawing, Glyph } from '../../lib/emoji-drawing'
 import { atom } from 'recoil'
 import { persistDrawingEffect } from './persistDrawingEffect'
 import { consoleServicesEffect } from './globalServices'
@@ -12,4 +12,9 @@ export const drawingAtom = atom({
     persistDrawingEffect,
     consoleServicesEffect
   ]
+})
+
+export const backgroundGlyphState = atom({
+  key: 'backgroundGlyph',
+  default: Glyph.whiteSquare
 })

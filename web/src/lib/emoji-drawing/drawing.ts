@@ -194,6 +194,12 @@ export class Drawing extends Grid<Glyph> {
     return matrix
   }
 
+  withBackground(background: Glyph): Drawing {
+    return this.withElements(this.elements.map(
+      ([position, glyph]) => [position, Glyph.isEmpty(glyph) ? background : glyph])
+    )
+  }
+
   toString(useWhiteSquares: boolean = false) {
     const array = this.toArray()
     const emptyChar = useWhiteSquares ? Glyph.whiteSquare : Glyph.space

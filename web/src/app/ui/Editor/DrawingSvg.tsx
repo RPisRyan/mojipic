@@ -10,7 +10,7 @@ const tileSize = 10
 const margin = 1
 
 export function DrawingSvg({ className, style }: StylableElementProps) {
-  const { drawing, applyTool } = useEditor()
+  const { drawingWithBackground: drawing, applyTool } = useEditor()
 
   const paddedBounds = drawing.paddedBounds(drawingSettings)
 

@@ -57,6 +57,6 @@ export const Glyph = {
    * Is it equal to any of the empty glyph representations?
    */
   isEmpty(glyph: Glyph) {
-    return glyph == null || glyph === ' ' || glyph === Glyph.space || glyph === Glyph.whiteSquare
+    return glyph == null || glyph === ' ' || glyph === Glyph.space
   },
 }

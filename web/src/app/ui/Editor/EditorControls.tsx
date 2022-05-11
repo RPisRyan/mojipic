@@ -8,7 +8,7 @@ import { ControlDivider, HelpButton, TileButton } from '../elements'
 import EditableChar from './EditableChar'
 
 export function EditorControls({ className, style }: StylableElementProps) {
-  const { toolbox, activateTool, pickBrush, undo, clear } = useEditor()
+  const { toolbox, activateTool, pickBrush, undo, clear, backgroundGlyph, setBackgroundGlyph } = useEditor()
   const { copyToClipboard } = useCopyToClipboard()
 
   return (
@@ -37,6 +37,13 @@ export function EditorControls({ className, style }: StylableElementProps) {
         ) : (
           <span>{toolbox.brush}</span>
         )}
+      </TileButton>
+
+      <TileButton
+        title="Background"
+        onClick={() => setBackgroundGlyph(toolbox.brush)}
+      >
+        <span>{backgroundGlyph}</span>
       </TileButton>
 
       <TileButton
