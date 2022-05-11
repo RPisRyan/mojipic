@@ -4,7 +4,7 @@ import React from 'react'
 import { classes, stylesheet } from 'typestyle'
 import type { StylableElementProps } from '../../../lib/react'
 import { spaces, useCopyToClipboard, useEditor } from '../../services'
-import { ControlDivider, TileButton } from '../elements'
+import { ControlDivider, HelpButton, TileButton } from '../elements'
 import EditableChar from './EditableChar'
 
 export function EditorControls({ className, style }: StylableElementProps) {
@@ -14,18 +14,18 @@ export function EditorControls({ className, style }: StylableElementProps) {
   return (
     <div className={classes(css.commandButtons, className)} style={style}>
       <TileButton title="Copy to clipboard" onClick={copyToClipboard}>
-        <FontAwesomeIcon icon={faCopy}/>
+        <FontAwesomeIcon icon={faCopy} />
       </TileButton>
 
       <TileButton title="Undo" onClick={() => undo()}>
-        <FontAwesomeIcon icon={faUndo}/>
+        <FontAwesomeIcon icon={faUndo} />
       </TileButton>
 
       <TileButton title="Clear" onClick={clear}>
-        <FontAwesomeIcon icon={faPlusSquare}/>
+        <FontAwesomeIcon icon={faPlusSquare} />
       </TileButton>
 
-      <ControlDivider direction="horizontal"/>
+      <ControlDivider direction="horizontal" />
 
       <TileButton
         title="Paintbrush"
@@ -33,7 +33,7 @@ export function EditorControls({ className, style }: StylableElementProps) {
         onClick={() => activateTool('paintbrush')}
       >
         {toolbox.activeToolType === 'paintbrush' ? (
-          <EditableChar value={toolbox.brush} onChange={(char) => pickBrush(char)}/>
+          <EditableChar value={toolbox.brush} onChange={(char) => pickBrush(char)} />
         ) : (
           <span>{toolbox.brush}</span>
         )}
@@ -44,7 +44,13 @@ export function EditorControls({ className, style }: StylableElementProps) {
         active={toolbox.activeToolType === 'eraser'}
         onClick={() => activateTool('eraser')}
       >
-        <FontAwesomeIcon icon={faEraser}/>
+        <FontAwesomeIcon icon={faEraser} />
+      </TileButton>
+
+      <ControlDivider direction={'horizontal'} />
+
+      <TileButton>
+        <HelpButton />
       </TileButton>
     </div>
   )

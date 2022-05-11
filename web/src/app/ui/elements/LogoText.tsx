@@ -5,7 +5,7 @@ import { colors, palette } from '../../services'
 
 export function LogoText({ children }: Props) {
   return (
-    <>
+    <div>
       {children
         ?.toString()
         .split('')
@@ -14,7 +14,7 @@ export function LogoText({ children }: Props) {
             {letter}
           </span>
         ))}
-    </>
+    </div>
   )
 }
 

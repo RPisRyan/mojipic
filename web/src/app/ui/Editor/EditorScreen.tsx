@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { extend } from 'typestyle'
-import { HelpButton, LogoText } from '../elements'
+import { LogoText } from '../elements'
 import { Greeting } from '../Help/Greeting'
 import { DrawingSvg } from './DrawingSvg'
 import { EditorControls } from './EditorControls'
@@ -12,51 +12,63 @@ import { colors, palette, spaces } from '../../services'
 export default function EditorScreen() {
   return (
     <div className={css.editorScreen}>
-      <div className={css.title}>
-        <LogoText>Mojipic</LogoText>
-      </div>
+      <div className={css.editorFrame}>
+        <div className={css.top}>
+          <LogoText>Mojipic</LogoText>
 
-      <div className={css.help}>
-        <HelpButton/>
-      </div>
+        </div>
 
-      <div className={css.drawing}>
-        <DrawingSvg/>
-      </div>
+        <div className={css.middle}>
 
-      <div className={css.controls}>
-        <EditorControls/>
-      </div>
+          <DrawingSvg />
 
-      <div className={css.brushes}>
-        <EmojiPicker/>
-      </div>
+          <EditorControls />
+        </div>
 
-      <Greeting/>
+        <div className={css.bottom}>
+          <EmojiPicker />
+
+        </div>
+
+        <Greeting />
+      </div>
     </div>
   )
 }
 
 const css = makeCss({
-  editorScreen: extend(fullScreenStyle, {
-    padding: spaces.sm,
-    display: 'grid',
-    gridTemplateAreas: `"title help" "drawing controls" "brushes brushes"`,
-    gridTemplateColumns: '1fr auto',
-    gridTemplateRows: '1em 1fr auto',
-    gap: spaces.sm,
-    background: palette.warm.luminance(0.92).hex(),
-  }),
-  title: {},
+  editorScreen: extend(
+    fullScreenStyle,
+    {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      background: palette.warm.luminance(0.92).hex(),
+      padding: spaces.sm
+    }),
+  editorFrame: {
+    display: 'flex',
+    maxWidth: '800px',
+    flexDirection: 'column',
+    gap: '0.5rem',
+
+  },
+  top: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  middle: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '0.5rem'
+  },
+  bottom: {
+    justifySelf: 'flex-end'
+  },
   help: {
     justifySelf: 'center',
     color: colors.darkest,
     cursor: 'pointer',
   },
-  drawing: {
-    minWidth: 0,
-    minHeight: 0,
-  },
-  controls: {},
-  brushes: {},
 })
